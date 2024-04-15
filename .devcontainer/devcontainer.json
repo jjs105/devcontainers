@@ -1,0 +1,27 @@
+/**
+* Node.js/JavaScript development container copied from/based on that used by the
+* official dev containers template-starter project.
+* 
+* For format details, see https://aka.ms/devcontainer.json. For config options,
+* see the README at: https://github.com/devcontainers/templates/tree/main/src/javascript-node
+* 
+* The original implementation may be seen at the following url:
+* https://github.com/devcontainers/template-starter/tree/main/.devcontainer/devcontainer.json
+*/
+{
+	"name": "Node.js/JavaScript",
+	"image": "mcr.microsoft.com/devcontainers/javascript-node:1-18-bullseye",
+	"features": {
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {}
+	},
+	"postCreateCommand": "npm install --global @devcontainers/cli",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"mads-hartmann.bash-ide-vscode",
+				"dbaeumer.vscode-eslint",
+				"GitHub.vscode-github-actions"
+			]
+		}
+	}
+}

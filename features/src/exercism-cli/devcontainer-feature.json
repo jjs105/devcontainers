@@ -1,0 +1,37 @@
+{
+    "id": "exercism-cli",
+    "version": "1.0.0",
+    "name": "Exercism CLI",
+    "description": "Installs the Exercism CLI application.",
+    "documentationUrl": "http://github.com/jjs105/devcontainers/tree/main/features/src/exercism-cli",
+    "options": {
+        "version": {
+            "type": "string",
+            "description": "The version to install.",
+            "default": "latest"
+        },
+        "os": {
+            "type": "string",
+            "description": "The target operating system.",
+            "default": "linux",
+            "enum": [
+                "darwin",
+                "freebsd",
+                "linux",
+                "openbsd"
+            ]
+        },
+        "arch": {
+            "type": "string",
+            "description": "The target CPU architecture.",
+            "default": "x86_64",
+            "enum": [
+                "x86_64",
+                "armv5",
+                "armv6",
+                "i386",
+                "ppc64"
+            ]
+        }
+    }
+}
