@@ -14,7 +14,8 @@
 	"features": {
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {}
 	},
-	"postCreateCommand": "npm install --global @devcontainers/cli",
+	"postCreateCommand":
+		"npm install --global @devcontainers/cli; curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/nektos/act/master/install.sh | bash;",
 	"customizations": {
 		"vscode": {
 			"extensions": [

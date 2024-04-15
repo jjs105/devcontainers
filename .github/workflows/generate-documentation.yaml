@@ -1,0 +1,25 @@
+name: "Generate Documentation for Development Containers and Features"
+
+on:
+  # Manual initiation of workflow.
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Generate Development Containers Documentation
+        uses: devcontainers/action@v1
+        with:
+          base-path-to-templates: "./templates/src"
+          generate-docs: "true"
+        
+      - name: Generate Features Documentation
+        uses: devcontainers/action@v1
+        with:
+            base-path-to-features: "./features/src"
+            generate-docs: "true"
