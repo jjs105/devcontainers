@@ -5,16 +5,17 @@
 * see the README at: https://github.com/jjs105/devcontainers/tree/main/templates/src/exercism-php
 */
 {
-    "name": "Exercism PHP CLI",
-	"image": "php:${templateOption:imageVariant}",
-	"features": {
-		"ghcr.io/jjs105/features/exercism-cli:1": {},
-		"ghcr.io/jjs105/features/phpunit:1": {}
-	},
-	"customizations": {
-		"vscode": {			
-			"extensions": [
-                "bmewburn.vscode-intelephense-client"
-			]
-		}
-	}}
+  "name": "Exercism PHP CLI",
+  "image": "php:${templateOption:imageVariant}",
+  "features": {
+    "ghcr.io/jjs105/features/exercism-cli:1": {},
+    "ghcr.io/jjs105/features/phpunit:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client"
+      ]
+    }
+  }
+}

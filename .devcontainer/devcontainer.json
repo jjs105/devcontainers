@@ -3,7 +3,8 @@
 * official dev containers template-starter project.
 * 
 * For format details, see https://aka.ms/devcontainer.json. For config options,
-* see the README at: https://github.com/devcontainers/templates/tree/main/src/javascript-node
+* see the README at:
+* 	https://github.com/devcontainers/templates/tree/main/src/javascript-node
 * 
 * The original implementation may be seen at the following url:
 * https://github.com/devcontainers/template-starter/tree/main/.devcontainer/devcontainer.json
@@ -14,8 +15,7 @@
 	"features": {
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {}
 	},
-	"postCreateCommand":
-		"npm install --global @devcontainers/cli; curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/nektos/act/master/install.sh | bash;",
+	"postCreateCommand": "npm install --global @devcontainers/cli",
 	"customizations": {
 		"vscode": {
 			"extensions": [

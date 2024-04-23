@@ -1,3 +1,24 @@
+
+# Exercism CLI (exercism-cli)
+
+Installs the Exercism CLI application.
+
+## Example Usage
+
+```json
+"features": {
+    "ghcr.io/jjs105/devcontainers/exercism-cli:1": {}
+}
+```
+
+## Options
+
+| Options Id | Description | Type | Default Value |
+|-----|-----|-----|-----|
+| version | The version to install. | string | latest |
+| os | The target operating system. | string | linux |
+| arch | The target CPU architecture. | string | x86_64 |
+
 ## Description
 
 Provides the `exercism` command in the shell. This command is used when working
@@ -23,3 +44,8 @@ Existing examples of this same feature were found at the following URLs:
 
 These implementations use different approaches, both of which are as described
 in the main README.md file of this repository.
+
+
+---
+
+_Note: This file was auto-generated from the [devcontainer-feature.json](devcontainer-feature.json).  Add additional notes to a `NOTES.md`._

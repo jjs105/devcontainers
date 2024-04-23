@@ -1,26 +1,27 @@
 {
-    "id": "exercism-php",
-    "version": "1.0.0",
-    "name": "Exercism PHP",
-    "publisher": "https://github.com/jjs105",
-    "description": "An environment suitable for local development of Exercism PHP solutions.",
-    "keywords": [
-        "PHP", "Exercism"
-    ],
-    "documentationURL": "https://github.com/jjs105/devcontainers/tree/main/templates/src/exercism-php",
-    "licenseURL": "https://github.com/jjs105/devcontainers/blob/main/LICENSE",
-    "platforms": [
-        "PHP"
-    ],
-    "options": {
-        "imageVariant": {
-            "type": "string",
-            "description": "PHP image variant to use.",
-            "default": "8-cli-alpine",
-            "proposals": [
-                "8-cli-alpine",
-                "8-cli"
-            ]
-        }
+  "id": "exercism-php",
+  "version": "1.0.0",
+  "name": "Exercism PHP",
+  "publisher": "https://github.com/jjs105",
+  "description": "An environment suitable for local development of Exercism PHP solutions.",
+  "keywords": [
+    "PHP",
+    "Exercism"
+  ],
+  "documentationURL": "https://github.com/jjs105/devcontainers/tree/main/templates/src/exercism-php",
+  "licenseURL": "https://github.com/jjs105/devcontainers/blob/main/LICENSE",
+  "platforms": [
+    "PHP"
+  ],
+  "options": {
+    "imageVariant": {
+      "type": "string",
+      "description": "PHP image variant to use.",
+      "default": "8-cli-alpine",
+      "proposals": [
+        "8-cli-alpine",
+        "8-cli"
+      ]
     }
+  }
 }

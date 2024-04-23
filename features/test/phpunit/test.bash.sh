@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Exit on any failure, use +e to revert if necessary.
+# @note: -x can be used for debugging purposes.
 set -eu
 
 # Source the development containers test library (hence reason for bash).

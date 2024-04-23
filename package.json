@@ -1,0 +1,19 @@
+{
+  "name": "@jjs105/devcontainers",
+  "version": "1.0.0",
+  "description": "Home for both development and management of personal development containers and features.",
+  "repository": "https://github.com/jjs105/devcontainers.git",
+  "author": "Jon Spain <jon.spain@gmail.com>",
+  "license": "LGPL-2.1-only",
+  "private": false,
+  "installConfig": {
+    "pnp": true
+  },
+  "scripts": {
+    "copy-lib": "./scripts/bin/tools.sh cp-lib",
+    "copy-test": "./scripts/bin/tools.sh cp-test",
+    "all-docs": "yarn template-docs && yarn feature-docs",
+    "feature-docs": "devcontainer templates generate-docs --project-folder=./templates/src",
+    "template-docs": "devcontainer features generate-docs --project-folder=./features/src --namespace=jjs105/devcontainers"
+  }
+}

@@ -1,29 +1,29 @@
 {
-    "id": "phpunit",
-    "version": "1.0.0",
-    "name": "PHPUnit",
-    "description": "Installs the PHPUnit application.",
-    "documentationUrl": "http://github.com/jjs105/devcontainers/tree/main/features/src/phpunit",
-    "options": {
-        "version": {
-            "type": "string",
-            "description": "The version to install.",
-            "default": "latest",
-            "enum": [
-                "latest",
-                "10",
-                "11"
-            ]
-        },
-        "install-php": {
-            "type": "string",
-            "description": "Whether to install (minimum) PHP packages for execution of PHPUnit.",
-            "default": "false",
-            "enum": [
-                "false",
-                "cli",
-                "all"
-            ]
-        }
+  "id": "phpunit",
+  "version": "1.0.0",
+  "name": "PHPUnit",
+  "description": "Installs the PHPUnit application.",
+  "documentationUrl": "http://github.com/jjs105/devcontainers/tree/main/features/src/phpunit",
+  "options": {
+    "version": {
+      "type": "string",
+      "description": "The version to install.",
+      "default": "latest",
+      "enum": [
+        "latest",
+        "10",
+        "11"
+      ]
+    },
+    "install-php": {
+      "type": "string",
+      "description": "Whether to install supporting PHP packages.",
+      "default": "false",
+      "enum": [
+        "false",
+        "cli",
+        "all"
+      ]
     }
+  }
 }

@@ -7,9 +7,9 @@ set -eu
 # Source the development containers test library (hence reason for bash).
 source dev-container-features-test-lib
 
-# Check Exercism is installed and reports its version.
-check "exercism location" bash -c "ls /usr/local/bin/exercism"
-check "version" bash -c "exercism version"
+# Check act is installed and reports its version.
+check "act location" bash -c "ls /usr/local/bin/act"
+check "version" bash -c "act --version"
 
 # Report all test results.
 reportResults
