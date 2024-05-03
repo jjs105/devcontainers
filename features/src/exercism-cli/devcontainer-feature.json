@@ -15,10 +15,9 @@
       "description": "The target operating system.",
       "default": "linux",
       "enum": [
-        "darwin",
-        "freebsd",
         "linux",
-        "openbsd"
+        "freebsd",
+        "darwin"
       ]
     },
     "arch": {
@@ -26,10 +25,9 @@
       "description": "The target CPU architecture.",
       "default": "x86_64",
       "enum": [
-        "x86_64",
-        "armv5",
-        "armv6",
         "i386",
+        "x86_64",
+        "arm64",
         "ppc64"
       ]
     }

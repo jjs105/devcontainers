@@ -12,8 +12,17 @@
   "scripts": {
     "copy-lib": "./scripts/bin/tools.sh cp-lib",
     "copy-test": "./scripts/bin/tools.sh cp-test",
-    "all-docs": "yarn template-docs && yarn feature-docs",
-    "feature-docs": "devcontainer templates generate-docs --project-folder=./templates/src",
-    "template-docs": "devcontainer features generate-docs --project-folder=./features/src --namespace=jjs105/devcontainers"
+    "test-all": "./scripts/bin/tools.sh test",
+    "test-templates": "./scripts/bin/tools.sh test templates",
+    "test-features": "./scripts/bin/tools.sh test features",
+    "docs-all": "./scripts/bin/tools.sh docs",
+    "docs-templates": "./scripts/bin/tools.sh docs templates",
+    "docs-features": "./scripts/bin/tools.sh docs features",
+    "package-all": "./scripts/bin/tools.sh package",
+    "package-templates": "./scripts/bin/tools.sh package templates",
+    "package-features": "./scripts/bin/tools.sh package features",
+    "publish-all": "./scripts/bin/tools.sh publish",
+    "publish-templates": "./scripts/bin/tools.sh publish templates",
+    "publish-features": "./scripts/bin/tools.sh publish features"
   }
 }

@@ -64,5 +64,23 @@ approaches with the additional following aims:
 * Centralise common functions in a library file that can be re-used at a later
 date
 
-# Build Tools and Actions
+# Build Tools etc.
+
+Build tools contained in this repository are implemented either a) directly as
+yarn scripts or b) in the scripts/bin directory. _In the latter case the commands are also available as yarn scripts._
+
+## Use of 'master' Scripts and Libraries
+
+This repository utilises a build tool script which allows master versions of
+certain reused files to be copied into the appropriate locations before build.
+
+The master files and where they are copied to are listed below:
+
+* `tools.sh cp-lib`
+  * scripts/lib/devcontainers-lib.sh -> /templates/src/**/
+  * scripts/lib/devcontainers-lib.sh -> /features/src/**/
+
+* `tools.sh cp-test`
+  * scripts/lib/test.sh -> /templates/test/**/
+  * scripts/lib/test.sh -> /features/test/**/
 

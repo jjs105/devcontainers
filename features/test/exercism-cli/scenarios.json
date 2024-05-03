@@ -1,0 +1,29 @@
+{
+  "alt-linux-alpine": {
+    "image": "alpine:latest",
+    "features": {
+      "exercism-cli": {}
+    }
+  },
+  "alt-linux-arch": {
+    "image": "archlinux:latest",
+    "features": {
+      "exercism-cli": {}
+    }
+  },
+  "alt-linux-debian": {
+    "image": "debian:latest",
+    "features": {
+      "exercism-cli": {}
+    }
+  },
+  "alt-os-darwin": {
+    "image": "arm64v8/alpine:latest",
+    "features": {
+      "exercism-cli": {
+        "os": "darwin",
+        "arch": "arm64"
+      }
+    }
+  }
+}

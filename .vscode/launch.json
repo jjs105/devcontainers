@@ -1,0 +1,87 @@
+{
+  "configurations": [
+    {
+      "name": "Copy library file(s)",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": [
+        "copy-lib"
+      ],
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "timeout": 5000
+    },
+    {
+      "name": "Copy test file(s)",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": [
+        "copy-test"
+      ],
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "timeout": 5000
+    },
+    {
+      "name": "Generate Docs",
+      "runtimeExecutable": "${workspaceFolder}/scripts/bin/tools.sh",
+      "runtimeArgs": [
+        "docs", "${input:target-type}"
+      ],
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "timeout": 5000
+    },
+    {
+      "name": "Test All",
+      "runtimeExecutable": "${workspaceFolder}/scripts/bin/tools.sh",
+      "runtimeArgs": [
+        "test", "${input:target-type}"
+      ],
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+    },
+    {
+      "name": "Test Templates",
+      "runtimeExecutable": "${workspaceFolder}/scripts/bin/tools.sh",
+      "runtimeArgs": [
+        "test", "templates", "${input:selected-items}"
+      ],
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+    },
+    {
+      "name": "Test Features",
+      "runtimeExecutable": "${workspaceFolder}/scripts/bin/tools.sh",
+      "runtimeArgs": [
+        "test", "features", "${input:selected-items}"
+      ],
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+    }
+  ],
+  "inputs": [
+    {
+      "id": "target-type",
+      "type": "promptString",
+      "description": "all|templates|features",
+      "default": "all"
+    },
+    {
+      "id": "selected-items",
+      "type": "promptString",
+      "description": "Comma separated list of features or templates",
+      "default": "all"
+    }
+  ]
+}

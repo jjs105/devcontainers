@@ -11,8 +11,9 @@
       "default": "latest",
       "enum": [
         "latest",
+        "11",
         "10",
-        "11"
+        "9"
       ]
     },
     "install-php": {

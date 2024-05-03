@@ -20,9 +20,13 @@ install_packages() {
     && apt-get clean && apt-get autoclean && apt-get autoremove \
     && rm -rf /var/lib/apt/lists/*
 
-  # Fall back to using APK (i.e. on Alpine).
-  elif [ -x "/sbin/apk" ] ; then
+  # APK? (i.e. on Alpine).
+  elif [ -x "/sbin/apk" ]; then
     apk add --no-cache "$@"
+
+  # Pacman? (i.e. on Arch).
+  elif [ -x "/sbin/pacman" ]; then
+    pacman --noconfirm -Sy "$@"
 
   # Otherwise noy supported.
   else

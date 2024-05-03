@@ -1,6 +1,9 @@
 # Running yarn in plug'n'play mode.
 .pnp.js
 
+# Dist folder etc.
+dist/
+
 # Ignore the copied versions of any master scripts.
 **/devcontainers-lib.sh
 !/scripts/lib/devcontainers-lib.sh

@@ -7,6 +7,8 @@
 # @note: We do not specify the shell when developing features and ensure
 # compatibility by assuming use of sh.
 
+# Exit on any failure, use +e to revert if necessary.
+# @note: -x can be used for debugging purposes.
 set -eu
 
 # Feature options.
@@ -20,9 +22,6 @@ ARCH=${ARCH=x86_64}
 # Our required packages.
 echo "==>> Installing cUrl ..."
 install_packages curl ca-certificates
-
-echo $(pwd)
-exit 0
 
 # Set up.
 DEST_DIR=/usr/local/bin

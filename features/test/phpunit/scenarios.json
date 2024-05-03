@@ -1,0 +1,62 @@
+{
+  "include-php-cli": {
+    "image": "ubuntu:latest",
+    "features": {
+      "phpunit": {
+        "install-php": "cli"
+      }
+    }
+  },
+  "include-php-full": {
+    "image": "ubuntu:latest",
+    "features": {
+      "phpunit": {
+        "install-php": "all"
+      }
+    }
+  },
+  "include-php-cli-alpine": {
+    "image": "alpine:latest",
+    "features": {
+      "phpunit": {
+        "install-php": "cli"
+      }
+    }
+  },
+  "include-php-full-alpine": {
+    "image": "alpine:latest",
+    "features": {
+      "phpunit": {
+        "install-php": "all"
+      }
+    }
+  },
+  "php7-base-image": {
+    "image": "php:7",
+    "features": {
+      "phpunit": {
+        "version": "9"
+      }
+    }
+  },
+  "php8-base-image": {
+    "image": "php:8",
+    "features": {
+      "phpunit": {}
+    }
+  },
+  "php7-base-image-alpine": {
+    "image": "php:7-alpine",
+    "features": {
+      "phpunit": {
+        "version": "9"
+      }
+    }
+  },
+  "php8-base-image-alpine": {
+    "image": "php:8-alpine",
+    "features": {
+      "phpunit": {}
+    }
+  }
+}
