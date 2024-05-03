@@ -1,5 +1,5 @@
 
-# Exercism CLI (exercism-cli)
+# Exercism CLI (features/exercism-cli)
 
 Installs the Exercism CLI application.
 
@@ -7,7 +7,7 @@ Installs the Exercism CLI application.
 
 ```json
 "features": {
-    "ghcr.io/jjs105/devcontainers/exercism-cli:1": {}
+    "ghcr.io/jjs105/devcontainers/features/exercism-cli:1": {}
 }
 ```
 

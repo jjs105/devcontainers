@@ -1,5 +1,5 @@
 
-# nektos/act Tool (nektos-act)
+# nektos/act Tool (features/nektos-act)
 
 Installs the nektos/act tool.
 
@@ -7,7 +7,7 @@ Installs the nektos/act tool.
 
 ```json
 "features": {
-    "ghcr.io/jjs105/devcontainers/nektos-act:1": {}
+    "ghcr.io/jjs105/devcontainers/features/nektos-act:1": {}
 }
 ```
 

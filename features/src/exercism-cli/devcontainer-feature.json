@@ -1,5 +1,5 @@
 {
-  "id": "exercism-cli",
+  "id": "features/exercism-cli",
   "version": "1.0.0",
   "name": "Exercism CLI",
   "description": "Installs the Exercism CLI application.",

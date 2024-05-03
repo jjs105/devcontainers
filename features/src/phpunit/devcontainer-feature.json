@@ -1,5 +1,5 @@
 {
-  "id": "phpunit",
+  "id": "features/phpunit",
   "version": "1.0.0",
   "name": "PHPUnit",
   "description": "Installs the PHPUnit application.",

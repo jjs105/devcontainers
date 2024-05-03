@@ -1,5 +1,5 @@
 {
-  "id": "nektos-act",
+  "id": "features/nektos-act",
   "version": "1.0.0",
   "name": "nektos/act Tool",
   "description": "Installs the nektos/act tool.",
