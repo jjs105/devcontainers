@@ -67,7 +67,8 @@ date
 # Build Tools etc.
 
 Build tools contained in this repository are implemented either a) directly as
-yarn scripts or b) in the scripts/bin directory. _In the latter case the commands are also available as yarn scripts._
+yarn scripts or b) in the scripts/bin directory. _In the latter case the
+commands are also available as yarn scripts._
 
 ## Use of 'master' Scripts and Libraries
 

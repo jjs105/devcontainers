@@ -1,8 +1,10 @@
 /**
-* Simple PHP (CLI) based dev container for local development of Exercism PHP solutions.
+* Simple PHP (CLI) based development container for local development of Exercism
+* PHP solutions.
 * 
 * For format details, see https://aka.ms/devcontainer.json. For config options,
-* see the README at: https://github.com/jjs105/devcontainers/tree/main/templates/src/exercism-php
+* see the README at:
+* https://github.com/jjs105/devcontainers/tree/main/templates/src/exercism-php
 */
 {
   "name": "Exercism PHP CLI",
