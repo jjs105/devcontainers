@@ -1,10 +1,29 @@
 {
-  "id": "features/exercism-cli",
+  "id": "exercism-cli",
   "version": "1.0.0",
   "name": "Exercism CLI",
   "description": "Installs the Exercism CLI application.",
-  "documentationUrl": "http://github.com/jjs105/devcontainers/tree/main/features/src/exercism-cli",
+  "documentationURL": "http://github.com/jjs105/devcontainers/tree/main/features/src/exercism-cli",
+  "licenseURL": "http://github.com/jjs105/devcontainers/tree/main/features/LICENSE",
+  "keywords": [
+    "Exercism", "CLI"
+  ],
+  "containerEnv": {
+    "WORKSPACE_PATH": "",
+    "EXERCISM_TOKEN": ""
+  },
   "options": {
+    "workspace": {
+      "type": "string",
+      "description": "The workspace path to configure for the exercism CLI tool.",
+      "proposals": [
+        "/workspaces/exercism"
+      ]
+    },
+    "token": {
+      "type": "string",
+      "description": "The authentication token to configure for the exercism CLI tool."
+    },
     "version": {
       "type": "string",
       "description": "The version to install.",

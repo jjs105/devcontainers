@@ -1,5 +1,5 @@
 
-# Exercism CLI (features/exercism-cli)
+# Exercism CLI (exercism-cli)
 
 Installs the Exercism CLI application.
 
@@ -7,7 +7,7 @@ Installs the Exercism CLI application.
 
 ```json
 "features": {
-    "ghcr.io/jjs105/devcontainers/features/exercism-cli:1": {}
+    "ghcr.io/jjs105/devcontainers/exercism-cli:1": {}
 }
 ```
 
@@ -15,6 +15,8 @@ Installs the Exercism CLI application.
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
+| workspace | The workspace path to configure for the exercism CLI tool. | string | undefined |
+| token | The authentication token to configure for the exercism CLI tool. | string | undefined |
 | version | The version to install. | string | latest |
 | os | The target operating system. | string | linux |
 | arch | The target CPU architecture. | string | x86_64 |
@@ -28,12 +30,18 @@ Further information about working on Exercism solutions locally may be found at
 the following URL:
 * https://exercism.org/docs/using/solving-exercises/working-locally
 
-Note this tool requires authentication using your Exercism token specified as
-follows:
+Note this tool requires configuration to a) set up your Exercism authentication
+using your Exercism token and b) set your workspace, as follows:
 
 ```shell
-exercism configure --token=<token>
+exercism configure \
+  --token=<token> \
+  --workspace=<workspace>
 ```
+
+Alternatively the values can be set using the local environment variables
+`EXERCISM_TOKEN` and `WORKSPACE_PATH` which are then passed ot the development
+container.
 
 ## Sources
 

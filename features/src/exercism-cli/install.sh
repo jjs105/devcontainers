@@ -12,6 +12,8 @@
 set -eu
 
 # Feature options.
+WORKSPACE=${WORKSPACE=}
+TOKEN=${TOKEN=}
 VERSION=${VERSION=latest}
 OS=${OS=linux}
 ARCH=${ARCH=x86_64}
@@ -46,3 +48,21 @@ DOWNLOAD_DIR=$(mktemp -d || mktemp -d -t 'tmp')
 curl -sfL --retry 3 ${RELEASE_URL} | tar -xz -C ${DOWNLOAD_DIR}
 install ${DOWNLOAD_DIR}/exercism ${DEST_DIR}
 rm -r ${DOWNLOAD_DIR}
+
+# Configure token and/or workspace if set.
+if [ ! -z ${WORKSPACE} ]; then
+  echo "==>> Configuring Workspace as: ${WORKSPACE}"
+  exercism configure --workspace="${WORKSPACE}"
+fi
+if [ ! -z ${WORKSPACE_PATH} ]; then
+  echo "==>> Configuring Workspace as: ${WORKSPACE_PATH}"
+  exercism configure --workspace="${WORKSPACE_PATH}"
+fi
+if [ ! -z ${TOKEN} ]; then
+  echo "==>> Configuring Token as: ${TOKEN}"
+  exercism configure --token="${TOKEN}"
+fi
+if [ ! -z ${EXERCISM_TOKEN} ]; then
+  echo "==>> Configuring Token as: ${EXERCISM_TOKEN}"
+  exercism configure --token="${EXERCISM_TOKEN}"
+fi

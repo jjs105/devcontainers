@@ -1,5 +1,5 @@
 
-# PHPUnit (features/phpunit)
+# PHPUnit (phpunit)
 
 Installs the PHPUnit application.
 
@@ -7,7 +7,7 @@ Installs the PHPUnit application.
 
 ```json
 "features": {
-    "ghcr.io/jjs105/devcontainers/features/phpunit:1": {}
+    "ghcr.io/jjs105/devcontainers/phpunit:1": {}
 }
 ```
 

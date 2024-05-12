@@ -88,12 +88,13 @@ case "${_command:="${1:-}"}" in
     if [ "ALL" = ${_type} ] || [ "FEATURES" = ${_type} ]; then
       devcontainer features package \
         ./features/src \
-        --output-folder ./dist
+        --force-clean-output-folder \
+        --output-folder ./dist/features
     fi
     if [ "ALL" = ${_type} ] || [ "TEMPLATES" = ${_type} ]; then
-      devcontainer templates package \
+      devcontainer templates publish \
         ./templates/src \
-        --output-folder ./dist
+        --namespace jjs105/devcontainers/features
     fi
     ;;
 
@@ -109,12 +110,14 @@ case "${_command:="${1:-}"}" in
     if [ "ALL" = ${_type} ] || [ "FEATURES" = ${_type} ]; then
       devcontainer features publish \
         ./features/src \
-        --namespace jjs105/devcontainers
+        --namespace jjs105/devcontainers/features
     fi
     if [ "ALL" = ${_type} ] || [ "TEMPLATES" = ${_type} ]; then
       devcontainer templates publish \
         ./templates/src \
-        --namespace jjs105/devcontainers
+        --registry ghcr.io \
+        --namespace jjs105/devcontainers/templates \
+        --log-level trace
     fi
     ;;
 

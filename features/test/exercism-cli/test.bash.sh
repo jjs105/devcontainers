@@ -2,7 +2,7 @@
 
 # Exit on any failure, use +e to revert if necessary.
 # @note: -x can be used for debugging purposes.
-set -eu
+set -eux
 
 # Source the development containers test library (hence reason for bash).
 source dev-container-features-test-lib

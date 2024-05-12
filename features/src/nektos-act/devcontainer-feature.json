@@ -1,9 +1,13 @@
 {
-  "id": "features/nektos-act",
+  "id": "nektos-act",
   "version": "1.0.0",
   "name": "nektos/act Tool",
   "description": "Installs the nektos/act tool.",
   "documentationUrl": "http://github.com/jjs105/devcontainers/tree/main/features/src/nektos-act",
+  "licenseURL": "http://github.com/jjs105/devcontainers/tree/main/features/LICENSE",
+  "keywords": [
+    "GitHub", "Actions"
+  ],
   "options": {
     "version": {
       "type": "string",
