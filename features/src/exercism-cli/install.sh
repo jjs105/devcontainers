@@ -50,19 +50,23 @@ install ${DOWNLOAD_DIR}/exercism ${DEST_DIR}
 rm -r ${DOWNLOAD_DIR}
 
 # Configure token and/or workspace if set.
+# @note: A token must be specified when configuring otherwise an error occurs.
+if [ ! -z ${WORKSPACE_PATH} ]; then WORKSPACE=${WORKSPACE_PATH}; fi
+if [ ! -z ${EXERCISM_TOKEN} ]; then TOKEN=${EXERCISM_TOKEN}; fi
+if [ -z ${TOKEN} ]; then TOKEN=DUMMY_AUTH_TOKEN; fi
+
+# We have a workspace so set as well as ...
 if [ ! -z ${WORKSPACE} ]; then
   echo "==>> Configuring Workspace as: ${WORKSPACE}"
-  exercism configure --workspace="${WORKSPACE}"
-fi
-if [ ! -z ${WORKSPACE_PATH} ]; then
-  echo "==>> Configuring Workspace as: ${WORKSPACE_PATH}"
-  exercism configure --workspace="${WORKSPACE_PATH}"
-fi
-if [ ! -z ${TOKEN} ]; then
   echo "==>> Configuring Token as: ${TOKEN}"
-  exercism configure --token="${TOKEN}"
-fi
-if [ ! -z ${EXERCISM_TOKEN} ]; then
-  echo "==>> Configuring Token as: ${EXERCISM_TOKEN}"
-  exercism configure --token="${EXERCISM_TOKEN}"
+  # A real or dummy token.
+  if [ "DUMMY_AUTH_TOKEN" != ${TOKEN} ]; then
+    exercism configure --workspace=${WORKSPACE} --token=${TOKEN}
+  else
+    exercism configure --workspace=${WORKSPACE} --token=${TOKEN} --no-verify
+  fi
+# Otherwise if a non-dummy token (only) is specified set that.
+elif [ "DUMMY_AUTH_TOKEN" != ${TOKEN} ]; then
+  echo "==>> Configuring Token as: ${TOKEN}"
+  exercism configure --token=${TOKEN}
 fi

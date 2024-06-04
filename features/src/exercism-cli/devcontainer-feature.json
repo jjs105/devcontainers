@@ -1,6 +1,6 @@
 {
   "id": "exercism-cli",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "name": "Exercism CLI",
   "description": "Installs the Exercism CLI application.",
   "documentationURL": "http://github.com/jjs105/devcontainers/tree/main/features/src/exercism-cli",
