@@ -22,8 +22,14 @@ ARCH=${ARCH=x86_64}
 . ./devcontainers-lib.sh
 
 # Our required packages.
-echo "==>> Installing cUrl ..."
-install_packages curl ca-certificates
+# @note: For some reason the latest version of cURL breaks OPENSSL on Arch, but
+# The versions installed by default are fine.
+if [ "arch" = $(cat /etc/os-release | grep ^ID= | cut -d = -f 2) ]; then
+  echo "==>> Skipping cUrl installation on Arch Linux ..."
+else
+  echo "==>> Installing cUrl ..."
+  install_packages curl ca-certificates
+fi
 
 # Set up.
 DEST_DIR=/usr/local/bin
@@ -49,6 +55,15 @@ curl -sfL --retry 3 ${RELEASE_URL} | tar -xz -C ${DOWNLOAD_DIR}
 install ${DOWNLOAD_DIR}/exercism ${DEST_DIR}
 rm -r ${DOWNLOAD_DIR}
 
+# Check for mismatch against darwin (Mac) OS.
+if [ "darwin" = ${OS} ] && [ "Darwin" != $(uname -s) ]; then
+    echo -e "\nSkipping configuration, not on Darwin/Mac OS."
+    exit 0
+elif [ "darwin" != ${OS} ] && [ "Darwin" == $(uname -s) ]; then
+    echo -e "\nSkipping configuration, on Darwin/Mac OS."
+    exit 0
+fi
+
 # Configure token and/or workspace if set.
 # @note: A token must be specified when configuring otherwise an error occurs.
 if [ ! -z ${WORKSPACE_PATH} ]; then WORKSPACE=${WORKSPACE_PATH}; fi
@@ -65,6 +80,7 @@ if [ ! -z ${WORKSPACE} ]; then
   else
     exercism configure --workspace=${WORKSPACE} --token=${TOKEN} --no-verify
   fi
+  
 # Otherwise if a non-dummy token (only) is specified set that.
 elif [ "DUMMY_AUTH_TOKEN" != ${TOKEN} ]; then
   echo "==>> Configuring Token as: ${TOKEN}"
