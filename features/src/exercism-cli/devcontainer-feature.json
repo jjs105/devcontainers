@@ -16,13 +16,15 @@
     "workspace": {
       "type": "string",
       "description": "The workspace path to configure for the exercism CLI tool.",
+      "default": "/workspaces/exercism",
       "proposals": [
         "/workspaces/exercism"
       ]
     },
     "token": {
       "type": "string",
-      "description": "The authentication token to configure for the exercism CLI tool."
+      "description": "The authentication token to configure for the exercism CLI tool.",
+      "default": ""
     },
     "version": {
       "type": "string",
