@@ -1,6 +1,6 @@
 {
   "id": "exercism-php-cli",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "name": "Exercism PHP",
   "publisher": "https://github.com/jjs105",
   "description": "An environment suitable for local development of Exercism PHP solutions.",

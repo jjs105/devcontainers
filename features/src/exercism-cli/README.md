@@ -15,8 +15,8 @@ Installs the Exercism CLI application.
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| workspace | The workspace path to configure for the exercism CLI tool. | string | undefined |
-| token | The authentication token to configure for the exercism CLI tool. | string | undefined |
+| workspace | The workspace path to configure for the exercism CLI tool. | string | /workspaces/exercism |
+| token | The authentication token to configure for the exercism CLI tool. | string | - |
 | version | The version to install. | string | latest |
 | os | The target operating system. | string | linux |
 | arch | The target CPU architecture. | string | x86_64 |
@@ -30,8 +30,10 @@ Further information about working on Exercism solutions locally may be found at
 the following URL:
 * https://exercism.org/docs/using/solving-exercises/working-locally
 
-Note this tool requires configuration to a) set up your Exercism authentication
-using your Exercism token and b) set your workspace, as follows:
+## Using the Exercism CLI
+
+Note the `exercism` tool requires configuration to a) set up your Exercism
+authentication using your Exercism token and b) set your workspace, as follows:
 
 ```shell
 exercism configure \

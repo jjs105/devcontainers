@@ -1,6 +1,6 @@
 {
   "id": "phpunit",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "name": "PHPUnit",
   "description": "Installs the PHPUnit application.",
   "documentationUrl": "http://github.com/jjs105/devcontainers/tree/main/features/src/phpunit",

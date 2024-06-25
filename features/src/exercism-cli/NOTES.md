@@ -7,8 +7,10 @@ Further information about working on Exercism solutions locally may be found at
 the following URL:
 * https://exercism.org/docs/using/solving-exercises/working-locally
 
-Note this tool requires configuration to a) set up your Exercism authentication
-using your Exercism token and b) set your workspace, as follows:
+## Using the Exercism CLI
+
+Note the `exercism` tool requires configuration to a) set up your Exercism
+authentication using your Exercism token and b) set your workspace, as follows:
 
 ```shell
 exercism configure \

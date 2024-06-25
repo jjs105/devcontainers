@@ -9,11 +9,21 @@ An environment suitable for local development of Exercism PHP solutions.
 |-----|-----|-----|-----|
 | imageVariant | PHP image variant to use. | string | 8-cli-alpine |
 
+## Description
+
+Provides a PHP environment suitable for carrying out PHP based Erercism
+exercises locally. Uses an official PHP container image as a base and then adds
+the `exercism` cli tool and PHPUnit using the development container features
+also contained in this repository.
+
+Further information about working on Exercism solutions locally may be found at
+the following URL:
+* https://exercism.org/docs/using/solving-exercises/working-locally
 
 ## Using the Exercism CLI
 
-Note this tool requires configuration to a) set up your Exercism authentication
-using your Exercism token and b) set your workspace, as follows:
+Note the `exercism` tool requires configuration to a) set up your Exercism
+authentication using your Exercism token and b) set your workspace, as follows:
 
 ```shell
 exercism configure \
