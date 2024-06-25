@@ -84,6 +84,12 @@ if [ "false" != ${INSTALL_PHP} ]; then
     echo "==>> Installing additional packages ..."
     [ "all" = ${INSTALL_PHP} ] \
       && install_packages php82-pecl-pcov php82-pecl-xdebug
+
+    # For some reason no generic PHP executable/link is created on Alpine.
+    [ ! -f /usr/bin/php ] && [ -f /usr/bin/php82 ] \
+      && ln -s /usr/bin/php82 /usr/bin/php
+    [ ! -f /usr/bin/php ] && [ -f /usr/bin/php8 ] \
+      && ln -s /usr/bin/php8 /usr/bin/php
   fi
   
 else
