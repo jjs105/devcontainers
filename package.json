@@ -10,19 +10,24 @@
     "pnp": true
   },
   "scripts": {
+    "debug": "./scripts/bin/tools.sh debug",
     "copy-lib": "./scripts/bin/tools.sh cp-lib",
     "copy-test": "./scripts/bin/tools.sh cp-test",
     "test-all": "./scripts/bin/tools.sh test",
     "test-templates": "./scripts/bin/tools.sh test templates",
     "test-features": "./scripts/bin/tools.sh test features",
+    "test-help": "./scripts/bin/tools.sh test help",
     "docs-all": "./scripts/bin/tools.sh docs",
     "docs-templates": "./scripts/bin/tools.sh docs templates",
     "docs-features": "./scripts/bin/tools.sh docs features",
+    "docs-help": "./scripts/bin/tools.sh docs help",
     "package-all": "./scripts/bin/tools.sh package",
     "package-templates": "./scripts/bin/tools.sh package templates",
     "package-features": "./scripts/bin/tools.sh package features",
+    "package-help": "./scripts/bin/tools.sh package help",
     "publish-all": "./scripts/bin/tools.sh publish",
     "publish-templates": "./scripts/bin/tools.sh publish templates",
-    "publish-features": "./scripts/bin/tools.sh publish features"
+    "publish-features": "./scripts/bin/tools.sh publish features",
+    "publish-help": "./scripts/bin/tools.sh publish help"
   }
 }

@@ -1,0 +1,22 @@
+{
+  "id": "ensure-bash",
+  "version": "1.0.0",
+  "name": "Ensure Bash",
+  "description": "Ensures that bash is installed, with optional Git prompt.",
+  "documentationURL": "http://github.com/jjs105/devcontainers/tree/main/features/src/ensure-bash",
+  "licenseURL": "http://github.com/jjs105/devcontainers/tree/main/features/LICENSE",
+  "keywords": [
+    "Bash", "Git"
+  ],
+  "options": {
+    "git-prompt": {
+      "type": "string",
+      "description": "Whether to install the Git prompt script.",
+      "default": "true",
+      "enum": [
+        "true",
+        "false"
+      ]
+    }
+  }
+}

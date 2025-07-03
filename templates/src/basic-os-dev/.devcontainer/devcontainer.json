@@ -1,0 +1,24 @@
+/**
+* Simple development container template used for basic OS based development (or
+* as a base/example for other templates).
+* 
+* For format details, see https://aka.ms/devcontainer.json. 
+*/
+{
+  "name": "Basic OS Dev",
+  "image": "${templateOption:image}:${templateOption:imageVariant}",
+  "features": {
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+				"mads-hartmann.bash-ide-vscode",
+        "streetsidesoftware.code-spell-checker",
+        "ms-azuretools.vscode-docker",
+        "DavidAnson.vscode-markdownlint",
+        "buenon.scratchpads"
+      ]
+    }
+  }
+}

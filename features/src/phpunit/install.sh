@@ -10,18 +10,17 @@
 set -eu
 
 # Feature options.
-VERSION=${VERSION=latest}
-INSTALL_PHP=${INSTALL_PHP=false}
+VERSION="${VERSION=latest}"
+INSTALL_PHP="${INSTALL_PHP=false}"
 
 # Include the development containers common library.
 . ./devcontainers-lib.sh
 
-# Our required packages.
-echo "==>> Installing cUrl ..."
-install_packages curl ca-certificates
+# Make sure we have cUrl.
+install_curl
 
 # If INSTALL_PHP is anything other than 'false' we need to ...
-if [ "false" != ${INSTALL_PHP} ]; then
+if [ "false" != "${INSTALL_PHP}" ]; then
 
   # If on Ubuntu/using apt ...
   if [ -x "/usr/bin/apt-get" ]; then
@@ -51,7 +50,7 @@ if [ "false" != ${INSTALL_PHP} ]; then
     install_packages lsb-release gnupg
 
     # The fingerprint value as specified in the PPA specification.
-    FINGERPRINT=14AA40EC0831756756D7F66C4F4EA0AAE5267A6C
+    FINGERPRINT="14AA40EC0831756756D7F66C4F4EA0AAE5267A6C"
 
     # Get the public key for the PPA using the fingerprint and add to apt.
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys "${FINGERPRINT}"
@@ -68,7 +67,7 @@ if [ "false" != ${INSTALL_PHP} ]; then
 
     # And if 'all' is specified install the remaining packages.
     echo "==>> Installing additional packages ..."
-    [ "all" = ${INSTALL_PHP} ] && install_packages php8.2-pcov php8.2-xdebug
+    [ "all" = "${INSTALL_PHP}" ] && install_packages php8.2-pcov php8.2-xdebug
 
   # If on Alpine/using apk ...
   elif [ -x "/sbin/apk" ]; then
@@ -82,7 +81,7 @@ if [ "false" != ${INSTALL_PHP} ]; then
 
     # And if 'all' is specified install the remaining packages.
     echo "==>> Installing additional packages ..."
-    [ "all" = ${INSTALL_PHP} ] \
+    [ "all" = "${INSTALL_PHP}" ] \
       && install_packages php82-pecl-pcov php82-pecl-xdebug
 
     # For some reason no generic PHP executable/link is created on Alpine.
@@ -97,14 +96,14 @@ else
 fi
 
 # Set up.
-DEST_DIR=/usr/local/bin
-BASE_URL=https://phar.phpunit.de
-LATEST_URL=${BASE_URL}/phpunit.phar
-VERSION_URL=${BASE_URL}/phpunit-${VERSION}.phar
+DEST_DIR="/usr/local/bin"
+BASE_URL="https://phar.phpunit.de"
+LATEST_URL="${BASE_URL}/phpunit.phar"
+VERSION_URL="${BASE_URL}/phpunit-${VERSION}.phar"
 
 # Work out the URL and report.
-[ "latest" = ${VERSION} ] && RELEASE_URL=${LATEST_URL} \
-    || RELEASE_URL=${VERSION_URL}
+[ "latest" = "${VERSION}" ] && RELEASE_URL="${LATEST_URL}" \
+    || RELEASE_URL="${VERSION_URL}"
 echo "==>> Installing PHPUnit: v${VERSION}"
 echo "==>> from: ${RELEASE_URL}"
 echo "==>> to: ${DEST_DIR}"
@@ -112,7 +111,4 @@ echo "==>> to: ${DEST_DIR}"
 # Download and install.
 # @note: the cUrl --output-dir option is only supported by v7.73+ so change to
 # the directory to be on the safe side.
-cd ${DEST_DIR}
-curl -sfL --retry 3 ${RELEASE_URL} --output phpunit.phar
-chmod +x ${DEST_DIR}/phpunit.phar
-cd -
+download_and_install "${RELEASE_URL}"

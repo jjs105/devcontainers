@@ -1,6 +1,7 @@
 {
   "alt-linux-alpine": {
     "image": "alpine:latest",
+    "postCreateCommand": "[ ! $(command -v bash) ] && apk add --no-cache bash",
     "features": {
       "exercism-cli": {}
     }

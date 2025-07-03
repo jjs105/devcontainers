@@ -2,10 +2,5 @@
 .pnp.js
 
 # Dist folder etc.
+build/
 dist/
-
-# Ignore the copied versions of any master scripts.
-**/devcontainers-lib.sh
-!/scripts/lib/devcontainers-lib.sh
-**/test.sh
-!/scripts/lib/test.sh

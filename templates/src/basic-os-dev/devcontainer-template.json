@@ -1,0 +1,35 @@
+{
+  "id": "basic-os-dev",
+  "version": "1.0.0",
+  "name": "Basic OS Dev",
+  "publisher": "https://github.com/jjs105",
+  "description": "Simple development container template used for basic OS based development.",
+  "keywords": [
+    "Basic", "Dev", "Development", "Bash"
+  ],
+  "documentationURL": "https://github.com/jjs105/devcontainers/tree/main/templates/src/basic-os-dev",
+  "licenseURL": "https://github.com/jjs105/devcontainers/blob/main/LICENSE",
+  "platforms": [
+    "Bash"
+  ],
+  "options": {
+    "image": {
+      "type": "string",
+      "description": "Container image to use.",
+      "default": "ubuntu",
+      "proposals": [
+        "ubuntu",
+        "debian",
+        "alpine"
+      ]
+    },
+    "imageVariant": {
+      "type": "string",
+      "description": "Container image variant to use.",
+      "default": "latest",
+      "proposals": [
+        "latest"
+      ]
+    }
+  }
+}

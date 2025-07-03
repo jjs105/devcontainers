@@ -1,6 +1,18 @@
 {
   "configurations": [
     {
+      "name": "Run Debug Container",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": [
+        "debug"
+      ],
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "timeout": 5000
+    },
+    {
       "name": "Copy library file(s)",
       "runtimeExecutable": "yarn",
       "runtimeArgs": [
@@ -25,19 +37,7 @@
       "timeout": 5000
     },
     {
-      "name": "Generate Docs",
-      "runtimeExecutable": "${workspaceFolder}/scripts/bin/tools.sh",
-      "runtimeArgs": [
-        "docs", "${input:target-type}"
-      ],
-      "type": "node",
-      "request": "launch",
-      "cwd": "${workspaceFolder}",
-      "console": "integratedTerminal",
-      "timeout": 5000
-    },
-    {
-      "name": "Test All",
+      "name": "Test",
       "runtimeExecutable": "${workspaceFolder}/scripts/bin/tools.sh",
       "runtimeArgs": [
         "test", "${input:target-type}"
@@ -68,7 +68,43 @@
       "request": "launch",
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
-    }
+    },
+    {
+      "name": "Generate Docs",
+      "runtimeExecutable": "${workspaceFolder}/scripts/bin/tools.sh",
+      "runtimeArgs": [
+        "docs", "${input:target-type}"
+      ],
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "timeout": 5000
+    },
+    {
+      "name": "Package",
+      "runtimeExecutable": "${workspaceFolder}/scripts/bin/tools.sh",
+      "runtimeArgs": [
+        "package", "${input:target-type}"
+      ],
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "timeout": 5000
+    },
+    {
+      "name": "Publish",
+      "runtimeExecutable": "${workspaceFolder}/scripts/bin/tools.sh",
+      "runtimeArgs": [
+        "publish", "${input:target-type}"
+      ],
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "timeout": 5000
+    },
   ],
   "inputs": [
     {

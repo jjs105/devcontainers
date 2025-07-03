@@ -12,77 +12,69 @@
 set -eu
 
 # Feature options.
-WORKSPACE=${WORKSPACE=}
-TOKEN=${TOKEN=}
-VERSION=${VERSION=latest}
-OS=${OS=linux}
-ARCH=${ARCH=x86_64}
+WORKSPACE="${WORKSPACE=}"
+TOKEN="${TOKEN=}"
+VERSION="${VERSION=latest}"
+OS="${OS=linux}"
+ARCH="${ARCH=x86_64}"
 
 # Include the development containers common library.
 . ./devcontainers-lib.sh
 
-# Our required packages.
-# @note: For some reason the latest version of cURL breaks OPENSSL on Arch, but
-# The versions installed by default are fine.
-if [ "arch" = $(cat /etc/os-release | grep ^ID= | cut -d = -f 2) ]; then
-  echo "==>> Skipping cUrl installation on Arch Linux ..."
-else
-  echo "==>> Installing cUrl ..."
-  install_packages curl ca-certificates
-fi
+# Make sure we have cUrl.
+install_curl
 
 # Set up.
-DEST_DIR=/usr/local/bin
-BASE_URL=https://github.com/exercism/cli
-LATEST_URL=${BASE_URL}/releases/latest/
+DEST_DIR="/usr/local/bin"
+BASE_URL="https://github.com/exercism/cli"
+LATEST_URL="${BASE_URL}/releases/latest/"
 
 # Work out the version.
-if [ -z ${VERSION} ] || [ "latest" = ${VERSION} ]; then
-  VERSION=$(curl -sLI -o /dev/null -w '%{url_effective}' ${LATEST_URL})
+if [ -z "${VERSION}" ] || [ "latest" = "${VERSION}" ]; then
+  VERSION=$(curl -sLI -o /dev/null -w '%{url_effective}' "${LATEST_URL}")
   VERSION=$(echo "${VERSION}" | cut -d v -f 2)
 fi
 
 # Work out the URL and report.
-BINARY=exercism-${VERSION}-${OS}-${ARCH}.tar.gz
-RELEASE_URL=${BASE_URL}/releases/download/v${VERSION}/${BINARY}
+BINARY="exercism-${VERSION}-${OS}-${ARCH}.tar.gz"
+RELEASE_URL="${BASE_URL}/releases/download/v${VERSION}/${BINARY}"
 echo "==>> Installing exercism-cli: v${VERSION}"
 echo "==>> from: ${RELEASE_URL}"
 echo "==>> to: ${DEST_DIR}"
 
 # Download and install.
-DOWNLOAD_DIR=$(mktemp -d || mktemp -d -t 'tmp')
-curl -sfL --retry 3 ${RELEASE_URL} | tar -xz -C ${DOWNLOAD_DIR}
-install ${DOWNLOAD_DIR}/exercism ${DEST_DIR}
-rm -r ${DOWNLOAD_DIR}
+# @note we have to specify the path even though it is the default as we want to
+# specify the command.
+download_and_install "${RELEASE_URL}" "/usr/local/bin" "exercism"
 
 # Check for mismatch against darwin (Mac) OS.
-if [ "darwin" = ${OS} ] && [ "Darwin" != $(uname -s) ]; then
+if [ "darwin" = "${OS}" ] && [ "Darwin" != "$(uname -s)" ]; then
     echo -e "\nSkipping configuration, not on Darwin/Mac OS."
     exit 0
-elif [ "darwin" != ${OS} ] && [ "Darwin" == $(uname -s) ]; then
+elif [ "darwin" != ${OS} ] && [ "Darwin" == "$(uname -s)" ]; then
     echo -e "\nSkipping configuration, on Darwin/Mac OS."
     exit 0
 fi
 
 # Configure token and/or workspace if set.
 # @note: A token must be specified when configuring otherwise an error occurs.
-if [ ! -z ${WORKSPACE_PATH} ]; then WORKSPACE=${WORKSPACE_PATH}; fi
-if [ ! -z ${EXERCISM_TOKEN} ]; then TOKEN=${EXERCISM_TOKEN}; fi
-if [ -z ${TOKEN} ]; then TOKEN=DUMMY_AUTH_TOKEN; fi
+if [ ! -z "${WORKSPACE_PATH}" ]; then WORKSPACE="${WORKSPACE_PATH}"; fi
+if [ ! -z "${EXERCISM_TOKEN}" ]; then TOKEN="${EXERCISM_TOKEN}"; fi
+if [ -z "${TOKEN}" ]; then TOKEN="DUMMY_AUTH_TOKEN"; fi
 
 # We have a workspace so set as well as ...
-if [ ! -z ${WORKSPACE} ]; then
+if [ ! -z "${WORKSPACE}" ]; then
   echo "==>> Configuring Workspace as: ${WORKSPACE}"
   echo "==>> Configuring Token as: ${TOKEN}"
   # A real or dummy token.
-  if [ "DUMMY_AUTH_TOKEN" != ${TOKEN} ]; then
-    exercism configure --workspace=${WORKSPACE} --token=${TOKEN}
+  if [ "DUMMY_AUTH_TOKEN" != "${TOKEN}" ]; then
+    exercism configure --workspace="${WORKSPACE}" --token="${TOKEN}"
   else
-    exercism configure --workspace=${WORKSPACE} --token=${TOKEN} --no-verify
+    exercism configure --workspace="${WORKSPACE}" --token="${TOKEN}" --no-verify
   fi
   
 # Otherwise if a non-dummy token (only) is specified set that.
-elif [ "DUMMY_AUTH_TOKEN" != ${TOKEN} ]; then
+elif [ "DUMMY_AUTH_TOKEN" != "${TOKEN}" ]; then
   echo "==>> Configuring Token as: ${TOKEN}"
-  exercism configure --token=${TOKEN}
+  exercism configure --token="${TOKEN}"
 fi
