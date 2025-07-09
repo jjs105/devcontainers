@@ -1,0 +1,62 @@
+/**
+* Node.js/JavaScript development container copied from/based on that used by the
+* official development containers template-starter project.
+* 
+* For format details, see https://aka.ms/devcontainer.json. For config options,
+* see the README at:
+* 	https://github.com/devcontainers/templates/tree/main/src/javascript-node
+*
+* Note that although the image used by this development container is based on
+* the standard Node.js image the following elements are also included by the
+* developer:
+*
+* - Zsh shell (via ghcr.io/devcontainers/features/common-utils)
+* - Git (via ghcr.io/devcontainers/features/git)
+* - dbaeumer.vscode-eslint VS code extension via customizations
+* 
+* The base implementation details may be seen at the following urls:
+*
+* - https://github.com/devcontainers/template-starter/tree/main
+* - https://github.com/devcontainers/templates/tree/main/src/javascript-node
+* - https://github.com/devcontainers/images/tree/main/src/javascript-node
+*
+* In addition to the above, we also then:
+* 
+* - Add Docker in Docker feature functionality
+* - Add our base jjs105-devcontainer feature functionality - install-lib.sh,
+*   ensure bash installed, shared bash history, fuzzy search tool(s) and the
+*   git-prompt script.
+* - Install the @devcontainers/cli package globally via postCreateCommand
+* - Add standard VS Code extensions to make life easier when working with bash
+*   scripts and JavaScript/TypeScript code.
+*
+* Because this development container is utilised when working on our own
+* development container elements we add the jjs105-devcontainer feature as if it
+* were a local feature by utilising a (soft) symlink, *although*, this symlink
+* has to point to the parent features/src directory (thereby linking all
+* features) as for some reason symlinking directly to a single feature - i.e.
+* the jjs105-devcontainer - doesn't work.
+*/
+{
+	"name": "Dev Container Dev!",
+	"image": "mcr.microsoft.com/devcontainers/javascript-node",
+	"features": {
+    "ghcr.io/devcontainers/features/docker-in-docker": {},
+    "./features/jjs105-devcontainer": {
+      "install-lib": true,
+      "bash-history-path": "/command-history/.bash_history"
+    }
+	},
+	"postCreateCommand": "npm install --global @devcontainers/cli",
+  "mounts": [
+      "source=projectname-bashhistory,target=/command-history,type=volume"
+  ],
+  "customizations": {
+		"vscode": {
+			"extensions": [
+				"mads-hartmann.bash-ide-vscode",
+				"dbaeumer.vscode-eslint"
+			]
+		}
+	}
+}
