@@ -1,8 +1,8 @@
-#-------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Copyright (c) Jon Spain (https://github.com/jjs105).
 # Licensed under GNU GPL v3 or later
 # https://github.com/jjs105/devcontainers/tree/main/LICENSE
-#-------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
 # Defines (helper) functions for the implementation of development container and
 # feature install scripts.
@@ -10,7 +10,7 @@
 # @note: We assume that only the most basic POSIX shell (sh) is available to aid
 # in OS compatibility etc.
 
-#-------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 install_packages() {
   # Function to install a list of packages.
   # @note: We do not worry about uninstalling later - i.e. to minimise
@@ -40,7 +40,7 @@ install_packages() {
   fi
 }
 
-#-------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 install_library() {
   # Simple install library function.
   # @note: This is implemented as the 'install' utility is not in the POSIX
@@ -59,7 +59,7 @@ install_library() {
     && chmod u=rw,go=r "${2}/${1##*/}"
 }
 
-#-------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 install_script() {
   # Simple install script function.
   # @note: This is implemented as the 'install' utility is not in the POSIX
@@ -78,7 +78,7 @@ install_script() {
     && chmod u=rwx,go=rx "${2}/${1##*/}"
 }
 
-#-------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 run_command_for_users() {
   # Runs a command for all users - i.e. root, _CONTAINER_USER and _REMOTE_USER
   # ${1} - the command to run
@@ -103,17 +103,17 @@ run_command_for_users() {
     fi
 }
 
-#-------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+# Ensure the log and directory exists and is writable.
+# @note: Development container feature install scripts run as root so we don't
+# need worry about permissions.
+mkdir -p /var/log/jjs105 && touch /var/log/jjs105/install-log
+chmod -R ugo+r /var/log/jjs105
+
 log() {
   # Simple log function.
-  # @note: Development container feature install scripts run as root so we don't
-  # need worry about permissions.
   # ${1} - package identifier
   # ${2} - string to log
-
-  # Ensure the log and directory exists and is writable.
-  mkdir -p /var/log/jjs105 && touch /var/log/jjs105/install-log
-  chmod -R ugo+r /var/log/jjs105
 
   # Log to stdout and log file (we don't assume that 'tee' is available).
   echo "===>>> ${1}: ${2}"

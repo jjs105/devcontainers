@@ -17,6 +17,11 @@
       "description": "Copy install-lib.sh to the container for future use.",
       "default": false
     },
+    "test-lib": {
+      "type": "boolean",
+      "description": "Copy test-lib.sh to the container for future use.",
+      "default": true
+    },
     "ensure-bash": {
       "type": "boolean",
       "description": "Ensure the Bash shell is installed.",

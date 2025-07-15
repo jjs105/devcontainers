@@ -1,3 +1,8 @@
+#-------------------------------------------------------------------------------
+# Copyright (c) Jon Spain (https://github.com/jjs105).
+# Licensed under GNU GPL v3 or later
+# https://github.com/jjs105/devcontainers/tree/main/LICENSE
+#-------------------------------------------------------------------------------
 
 # This file is not intended to be run as a script, although it is possible.
 # Rather it should be appended to a user's .bashrc file.

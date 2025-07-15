@@ -44,12 +44,17 @@
     "ghcr.io/devcontainers/features/docker-in-docker": {},
     "./features/jjs105-devcontainer": {
       "install-lib": true,
+      "test-lib": true,
       "bash-history-path": "/command-history/.bash_history"
     }
 	},
 	"postCreateCommand": "npm install --global @devcontainers/cli",
   "mounts": [
-      "source=projectname-bashhistory,target=/command-history,type=volume"
+      {
+        "source": "projectname-bashhistory",
+        "target": "/command-history",
+        "type": "volume"
+      }
   ],
   "customizations": {
 		"vscode": {
