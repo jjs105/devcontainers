@@ -14,7 +14,7 @@ features to be referenced as if they were local during development.
 
 The repository itself uses a tweaked version of the Node.js based development
 container provided as a starter template for container development. This
-container provides the following features:
+development container provides the following features:
 
 * Use of Docker in Docker
 * Installation of the official development container CLI tool(s)
@@ -74,7 +74,33 @@ https://containers.dev/features), as follows:
   GitHub repository
 
 Note, the above use of `nanolayer` and/or `gh-release` also require `python` to
-be installed and available on the container.
+be installed and available on the development container.
+
+### Testing
+
+All development container features in the repository have associated test
+scripts, as follows:
+
+* Very simple in nature
+* Test main install options
+* Utilise a simple test library `test-lib.sh`
+
+The test library is part of the jjs105-devcontainer development container
+feature to allow its (re)use between development container templates and 
+features however this is less than ideal as it introduces a dependency when
+testing* **.
+
+\* Any such development container feature dependency, in the context of testing,
+needs to be a fully published package as it is not available locally.
+
+\** Additionally, for completeness of the jjs105-devcontainer development
+container feature, scenarios are required to ensure the dependency is installed
+and configured correctly 
+
+A better approach, still to be completed, is to use the `bashunit` testing
+framework which could be downloaded as part of the test script itself negating
+the requirement of using the jjs105-devcontainer development container feature
+as a dependency.
 
 ### Aims
 
@@ -82,7 +108,8 @@ The implementations in this repository utilise ideas from the above approaches
 with the additional following aims:
 
 * Development container templates and feature should be fully stand-alone
-* Container image layers should be kept as small as possible using best practice
+* Development container image layers should be kept as small as possible using
+  best practice
 * Centralise common functions in a library file that can be re-used at a later
   date
 
@@ -94,8 +121,8 @@ one start from scratch.
 
 The current approach is to develop all development container templates and
 features in place (i.e. within their src folder) and use the jjs105-devcontainer
-feature as a dependency to include any common libraries - which should be kept
-to a minimum.
+development container feature as a dependency to include any common libraries.
+This should be kept to a minimum.
 
 ## Alternative Approaches
 
@@ -171,6 +198,3 @@ The single successful exception to this was the use of a symbolic link to allow
 use of the development container features *within this repository* to be
 utilised/referenced by the development container *of this repository*, as if
 they were local features.
-
-
-

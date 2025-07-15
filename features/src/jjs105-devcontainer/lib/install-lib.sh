@@ -14,8 +14,8 @@
 install_packages() {
   # Function to install a list of packages.
   # @note: We do not worry about uninstalling later - i.e. to minimise
-  # container image layer sizes. If this is a hard requirement then a
-  # different approach should be used.
+  # development container image layer sizes. If this is a hard requirement then
+  # a different approach should be used.
   # ${@} - list of packages to install
 
   # Use apt if available.
