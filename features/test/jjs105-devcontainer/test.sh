@@ -24,8 +24,8 @@ set -eu
 # Feature options.
 # @note: := substitution to ensure var=null => true.
 
-INSTALL_LIB="${INSTALL_LIB:=false}"
-TEST_LIB="${TEST_LIB:=true}"
+INSTALL_LIB="${INSTALL_LIB:=true}"
+TEST_LIB="${TEST_LIB:=false}"
 ENSURE_BASH="${ENSURE_BASH:=true}"
 BASH_HISTORY_PATH="${BASH_HISTORY_PATH:=}"
 INSTALL_FZF="${INSTALL_FZF:=true}"
@@ -38,7 +38,7 @@ GIT_PROMPT="${GIT_PROMPT:=true}"
 # @note: This should have been installed as part of the jjs-devcontainer feature
 # itself.
 
-# Check for our test library, existing if not found.
+# Check for our test library, exiting if not found.
 if [ ! -f "/opt/jjs105/lib/test-lib.sh" ]; then
   echo -e "\n\n!!! Test library not found (/opt/jjs105/lib/test-lib.sh)" 1>&2 
   exit 1
@@ -101,4 +101,3 @@ test_report_counts
 
 # Finish testing and return overall success/failure.
 test_finish_exit
-

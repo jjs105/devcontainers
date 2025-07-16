@@ -15,12 +15,12 @@
     "install-lib": {
       "type": "boolean",
       "description": "Copy install-lib.sh to the container for future use.",
-      "default": false
+      "default": true
     },
     "test-lib": {
       "type": "boolean",
       "description": "Copy test-lib.sh to the container for future use.",
-      "default": true
+      "default": false
     },
     "ensure-bash": {
       "type": "boolean",
@@ -30,7 +30,7 @@
     "bash-history-path": {
       "type": "string",
       "description": "The path to use for the (common) bash history file.",
-      "default": "",
+      "default": "/command-history/.bash_history",
       "proposals": [
         "/command-history/.bash_history",
         "/root/.bash_history",
@@ -47,5 +47,12 @@
       "description": "Install the Git prompt script.",
       "default": true
     }
-  }
+  },
+  "mounts": [
+      {
+        "source": "projectname-bashhistory",
+        "target": "/command-history",
+        "type": "volume"
+      }
+  ]
 }

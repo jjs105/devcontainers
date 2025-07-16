@@ -1,3 +1,9 @@
+_**2025-07-16:**_\
+Minor updates:
+- Move bash history mount to the feature
+- Comment and README updates
+- Feature options defaults changes
+
 _**2025-07-15:**_\
 Initial working version(s)
 - Working jjs105-devcontainer development container feature

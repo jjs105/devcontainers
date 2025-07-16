@@ -13,6 +13,7 @@
 * - Zsh shell (via ghcr.io/devcontainers/features/common-utils)
 * - Git (via ghcr.io/devcontainers/features/git)
 * - dbaeumer.vscode-eslint VS code extension via customizations
+* - Sets the container user to 'node'
 * 
 * The base implementation details may be seen at the following urls:
 *
@@ -22,7 +23,7 @@
 *
 * In addition to the above, we also then:
 * 
-* - Add Docker in Docker feature functionality
+* - Add Docker in Docker development container feature functionality
 * - Add our base jjs105-devcontainer development container feature functionality
 *   (install-lib.sh) then, ensure bash installed, shared bash history, fuzzy
 *   search tool(s) and the git-prompt script
@@ -49,13 +50,6 @@
     }
 	},
 	"postCreateCommand": "npm install --global @devcontainers/cli",
-  "mounts": [
-      {
-        "source": "projectname-bashhistory",
-        "target": "/command-history",
-        "type": "volume"
-      }
-  ],
   "customizations": {
 		"vscode": {
 			"extensions": [
