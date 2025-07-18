@@ -1,3 +1,11 @@
+_**2025-07-18:**_\
+All command options -- instead of - (or explanation)
+Return instead of exit from library functions
+Install log identifier change
+Added function to get git hub repo latest release tag
+Tidy test lib comments
+jjs105-devcontainer versioned
+
 _**2025-07-16:**_\
 Minor updates:
 - Move bash history mount to the feature

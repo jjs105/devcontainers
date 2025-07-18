@@ -7,6 +7,8 @@
 # Defines a bespoke functionality allowing enhanced testing of development
 # container scripts and templates.
 
+# @note: echo -e means interpret escaped chars, -n means no ending newline.
+
 #-------------------------------------------------------------------------------
 log() {
   # Simple log function.
@@ -47,6 +49,8 @@ check() {
 
   local _LABEL="${1}"; shift
   echo -e "🔄 Testing '${_LABEL}'\033[37m"
+
+  # Run the test reporting the result, adding to the failed list if it fails.
   if "${@}"; then
     echo "✅ Passed '${_LABEL}'" && return 0
   else
@@ -64,11 +68,16 @@ checkMultiple() {
   local _LABEL="${1}"; shift;
   local _MIN_TO_PASS="${1}"; shift
   echo -e "🔄 Testing '${_LABEL}'\033[37m"
+
+  # Loop through the multiple tests.
   local _PASSED=0; local _EXPRESSION="${1}"
   while [ "" != "${_EXPRESSION}" ]; do
     if "${_EXPRESSION}"; then ((_PASSED++)); fi
     shift; _EXPRESSION="${1}"
   done
+
+  # Check the tests against minimum required reporting the result, adding to the
+  # failed list if it fails.
   if [ "${_PASSED}" -ge "${_MIN_TO_PASS}" ]; then
     echo "✅ Passed '${_LABEL}'" && return 0
   else
@@ -79,6 +88,7 @@ checkMultiple() {
 
 reportResults() {
   # Function to report test results of testing created with check* function(s).
+
   [ 0 = "${#DC_CLI_FAILED[@]}" ] && echo "✅✅✅ All Tests Passed" && return 0
   echo "💥💥💥 Failed tests: ${DC_CLI_FAILED[@]}" 1>&2 && return 1
 }
@@ -88,6 +98,7 @@ reportResults() {
 
 # Passed and failed test lists.
 PASSED_TESTS=(); FAILED_TESTS=()
+
 # The label of the most recent started test and whether it has sub results.
 CURRENT_TEST_LABEL=""; CURRENT_TEST_HAS_SUB=0
 
@@ -105,6 +116,7 @@ _test_sub_result() {
   # ${1} - the sub-test result 0|1
   # ${2} - the sub-test label to display
 
+  # Increment the sub-test count, run the test and display the result.
   ((CURRENT_TEST_HAS_SUB++))
   [ 0 = "${1}" ] \
     && echo -en "\n  ... ${2} ... \033[032mPASSED\033[0m" \
@@ -117,6 +129,8 @@ _test_result() {
 
   local _result=""
   local _LABEL="${CURRENT_TEST_LABEL:-unknown test, call _test_start!}"
+
+  # Display and log the test result.
   if [ 0 = "${1}" ]; then
     _result="\033[092mPASSED\033[0m"
     PASSED_TESTS+=("${_LABEL}")
@@ -124,8 +138,12 @@ _test_result() {
     _result="\033[091mFAILED\033[0m"
     FAILED_TESTS+=("${_LABEL}")
   fi
+
+  # If there are sub-tests then display the overall result.
   [ 0 != "${CURRENT_TEST_HAS_SUB}" ] && echo -en "\n  ... overall result ... "
   echo -e "${_result}"
+  
+  # Reset the current test label and sub-test count.
   CURRENT_TEST_LABEL=""; CURRENT_TEST_HAS_SUB=0
 }
 
@@ -189,7 +207,11 @@ check_env_exists() {
 }
 
 check_env_function_exists() {
+  # Function to check that an environment function exists
+  # ${1} - the environment function to check
+
   _test_start "env function exists: ${1}"
+  # @note: bash -i means run in interactive mode, -c run the following command.
   local _RESULT=0; $(bash -ic "${1}" > /dev/null 2>&1)  || _RESULT=1
   _test_result "${_RESULT}"
 }

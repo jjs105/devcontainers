@@ -11,8 +11,9 @@
 # @note: The Git prompt script documentation adds this command call to the
 # prompt string however it should never change so we do it now.
 # @note: :+ substitution to check for final RELEASE=null.
+# @note: command -v is similar to using type but more portable.
 [ -f "/etc/os-release" ] && \
-  RELEASE=" $(cat /etc/os-release | grep ^ID= | cut -d = -f 2)"
+  RELEASE=" $(cat /etc/os-release | grep ^ID= | cut --delimiter = --fields 2)"
 [ $(command -v lsb_release) ] && \
   RELEASE=" $(lsb_release --id --short | tr '[:upper:]' '[:lower:]')"
 RELEASE="${RELEASE:+\033[35m}${RELEASE-}${RELEASE:+\033[0m}"
@@ -27,8 +28,8 @@ if [ -f "/opt/jjs105/lib/git-prompt.sh" ]; then
 fi
 
 # Set # or $ as prompt end.
-[ "\$(id -u)" = "0" ] && PS1="${PS1}\n# "
-[ "\$(id -u)" = "0" ] || PS1="${PS1}\n\$ "
+[ "\$(id --user)" = "0" ] && PS1="${PS1}\n# "
+[ "\$(id --user)" = "0" ] || PS1="${PS1}\n\$ "
 
 # Export the prompt.
 export PS1

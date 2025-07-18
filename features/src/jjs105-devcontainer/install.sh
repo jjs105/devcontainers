@@ -4,7 +4,7 @@
 # https://github.com/jjs105/devcontainers/tree/main/LICENSE
 #-------------------------------------------------------------------------------
 
-# Install script jjs105-devcontainer development container feature.
+# Install script for the jjs105-devcontainer development container feature.
 
 # @note: We assume that only the most basic POSIX shell (sh) is available to aid
 # in OS compatibility etc.
@@ -14,7 +14,7 @@
 # COMMAND FAILS. This means that, for correct operation, tests that may fail
 # as expected behaviour need to be part of a command that actually succeeds.
 # @note: -x can be used for debugging purposes.
-set -eux
+set -eu
 
 #-------------------------------------------------------------------------------
 # Feature options.
@@ -34,7 +34,7 @@ GIT_PROMPT="${GIT_PROMPT:=true}"
 . ./lib/install-lib.sh
 
 # Set up our simplified log function.
-_log() { log "devcontainer-install" "${1}"; }
+_log() { log "jjs105/devcontainer" "${1}"; }
 
 # Copy/install the install-lib.sh library if necessary.
 [ "true" = "${INSTALL_LIB}" ] \
@@ -51,13 +51,15 @@ if [ "true" = "${INSTALL_FZF}" ] || [ "true" = "${GIT_PROMPT}" ]; then
   _log "installing cURL"
   install_packages curl ca-certificates
   _log "creating download dir"
-  DOWNLOAD_DIR="$(mktemp -d || mktemp -d -t 'tmp')"
+  # @note: -t is used to specify a template for the temporary directory name.
+  DOWNLOAD_DIR="$(mktemp --directory || mktemp --directory -t 'tmp')"
 fi
 
 #-------------------------------------------------------------------------------
 # Bash install and configuration.
 
 # Check for bash and install if necessary.
+# @note: command -v is similar to using type but more portable.
 [ "true" = "${ENSURE_BASH}" ] && [ ! $(command -v bash) ] \
   && _log "installing bash" \
   && install_packages bash
@@ -68,11 +70,12 @@ if [ -n "${BASH_HISTORY_PATH}" ]; then
   if [ -n "${HISTORY_PATH:="${BASH_HISTORY_PATH%\.bash_history}"}" ]; then
 
     _log "setting bash history location to ${HISTORY_PATH}"
-    mkdir -p "${HISTORY_PATH}" && touch "${HISTORY_PATH}/.bash_history" 
-    chmod -R ugo+rw "${HISTORY_PATH}"
+    mkdir --parents "${HISTORY_PATH}" && touch "${HISTORY_PATH}/.bash_history" 
+    chmod --recursive ugo+rw "${HISTORY_PATH}"
 
     _log "setting user bash history location(s)"
     SNIPPET="export HISTFILE=${HISTORY_PATH}.bash_history"
+    # @note: echo -e means interpret escaped chars, -n means no ending newline.
     run_command_for_users "echo -e \"\n\n${SNIPPET}\" >> ~/.bashrc"
   fi
 fi
@@ -85,7 +88,8 @@ if [ "true" = "${INSTALL_FZF}" ]; then
 
   URL="https://raw.githubusercontent.com/junegunn/fzf/refs/heads/master/install"
   _log "downloading fzf from ${URL}"
-  curl -sfL --retry 3 "${URL}" --output "${DOWNLOAD_DIR}/install-fzf"
+  curl --silent --fail --location --retry 3 "${URL}" \
+    --output "${DOWNLOAD_DIR}/install-fzf"
   install_script "${DOWNLOAD_DIR}/install-fzf" /opt/jjs105
 
   _log "installing fzf for users"
@@ -97,7 +101,8 @@ if [ "true" = "${GIT_PROMPT}" ]; then
 
   URL="https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh"
   _log "downloading git-prompt from ${URL}"
-  curl -sfL --retry 3 "${URL}" --output "${DOWNLOAD_DIR}/git-prompt.sh"
+  curl --silent --fail --location --retry 3 "${URL}" \
+    --output "${DOWNLOAD_DIR}/git-prompt.sh"
   install_library "${DOWNLOAD_DIR}/git-prompt.sh" /opt/jjs105/lib
 
   _log "configuring git prompt for users"
@@ -110,4 +115,4 @@ fi
 # Remove the download directory if created.
 [ -n "${DOWNLOAD_DIR}" ] \
   && _log "removing download dir" \
-  && rm -r "${DOWNLOAD_DIR}"
+  && rm --recursive "${DOWNLOAD_DIR}"

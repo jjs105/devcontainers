@@ -23,7 +23,7 @@ install_packages() {
     apt-get update --assume-yes \
     && apt-get install --assume-yes --no-install-recommends "$@" \
     && apt-get clean && apt-get autoclean && apt-get autoremove \
-    && rm -rf /var/lib/apt/lists/*
+    && rm --recursive --force /var/lib/apt/lists/*
 
   # APK? (i.e. on Alpine).
   elif [ -x "/sbin/apk" ]; then
@@ -31,12 +31,12 @@ install_packages() {
 
   # Pacman? (i.e. on Arch).
   elif [ -x "/sbin/pacman" ]; then
-    pacman --noconfirm -Sy "$@"
+    pacman --noconfirm --sync --refresh "$@"
 
   # Otherwise not supported.
   else
     echo "Linux distro not supported."
-    exit 1
+    return 1
   fi
 }
 
@@ -50,12 +50,12 @@ install_library() {
 
   # We only support installing single (library) files.
   [ ! -f "${1}"] \
-    && log "install_library() expects '${1}' to be a file" \
-    && exit 1
+    && log "jjs105/install-lib" "install_library() expects '${1}' to be a file" \
+    && return 1
 
   # Ensure that the target path exists copy the file and set permissions.
   log "jjs105/install-lib" "installing library ${1} -> ${2}"
-  mkdir -p "${2}" && cp "${1}" "${2}" \
+  mkdir --parents "${2}" && cp "${1}" "${2}" \
     && chmod u=rw,go=r "${2}/${1##*/}"
 }
 
@@ -69,13 +69,24 @@ install_script() {
 
   # We only support installing single (script) files.
   [ ! -f "${1}"] \
-    && log "install_script() expects '${1}' to be a file" \
-    && exit 1
+    && log "jjs105/install-lib" "install_script() expects '${1}' to be a file" \
+    && return 1
 
   # Ensure that the target path exists copy the file and set permissions.
   log "jjs105/install-lib" "installing script ${1} -> ${2}"
-  mkdir -p "${2}" && cp "${1}" "${2}" \
+  mkdir --parents "${2}" && cp "${1}" "${2}" \
     && chmod u=rwx,go=rx "${2}/${1##*/}"
+}
+
+#-------------------------------------------------------------------------------
+latest_git_release() {
+  # Get the latest release tag from a GitHub repository.
+  # ${1} - the GitHub repository in the format 'owner/repo'.
+
+  # Get the release information from the GitHub API and extract the tag name.
+  curl --silent "https://api.github.com/repos/${1}/releases/latest" \
+    | grep '"tag_name":' \
+    | sed --regexp-extended 's/.*"([^"]+)".*/\1/'
 }
 
 #-------------------------------------------------------------------------------
@@ -85,13 +96,13 @@ run_command_for_users() {
 
   # Run the command for root.
   log "jjs105/install-lib" "running command as root: ${1}"
-  /bin/su -c "${1}" - root
+  /bin/su --command "${1}" - root
   
   # Run the command for the container user if not root.
   if [ "root" != "${_CONTAINER_USER}" ]; then
     log "jjs105/install-lib" \
       "running command as _CONTAINER_USER: ${_CONTAINER_USER}: ${1}"
-    /bin/su -c "${1}" - "${_CONTAINER_USER}"
+    /bin/su --command "${1}" - "${_CONTAINER_USER}"
   fi
 
   # Run the command for the remote user if not root or the container user.
@@ -99,16 +110,18 @@ run_command_for_users() {
     && [ "${_CONTAINER_USER}" != "${_REMOTE_USER}" ]; then
       log "jjs105/install-lib" \
         "running command as _REMOTE_USER: ${_REMOTE_USER}: ${1}" \
-      && /bin/su -c "${1}" - "${_REMOTE_USER}"
+      && /bin/su --command "${1}" - "${_REMOTE_USER}"
     fi
 }
 
 #-------------------------------------------------------------------------------
+# Log file functionality.
+
 # Ensure the log and directory exists and is writable.
 # @note: Development container feature install scripts run as root so we don't
 # need worry about permissions.
-mkdir -p /var/log/jjs105 && touch /var/log/jjs105/install-log
-chmod -R ugo+r /var/log/jjs105
+mkdir --parents /var/log/jjs105 && touch /var/log/jjs105/install-log
+chmod --recursive ugo+r /var/log/jjs105
 
 log() {
   # Simple log function.

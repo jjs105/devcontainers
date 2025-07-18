@@ -7,7 +7,7 @@ Installs tools useful for development of development containers.
 
 ```json
 "features": {
-    "ghcr.io/jjs105/devcontainers/jjs105-devcontainer:1": {}
+    "ghcr.io/jjs105/features/jjs105-devcontainer:1": {}
 }
 ```
 

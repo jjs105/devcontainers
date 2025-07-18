@@ -40,6 +40,7 @@ GIT_PROMPT="${GIT_PROMPT:=true}"
 
 # Check for our test library, exiting if not found.
 if [ ! -f "/opt/jjs105/lib/test-lib.sh" ]; then
+  # @note: echo -e means interpret escaped chars, -n means no ending newline.
   echo -e "\n\n!!! Test library not found (/opt/jjs105/lib/test-lib.sh)" 1>&2 
   exit 1
 fi
@@ -75,7 +76,8 @@ test_section "Check BASH History Path"
 [ -n "${BASH_HISTORY_PATH}" ] \
   && check_env_exists "HISTFILE" \
   && check_env_not_blank "HISTFILE" \
-  && check_env_matches "HISTFILE" "${BASH_HISTORY_PATH%\.bash_history}/.bash_history" \
+  && check_env_matches "HISTFILE" \
+    "${BASH_HISTORY_PATH%\.bash_history}/.bash_history" \
   && check_file_exists "${HISTFILE}" \
   || echo "History path not configured, skipping."
 
