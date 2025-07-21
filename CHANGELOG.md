@@ -1,3 +1,6 @@
+_**2025-07-21:**_\
+Added WLSg support feature (initial working version)
+
 _**2025-07-18:**_\
 All command options -- instead of - (or explanation)
 Return instead of exit from library functions

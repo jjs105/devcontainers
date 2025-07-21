@@ -47,9 +47,25 @@
       "install-lib": true,
       "test-lib": true,
       "bash-history-path": "/command-history/.bash_history"
+    },
+    "./features/wslg-support": {
+      "install-x11-apps": true,
+      "install-mesa-utils": true,
+      "check-device-dxg": true,
+      "check-device-video": true
     }
 	},
 	"postCreateCommand": "npm install --global @devcontainers/cli",
+  "containerEnv": {
+    "LD_LIBRARY_PATH": "/usr/lib/wsl/lib",
+    "LIBVA_DRIVER_NAME": "d3d12"
+  },
+  "runArgs": [
+    "--device=/dev/dxg",
+    "--device=/dev/dri/card0",
+    "--device=/dev/dri/renderD128",
+    "--gpus=all"
+  ],
   "customizations": {
 		"vscode": {
 			"extensions": [
