@@ -60,3 +60,9 @@ mkdir --parents /opt/jjs105/etc
 [ "true" = "${CHECK_DEVICE_DXG}" ] && touch /opt/jjs105/etc/.check-vgpu
 [ "true" = "${CHECK_DEVICE_VIDEO}" ] && touch /opt/jjs105/etc/.check-accvid
 chmod --recursive ugo+r /opt/jjs105/etc
+
+#-------------------------------------------------------------------------------
+# Set up required environment variables.
+
+export LD_LIBRARY_PATH="/usr/lib/wsl/lib"
+export LIBVA_DRIVER_NAME="d3d12"

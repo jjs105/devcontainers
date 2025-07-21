@@ -56,10 +56,6 @@
     }
 	},
 	"postCreateCommand": "npm install --global @devcontainers/cli",
-  "containerEnv": {
-    "LD_LIBRARY_PATH": "/usr/lib/wsl/lib",
-    "LIBVA_DRIVER_NAME": "d3d12"
-  },
   "runArgs": [
     "--device=/dev/dxg",
     "--device=/dev/dri/card0",

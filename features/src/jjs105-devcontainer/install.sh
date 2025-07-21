@@ -37,11 +37,19 @@ GIT_PROMPT="${GIT_PROMPT:=true}"
 _log() { log "jjs105/devcontainer" "${1}"; }
 
 # Copy/install the install-lib.sh library if necessary.
+# @note: We check that the file does not already exist to avoid overwriting.
+[ "true" = "${INSTALL_LIB}" ] && [ -f "/opt/jjs105/lib/install-lib.sh" ] \
+  && _log "install-lib.sh already exists, skipping install" \
+  && INSTALL_LIB="false"
 [ "true" = "${INSTALL_LIB}" ] \
   && _log "installing install-lib.sh" \
   && install_library ./lib/install-lib.sh /opt/jjs105/lib
 
-# Copy/install the tst-lib.sh library if necessary.
+# Copy/install the test-lib.sh library if necessary.
+# @note: We check that the file does not already exist to avoid overwriting.
+[ "true" = "${TEST_LIB}" ] && [ -f "/opt/jjs105/lib/test-lib.sh" ] \
+  && _log "test-lib.sh already exists, skipping install" \
+  && TEST_LIB="false"
 [ "true" = "${TEST_LIB}" ] \
   && _log "installing test-lib.sh" \
   && install_library ./lib/test-lib.sh /opt/jjs105/lib
@@ -66,6 +74,8 @@ fi
 
 # If necessary change the bash history file location so that it can be shared
 # between users and persisted as a volume.
+# @note: We allow this code to run even if multiple installs of the development
+# container feature - just in case the user has set different paths.
 if [ -n "${BASH_HISTORY_PATH}" ]; then
   if [ -n "${HISTORY_PATH:="${BASH_HISTORY_PATH%\.bash_history}"}" ]; then
 
@@ -84,6 +94,8 @@ fi
 # Other tools installation and configuration.
 
 # Download, install and configure fzf.
+# @note: We allow this code to run even if multiple installs of the development
+# container feature - fzf doesn't mind being installed multiple times.
 if [ "true" = "${INSTALL_FZF}" ]; then
 
   URL="https://raw.githubusercontent.com/junegunn/fzf/refs/heads/master/install"
@@ -97,6 +109,11 @@ if [ "true" = "${INSTALL_FZF}" ]; then
 fi
 
 # Download, install and configure Git prompt script.
+# @note:@ We check if the script has already been downloaded - i.e. by a
+# previous install of this feature - to avoid overwriting.
+[ -f "/opt/jjs105/lib/git-prompt.sh" ] \
+  && _log "git-prompt.sh already exists, skipping install" \
+  && GIT_PROMPT="false"
 if [ "true" = "${GIT_PROMPT}" ]; then
 
   URL="https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh"

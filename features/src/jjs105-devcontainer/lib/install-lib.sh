@@ -49,7 +49,7 @@ install_library() {
   # ${2} - target directory path
 
   # We only support installing single (library) files.
-  [ ! -f "${1}"] \
+  [ ! -f "${1}" ] \
     && log "jjs105/install-lib" "install_library() expects '${1}' to be a file" \
     && return 1
 
@@ -68,7 +68,7 @@ install_script() {
   # ${2} - target directory path
 
   # We only support installing single (script) files.
-  [ ! -f "${1}"] \
+  [ ! -f "${1}" ] \
     && log "jjs105/install-lib" "install_script() expects '${1}' to be a file" \
     && return 1
 

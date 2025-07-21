@@ -1,6 +1,6 @@
 {
   "id": "wslg-support",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "name": "Windows WSL GUI Support",
   "description": "Adds Windows WSL based GUI, GPU and accelerated video support to a development container.",
   "documentationURL": "https://github.com/jjs105/devcontainers/tree/main/features/src/wsl2-gui-support",

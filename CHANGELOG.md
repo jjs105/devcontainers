@@ -1,5 +1,8 @@
 _**2025-07-21:**_\
 Added WLSg support feature (initial working version)
+Moved wslg support feature environment variables to install script
+Minor fixes to install-lib.sh
+Check for multiple install of jjs105-devcontainer feature
 
 _**2025-07-18:**_\
 All command options -- instead of - (or explanation)
