@@ -1,4 +1,5 @@
 _**2025-07-21:**_\
+Initial version of the ODIN language feature
 Added WLSg support feature (initial working version)
 Moved wslg support feature environment variables to install script
 Minor fixes to install-lib.sh

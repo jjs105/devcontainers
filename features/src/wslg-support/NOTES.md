@@ -1,4 +1,4 @@
-_Please note, that accelerated video support - although described below - does
+_Please note that accelerated video support - although described below - does
 not currently work._
 
 As detailed below this development container feature cannot configure runtime

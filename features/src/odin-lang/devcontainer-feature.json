@@ -1,0 +1,66 @@
+{
+  "id": "odin-lang",
+  "version": "1.0.0",
+  "name": "ODIN Language Support",
+  "description": "Adds the ODIN language support and tools.",
+  "documentationURL": "https://github.com/jjs105/devcontainers/tree/main/features/src/odin-lang",
+  "licenseURL": "https://github.com/jjs105/devcontainers/tree/main/LICENSE",
+  "keywords": [
+    "development container", "devcontainer",
+    "ODIN", "ODIN lang", "programming language", "compiler", "tools"
+  ],
+  "dependsOn": {
+    "ghcr.io/jjs105/features/jjs105-devcontainer:latest": {
+      "install-lib": true
+    }
+  },
+  "options": {
+    "release":{
+      "type": "string",
+      "description": "The ODIN release version to install. 'latest' for latest official release, 'master' for GitHub master.",
+      "default": "latest",
+      "proposals": [
+        "master",
+        "latest",
+        "dev-2025-07",
+        "dev-2025-06"
+      ]
+    },
+    "os": {
+      "type": "string",
+      "description": "The target operating system (when downloading, not compiling.",
+      "default": "linux",
+      "enum": [
+        "linux",
+        "macos",
+        "windows"
+      ]
+    },
+    "arch": {
+      "type": "string",
+      "description": "The target architecture (when downloading, not compiling.",
+      "default": "amd64",
+      "enum": [
+        "amd64",
+        "arm64"
+      ]
+    },
+    "examples": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to install the ODIN example projects."
+    },
+    "examples-path": {
+      "type": "string",
+      "default": "/opt/jjs105/src",
+      "description": "The path where the ODIN example projects will be installed."
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "DanielGavin.ols"
+      ]
+    }
+  }
+}

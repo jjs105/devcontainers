@@ -20,7 +20,7 @@ Adds Windows WSL based GUI, GPU and accelerated video support to a development c
 | check-device-dxg | On startup check the /dev/dxg device (vGPU support). | boolean | true |
 | check-device-video | On startup check the /dev/dri/card0+renderD128 devices (acc. video support). | boolean | true |
 
-_Please note, that accelerated video support - although described below - does
+_Please note that accelerated video support - although described below - does
 not currently work._
 
 As detailed below this development container feature cannot configure runtime
