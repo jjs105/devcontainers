@@ -7,8 +7,6 @@
 # Defines a bespoke functionality allowing enhanced testing of development
 # container scripts and templates.
 
-# @note: echo -e means interpret escaped chars, -n means no ending newline.
-
 #-------------------------------------------------------------------------------
 log() {
   # Simple log function.
@@ -32,7 +30,7 @@ log() {
 # in case the log command fails for any reason.
 
 if [ "bash" != "$(readlink /proc/$$/exe | sed "s/.*\///")" ]; then
-  log "test-lib" "Test scripts must be run using the bash shell, exiting."
+  log "test-lib" "test scripts must be run using the bash shell, exiting"
   exit 1
 fi
 
@@ -48,6 +46,7 @@ check() {
   # ${2...} - test command to run
 
   local _LABEL="${1}"; shift
+# @note: echo -e means interpret escaped chars, -n means no ending newline.
   echo -e "🔄 Testing '${_LABEL}'\033[37m"
 
   # Run the test reporting the result, adding to the failed list if it fails.
@@ -67,6 +66,7 @@ checkMultiple() {
 
   local _LABEL="${1}"; shift;
   local _MIN_TO_PASS="${1}"; shift
+# @note: echo -e means interpret escaped chars, -n means no ending newline.
   echo -e "🔄 Testing '${_LABEL}'\033[37m"
 
   # Loop through the multiple tests.
@@ -117,6 +117,7 @@ _test_sub_result() {
   # ${2} - the sub-test label to display
 
   # Increment the sub-test count, run the test and display the result.
+  # @note: echo -e means interpret escaped chars, -n means no ending newline.
   ((CURRENT_TEST_HAS_SUB++))
   [ 0 = "${1}" ] \
     && echo -en "\n  ... ${2} ... \033[032mPASSED\033[0m" \
@@ -140,6 +141,7 @@ _test_result() {
   fi
 
   # If there are sub-tests then display the overall result.
+  # @note: echo -e means interpret escaped chars, -n means no ending newline.
   [ 0 != "${CURRENT_TEST_HAS_SUB}" ] && echo -en "\n  ... overall result ... "
   echo -e "${_result}"
   
@@ -154,12 +156,14 @@ test_section() {
   # Function to start a test section.
   # ${1} - the section label
 
+  # @note: echo -e means interpret escaped chars, -n means no ending newline.
   echo -e "\n=== Starting Tests: ${1}"
 }
 
 test_report_counts() {
   # Function to report the test counts.
 
+  # @note: echo -e means interpret escaped chars, -n means no ending newline.
   echo -en "\nTotal Tests = $((${#PASSED_TESTS[@]}+${#FAILED_TESTS[@]}))"
   [ 0 = "${#PASSED_TESTS[@]}" ] \
     || echo -en ", ${#PASSED_TESTS[@]} \033[092mPASSED\033[0m"
@@ -171,6 +175,7 @@ test_report_counts() {
 test_report_passed() {
   # Function to report the passed tests.
 
+  # @note: echo -e means interpret escaped chars, -n means no ending newline.
   echo -e "\nThe following tests \033[092mPASSED\033[0m:"
   printf '  %s\n' "${PASSED_TESTS[@]}"
 }
@@ -178,6 +183,7 @@ test_report_passed() {
 test_report_failed() {
   # Function to report the failed tests.
 
+  # @note: echo -e means interpret escaped chars, -n means no ending newline.
   echo -e "\nThe following tests \033[091mFAILED\033[0m:"
   printf '  %s\n' "${FAILED_TESTS[@]}"
 }

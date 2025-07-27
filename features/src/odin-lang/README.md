@@ -1,7 +1,7 @@
 
-# ODIN Language Support (odin-lang)
+# Odin Language Support (odin-lang)
 
-Adds the ODIN language support and tools.
+Adds the Odin language support and tools.
 
 ## Example Usage
 
@@ -15,19 +15,22 @@ Adds the ODIN language support and tools.
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| release | The ODIN release version to install. 'latest' for latest official release, 'master' for GitHub master. | string | latest |
+| release | The Odin release version to install. 'latest' for latest official release, 'master' for GitHub master. | string | latest |
 | os | The target operating system (when downloading, not compiling. | string | linux |
 | arch | The target architecture (when downloading, not compiling. | string | amd64 |
-| examples | Whether to install the ODIN example projects. | boolean | true |
-| examples-path | The path where the ODIN example projects will be installed. | string | /opt/jjs105/src |
+| examples | Whether to install the Odin example projects. | boolean | true |
+| examples-path | The path where the Odin example projects will be installed. | string | /opt/jjs105/src |
+| ols-create-config | Whether to create ant OLS configuration file. | boolean | true |
+| ols-create-format | Whether to create ant OLS format file. | boolean | true |
 
 ## Customizations
 
 ### VS Code Extensions
 
 - `DanielGavin.ols`
+- `vadimcn.vscode-lldb`
 
-_Please note that compiling of the ODIN language is not yet supported by this
+_Please note that compiling of the Odin language is not yet supported by this
 feature._
 
 ## Development Container Build Times
@@ -35,11 +38,10 @@ feature._
 This feature, especially when setting the `compile` option to true, can add a
 lot of time to any development container build.
 
-For this reason, when using ODIN in ernest, the ODIN development container
+For this reason, when using Odin in ernest, the Odin development container
 template - which is yet to be implemented - should be used.
 
 <!-- markdownlint-disable-file MD041 -->
-
 
 ---
 

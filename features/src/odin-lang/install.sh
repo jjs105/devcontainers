@@ -26,6 +26,8 @@ ARCH="${ARCH:=amd64}"
 COMPILE="${COMPILE:=false}"
 EXAMPLES="${EXAMPLES:=true}"
 EXAMPLES_PATH="${EXAMPLES_PATH:=/opt/jjs105/src/}"
+OLS_CREATE_CONFIG="${OLS_CREATE_CONFIG:=true}"
+OLS_CREATE_FORMAT="${OLS_CREATE_FORMAT:=true}"
 
 #-------------------------------------------------------------------------------
 # Library inclusion and copy + required script setup.
@@ -33,12 +35,13 @@ EXAMPLES_PATH="${EXAMPLES_PATH:=/opt/jjs105/src/}"
 # Include the install-lib.sh library from its install location.
 . /opt/jjs105/lib/install-lib.sh
 
-# Set up our simplified log function.
+# Ensure logs are configured and set up our simplified log function.
 _log() { log "jjs105/odin-lang" "${1}"; }
+log_setup
 
 # We don't actually support windows download.
 [ "windows" = "${OS}" ] \
-  && _log "Windows OS not supported by this development container feature." \
+  && _log "Windows OS not supported, exiting" \
   && exit 1
 
 # We will always need a download directory, so create it now.
@@ -52,13 +55,16 @@ if [ "true" != "${COMPILE}" ]; then
   install_packages curl ca-certificates
 fi
 
+# Ensure that we have a general jjs105 INI file.
+ensure_jjs105_ini
+
 #-------------------------------------------------------------------------------
-# ODIN pre-requisites installation.
+# Odin pre-requisites installation.
 
 install_packages clang
 
 #-------------------------------------------------------------------------------
-# Not compiling ODIN so download and use specified release.
+# Not compiling Odin so download and use specified release.
 
 if [ "true" != "${COMPILE}" ]; then
 
@@ -67,7 +73,7 @@ if [ "true" != "${COMPILE}" ]; then
 
   # arm64 only supported on MacOS.
   [ "arm64" = "${ARCH}" ] && [ "macos" != "${OS}" ] \
-    && _log "arm64 architecture only supported on MacOS." \
+    && _log "arm64 architecture only supported on MacOS, exiting" \
     && exit 1
 
   # Extension based on OS, however we don't support windows download.
@@ -89,26 +95,26 @@ if [ "true" != "${COMPILE}" ]; then
 fi
 
 #-------------------------------------------------------------------------------
-# Compiling ODIN so clone from Git configure and compile.
+# Compiling Odin so clone from Git configure and compile.
 
 if [ "true" = "${COMPILE}" ]; then
 
   # Not yest supported.
-  _log "Compiling ODIN is not yet supported by this feature."  
+  _log "compiling Odin is not yet supported by this feature, exiting"  
   exit 1
 
   # Install the pre-requisites.
-  # Clone the ODIN repository.
+  # Clone the Odin repository.
   # Check for and checkout a release branch if specified.
-  # Compile ODIN.
-  # Install the compiled ODIN to the lib directory.
+  # Compile Odin.
+  # Install the compiled Odin to the lib directory.
   # Uninstall the pre-requisites.
 fi
 
 #-------------------------------------------------------------------------------
-# ODIN configuration.
+# Odin configuration.
 
-# Update the PATH to include odin tools.
+# Symlink Odin to standard location.
 ln --symbolic /opt/jjs105/lib/odin-lang/odin /usr/local/bin/
 
 #-------------------------------------------------------------------------------
@@ -127,16 +133,31 @@ if [ "true" = "${EXAMPLES}" ]; then
   tar --extract --gzip --file="${DOWNLOAD_DIR}/${FILENAME}" \
     --directory="${EXAMPLES_PATH}"
 
-  chmod --recursive go+w "${EXAMPLES_PATH}"
+  chmod --recursive ugo+rw "${EXAMPLES_PATH}"
 
   # Add the examples message to the bashrc file.
-  if [ ! $(grep -q "ODIN examples" "~/.bashrc") ]; then
-    _log "Adding ODIN examples message to ~/.bashrc"
-    SNIPPET="echo \"ODIN examples can be found in ${EXAMPLES_PATH}.\""
+  if [ ! $(grep -q "Odin examples" "~/.bashrc") ]; then
+    _log "adding Odin examples message to ~/.bashrc"
+    SNIPPET="echo \"Odin examples can be found in ${EXAMPLES_PATH}.\""
     # @note: echo -e means interpret escaped chars, -n means no ending newline.
     run_command_for_users "echo -e \"\n\n${SNIPPET}\" >> ~/.bashrc"
   fi
 fi
+
+#-------------------------------------------------------------------------------
+# Odin Language Server (OLS) configuration.
+
+# Copy the OLS script and files so they can be used later in the lifecycle.
+_log "copying OLS configuration files"
+install_script ./ols/odin-ols-config.sh /opt/jjs105/bin
+install_library ./ols/ols.json /opt/jjs105/lib/ols
+install_library ./ols/odinfmt.json /opt/jjs105/lib/ols
+
+# Set the OLS configuration in the jjs105 INI file.
+ini_set_value "${INI_FILE}" "odin-lang" \
+  "create-ols-config" "${OLS_CREATE_CONFIG}"
+ini_set_value "${INI_FILE}" "odin-lang" \
+  "create-ols-format" "${OLS_CREATE_FORMAT}"
 
 #-------------------------------------------------------------------------------
 # Script cleanup etc.

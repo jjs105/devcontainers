@@ -1,0 +1,37 @@
+{
+  "$schema": "https://raw.githubusercontent.com/DanielGavin/ols/master/misc/ols.schema.json",
+  
+  "collections": [],
+
+  "profile": "default",
+  "profiles": [
+    {
+      "name": "default", "os": "linux",
+      "checker_path": ["."], "exclude_path": []
+    }
+  ],
+
+  "odin_command": "/opt/jjs105/lib/odin-lang/odin",
+  "checker_args": "",
+  "enable_checker_only_saved": false,
+  "enable_auto_import": true,
+
+  "enable_format": true,
+  "verbose": true,
+  "file_log": false,
+
+  "enable_hover": true,
+  "enable_semantic_tokens": true,
+  "enable_document_symbols": true,
+  "enable_snippets": true,
+  "enable_procedure_snippet": true,
+
+  "enable_inlay_hints": true,
+  "enable_inlay_hints_params": true,
+  "enable_inlay_hints_default_params": true,
+  
+  "disable_parser_errors": false,
+  "enable_procedure_context": false,
+  "enable_fake_methods": false,
+  "enable_references": false
+}

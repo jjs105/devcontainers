@@ -33,8 +33,9 @@ GIT_PROMPT="${GIT_PROMPT:=true}"
 # Include the install-lib.sh library directly from the container.
 . ./lib/install-lib.sh
 
-# Set up our simplified log function.
+# Ensure logs are configured and set up our simplified log function.
 _log() { log "jjs105/devcontainer" "${1}"; }
+log_setup
 
 # Copy/install the install-lib.sh library if necessary.
 # @note: We check that the file does not already exist to avoid overwriting.

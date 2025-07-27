@@ -1,13 +1,13 @@
 {
   "id": "odin-lang",
-  "version": "1.0.0",
-  "name": "ODIN Language Support",
-  "description": "Adds the ODIN language support and tools.",
+  "version": "1.0.5",
+  "name": "Odin Language Support",
+  "description": "Adds the Odin language support and tools.",
   "documentationURL": "https://github.com/jjs105/devcontainers/tree/main/features/src/odin-lang",
   "licenseURL": "https://github.com/jjs105/devcontainers/tree/main/LICENSE",
   "keywords": [
     "development container", "devcontainer",
-    "ODIN", "ODIN lang", "programming language", "compiler", "tools"
+    "Odin", "Odin lang", "programming language", "compiler", "tools"
   ],
   "dependsOn": {
     "ghcr.io/jjs105/features/jjs105-devcontainer:latest": {
@@ -17,7 +17,7 @@
   "options": {
     "release":{
       "type": "string",
-      "description": "The ODIN release version to install. 'latest' for latest official release, 'master' for GitHub master.",
+      "description": "The Odin release version to install. 'latest' for latest official release, 'master' for GitHub master.",
       "default": "latest",
       "proposals": [
         "master",
@@ -48,18 +48,33 @@
     "examples": {
       "type": "boolean",
       "default": true,
-      "description": "Whether to install the ODIN example projects."
+      "description": "Whether to install the Odin example projects."
     },
     "examples-path": {
       "type": "string",
       "default": "/opt/jjs105/src",
-      "description": "The path where the ODIN example projects will be installed."
+      "description": "The path where the Odin example projects will be installed."
+    },
+    "ols-create-config": {
+      "type": "boolean",
+      "description": "Whether to create ant OLS configuration file.",
+      "default": true
+    },
+    "ols-create-format": {
+      "type": "boolean",
+      "description": "Whether to create ant OLS format file.",
+      "default": true
     }
   },
+  "containerEnv": {
+    "ODIN_ROOT": "/opt/jjs105/lib/odin-lang"
+  },
+  "onCreateCommand": "/opt/jjs105/bin/odin-ols-config.sh",
   "customizations": {
     "vscode": {
       "extensions": [
-        "DanielGavin.ols"
+        "DanielGavin.ols",
+        "vadimcn.vscode-lldb"
       ]
     }
   }

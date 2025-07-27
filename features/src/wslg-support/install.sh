@@ -31,8 +31,12 @@ CHECK_DEVICE_VIDEO="${CHECK_DEVICE_VIDEO:=true}"
 # Include the install-lib.sh library from its install location.
 . /opt/jjs105/lib/install-lib.sh
 
-# Set up our simplified log function.
+# Ensure logs are configured and set up our simplified log function.
 _log() { log "jjs105/wslg-support" "${1}"; }
+log_setup
+
+# Ensure that we have a general jjs105 INI file.
+ensure_jjs105_ini
 
 #-------------------------------------------------------------------------------
 # Install packages etc.
@@ -56,13 +60,9 @@ install_packages vainfo mesa-va-drivers
 
 _log "setting up check options script"
 install_script ./check-wslg-options.sh /opt/jjs105/bin
-mkdir --parents /opt/jjs105/etc
-[ "true" = "${CHECK_DEVICE_DXG}" ] && touch /opt/jjs105/etc/.check-vgpu
-[ "true" = "${CHECK_DEVICE_VIDEO}" ] && touch /opt/jjs105/etc/.check-accvid
-chmod --recursive ugo+r /opt/jjs105/etc
 
-#-------------------------------------------------------------------------------
-# Set up required environment variables.
-
-export LD_LIBRARY_PATH="/usr/lib/wsl/lib"
-export LIBVA_DRIVER_NAME="d3d12"
+# Set the check options configuration in the jjs105 INI file.
+ini_set_value "${INI_FILE}" "wslg-support" \
+  "check-device-dxg" "${CHECK_DEVICE_DXG}"
+ini_set_value "${INI_FILE}" "wslg-support" \
+  "check-device-video" "${CHECK_DEVICE_VIDEO}"

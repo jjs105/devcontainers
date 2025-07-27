@@ -1,6 +1,6 @@
 {
   "id": "jjs105-devcontainer",
-  "version": "1.0.4",
+  "version": "1.0.8",
   "name": "jjs105 Development Container Base",
   "description": "Installs tools useful for development of development containers.",
   "documentationURL": "https://github.com/jjs105/devcontainers/tree/main/features/src/jjs105-devcontainer",
