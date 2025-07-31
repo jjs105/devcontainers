@@ -95,7 +95,7 @@ needs to be a fully published package as it is not available locally.
 
 \** Additionally, for completeness of the jjs105-devcontainer development
 container feature, scenarios are required to ensure the dependency is installed
-and configured correctly 
+and configured correctly.
 
 A better approach, still to be completed, is to use the `bashunit` testing
 framework which could be downloaded as part of the test script itself negating

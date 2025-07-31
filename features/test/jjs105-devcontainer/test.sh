@@ -13,6 +13,8 @@
 # to the container specification (assuming alpine image as an example):
 #   "postCreateCommand": "apk add --no-cache bash"
 
+# @todo: Utilise 3rd party bash test library.
+
 # Exit on any failure, use +e to revert if necessary.
 # WARNING: The use of set -e means that the script wil exit if ANY SINGLE
 # COMMAND FAILS. This means that, for correct operation, tests that may fail
@@ -24,11 +26,14 @@ set -eu
 # Feature options.
 # @note: := substitution to ensure var=null => true.
 
-INSTALL_LIB="${INSTALL_LIB:=true}"
 TEST_LIB="${TEST_LIB:=false}"
 ENSURE_BASH="${ENSURE_BASH:=true}"
-BASH_HISTORY_PATH="${BASH_HISTORY_PATH:=}"
-INSTALL_FZF="${INSTALL_FZF:=true}"
+EXPECTED_SECRETS="${EXPECTED_SECRETS:=}"
+SHELL_HISTORY_METHOD="${SHELL_HISTORY_METHOD:=atuin_fzf}"
+BASH_HISTORY_PATH="${BASH_HISTORY_PATH:=/command-history/.bash_history}"
+ATUIN_DISABLE_UP_ARROW="${ATUIN_DISABLE_UP_ARROW:=true}"
+ATUIN_ENTER_ACCEPT="${ATUIN_ENTER_ACCEPT:=false}"
+ATUIN_INLINE_HEIGHT="${ATUIN_INLINE_HEIGHT:=0}"
 GIT_PROMPT="${GIT_PROMPT:=true}"
 
 #-------------------------------------------------------------------------------
@@ -49,26 +54,50 @@ fi
 source /opt/jjs105/lib/test-lib.sh
 
 #-------------------------------------------------------------------------------
-# Test library testing - its part of the jjs105-devcontainer feature after all.
+# Install library function testing.
 # @note: We define these tests in a separate script to keep things tidy.
+
+# Check for our install library, exiting if not found.
+if [ ! -f "/opt/jjs105/lib/install-lib.sh" ]; then
+  # @note: echo -e means interpret escaped chars, -n means no ending newline.
+  echo -e "\n\n!!! Install library not found (/opt/jjs105/lib/install-lib.sh)" 1>&2 
+  exit 1
+fi
+
+# Header and superfluous file exists check for completeness.
+test_section "Install Library Testing"
+check_file_exists "/opt/jjs105/lib/install-lib.sh"
+
+# CURRENTLY EMPTY!!!
+source install-lib-test.sh
+
+# Create mock environment variables and test retrieval.
+# Create mock secrets file variables and test retrieval.
+
+#-------------------------------------------------------------------------------
+# Test library function testing.
+# @note: We define these tests in a separate script to keep things tidy.
+
+# Header and superfluous file exists check for completeness.
+test_section "Test Library Testing"
+check_file_exists "/opt/jjs105/lib/test-lib.sh"
 
 # CURRENTLY EMPTY!!!
 source test-lib-test.sh
 
 #-------------------------------------------------------------------------------
-# Check all the files that should or shouldn't exist dependent on the
-# development container feature options.
-# @note: The check for the test-lib.sh file is superfluous because the script
-# would have already exited if it didn't exist
+# General testing.
 
-test_section "Check Installed Files"
-[ "true" = "${INSTALL_LIB}" ] \
-  && check_file_exists "/opt/jjs105/lib/install-lib.sh" \
-  || check_file_absent "/opt/jjs105/lib/install-lib.sh"
+# @todo: Check cUrl is installed.
+# @todo: Check for the INI file.
+# @todo: Check for lifecycle scripts.
+# @todo:@ Configure the container user and check it exists.
 
-[ "true" = "${TEST_LIB}" ] \
-  && check_file_exists "/opt/jjs105/lib/test-lib.sh" \
-  || check_file_absent "/opt/jjs105/lib/test-lib.sh"
+#-------------------------------------------------------------------------------
+# Shell history configuration testing [TBC].
+# @todo: Separate out into a separate file.
+
+# @todo: If shell history is set to 'shared_file' ensure a path has been set.
 
 # Check if a history path is specified, and if so that the HISTFILE environment
 # variable is set, matches it and points to existing file.
@@ -81,12 +110,30 @@ test_section "Check BASH History Path"
   && check_file_exists "${HISTFILE}" \
   || echo "History path not configured, skipping."
 
-# Check if fuzzy search tools(s) fzf is installed and available if configured.
+# Check if fuzzy search tools(s) fzf ar installed and available if configured.
 test_section "Check Fuzzy Search Install"
-[ "true" = "${INSTALL_FZF}" ] \
+[ "fzf" = "${SHELL_HISTORY_METHOD##atuin_}" ] || \
   && check_installed "/opt/jjs105/bin/fzf" "fzf --version" \
   && check_installed "fzf" "fzf --version" \
-  || echo "Fuzzy search install not configured, skipping."
+  || echo "Fuzzy search install not required, skipping."
+  
+# Check if atuin history tools(s) are installed and available if configured.
+test_section "Check Atuin History Install"
+[ "atuin" = "${SHELL_HISTORY_METHOD%%_fzf}" ] \
+  && check_installed "~/.atuin/bin/atuin" "atuin --version" \
+  && check_installed "atuin" "atuin --version" \
+  || echo "Atuin history install not required, skipping."
+
+# @todo: Check atuin configuration .bashrc/disable-up-arrow - user+root
+# @todo: Check atuin configuration config.toml/enter_accept - user+root
+# @todo: Check atuin configuration config.toml/inline_height - user+root
+# @todo: Check atuin configuration INI file/shell/shell_history_method 
+# @todo: Check atuin configuration INI file/atuin/atuin_enter_accept
+# @todo: Check atuin configuration INI file/atuin/atuin_inline_height
+# @todo: Check logged in + history size if key file found - user+root
+
+#-------------------------------------------------------------------------------
+# Shell prompt configuration testing.
 
 # Check if git-prompt is installed and used.
 test_section "Check Git Prompt Install"
@@ -95,7 +142,16 @@ test_section "Check Git Prompt Install"
   && check_env_function_exists "__git_ps1" \
   || echo "Git prompt install not configured, skipping."
 
-# Report all test results.
+#-------------------------------------------------------------------------------
+# Secrets testing [TBC].
+# @todo: Separate out into a separate file.
+
+# @todo: Check for the secrets example file.
+# @todo: Check that any expected secrets have been added to the INI file.
+
+#-------------------------------------------------------------------------------
+# Report all test results and finish.
+
 #reportResults
 test_report_passed
 test_report_failed

@@ -10,6 +10,13 @@
 # to create the Odin Language Server (OLS) configuration files in the workspace 
 # root as necessary.
 
+# Exit on any failure, use +e to revert if necessary.
+# WARNING: The use of set -e means that the script wil exit if ANY SINGLE
+# COMMAND FAILS. This means that, for correct operation, tests that may fail
+# as expected behaviour need to be part of a command that actually succeeds.
+# @note: -x can be used for debugging purposes.
+set -eu
+
 #-------------------------------------------------------------------------------
 # Library inclusion and copy + required script setup.
 

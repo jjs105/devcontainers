@@ -25,8 +25,8 @@
 * 
 * - Add Docker in Docker development container feature functionality
 * - Add our base jjs105-devcontainer development container feature functionality
-*   (install-lib.sh) then, ensure bash installed, shared bash history, fuzzy
-*   search tool(s) and the git-prompt script
+*   (install-lib.sh) then, ensure bash installed, shared shell history, atuin
+*   shell history, fuzzy search tool(s) and the git-prompt script
 * - Install the @devcontainers/cli package globally via postCreateCommand
 * - Add standard VS Code extensions to make life easier when working with bash
 *   scripts and JavaScript/TypeScript code
@@ -44,15 +44,9 @@
 	"features": {
     "ghcr.io/devcontainers/features/docker-in-docker": {},
     "./features/jjs105-devcontainer": {
-      "install-lib": true,
       "test-lib": true,
-      "bash-history-path": "/command-history/.bash_history"
     },
     "./features/wslg-support": {
-      "install-x11-apps": true,
-      "install-mesa-utils": true,
-      "check-device-dxg": true,
-      "check-device-video": true
     }
 	},
 	"postCreateCommand": "npm install --global @devcontainers/cli",

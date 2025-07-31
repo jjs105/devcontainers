@@ -1,6 +1,6 @@
 {
   "id": "jjs105-devcontainer",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "name": "jjs105 Development Container Base",
   "description": "Installs tools useful for development of development containers.",
   "documentationURL": "https://github.com/jjs105/devcontainers/tree/main/features/src/jjs105-devcontainer",
@@ -11,12 +11,8 @@
     "fzf", "fuzzy search", "search",
     "prompt", "git prompt"
   ],
+  "postAttachCommand": "/opt/jjs105/bin/jjs105-post-attach.sh",
   "options": {
-    "install-lib": {
-      "type": "boolean",
-      "description": "Copy install-lib.sh to the container for future use.",
-      "default": true
-    },
     "test-lib": {
       "type": "boolean",
       "description": "Copy test-lib.sh to the container for future use.",
@@ -27,9 +23,29 @@
       "description": "Ensure the Bash shell is installed.",
       "default": true
     },
+    "expected_secrets":{
+      "type": "string",
+      "description": "Secrets to expect either in ENV variables or /workspace/.jjs105-secrets file. Comma separated list.",
+      "default": "ATUIN_USERNAME,ATUIN_PASSWORD,ATUIN_KEY",
+      "proposals": [
+        "ATUIN_USERNAME,ATUIN_PASSWORD,ATUIN_KEY"
+      ]
+    },
+    "shell_history_method": {
+      "type": "string",
+      "description": "The method used to control shell history.",
+      "default": "atuin_fzf",
+      "enum": [
+        "none",
+        "shared_file",
+        "fzf",
+        "atuin",
+        "atuin_fzf"
+      ]
+    },
     "bash-history-path": {
       "type": "string",
-      "description": "The path to use for the (common) bash history file.",
+      "description": "The path to use shared shell history path (shared_file).",
       "default": "/command-history/.bash_history",
       "proposals": [
         "/command-history/.bash_history",
@@ -37,10 +53,20 @@
         "~/.bash_history"
       ]
     },
-    "install-fzf": {
+    "atuin_disable_up_arrow": {
       "type": "boolean",
-      "description": "Install the fzf fuzzy search tool(s).",
+      "description": "When installing atuin disable the up arrow functionality.",
       "default": true
+    },
+    "atuin_enter_accept": {
+      "type": "boolean",
+      "description": "When installing atuin set the enter_accept config value.",
+      "default": false
+    },
+    "atuin_inline_height": {
+      "type": "string",
+      "description": "When installing atuin set the inline_height config value.",
+      "default": "0"
     },
     "git-prompt": {
       "type": "boolean",

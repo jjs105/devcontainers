@@ -38,7 +38,7 @@ install_packages() {
 
   # Otherwise not supported.
   else
-    echo "Linux distro not supported."
+    log "jjs105/install-lib" "Linux distro not supported."
     return 1
   fi
 }
@@ -106,6 +106,22 @@ install_workspace_file() {
 # Utility functions.
 
 #-------------------------------------------------------------------------------
+show_context() {
+  # Shows the current context.
+  # ${1} - heading to display
+
+  [ -n "${1:-}" ] && echo "${1}" || :
+
+  # @note: echo -e means interpret escaped chars, -n means no ending newline.
+  # @note: ls -l means long format, 
+  echo -n "user: " && whoami
+  echo "environment: " && printenv
+  echo -n "current dir: " && pwd && ls -l --all
+  echo "root dir: " &&  ls -l --all /
+  [ -d /workspaces ] && echo "workspaces dir: " && ls -l --all /workspaces || :
+}
+
+#-------------------------------------------------------------------------------
 truthy() {
   # Checks if a value is truthy - 1, y, yes, t, true
   # ${1} - the value to check
@@ -170,6 +186,18 @@ ensure_jjs105_ini() {
 }
 
 #-------------------------------------------------------------------------------
+get_secret() {
+  # Gets a secret either from an environment variable with the same name or a
+  # file called .jjs105.secrets in the current directory.
+  # ${1} - the secret name
+
+  [ -n "${!1+1}" ] && echo "${!1}"
+  [ -f "./.jjs105-secrets" ] && ini_get_value "./.jjs105-secrets" "ROOT" "${1}"
+  echo ""
+  return 0
+}
+
+#-------------------------------------------------------------------------------
 # INI file functions.
 
 ini_has_section() {
@@ -195,59 +223,59 @@ ini_set_value() {
   # ${3} - the key name
   # ${4} - the value to set
 
+  # @todo: Understand 2s around values.
+
+  log "jjs105/install-lib" "setting INI ${2}/${3} = ${4} (${1})"
   # Set = as the delimiter (-F) and set variables (-v).
   awk -F '=' -v section="${2}" -v key="${3}" -v value="${4}" '
 
     # Init functions, variables and regular expressions.
     function trim(s) { gsub(/^[ \t]+|[ \t]+$/, "", s); return s; }
+
     BEGIN {
-      in_root = 1; in_section = 0;
-      key_found = 0; section_found = 0; last_line = 1;
-      re_section = "\["section"\]";
-      re_key = "^[ \t]*"key"[ \t]*";
+      in_root = 1; in_section = 0; key_found = 0; section_found = 0;
+      re_section = "\["section"\]"; re_key = "^[ \t]*"key"[ \t]*";
     }
 
-    # New section, update state variables.
-    # @note: Next 2 lines - ORDER IS IMPORTANT.
-    $0 ~ "^\[" { in_root = 0; in_section = 0; }
-    $0 ~ re_section { in_root = 0; in_section = 1; section_found = 1; }
-
-    # Non-blank line in correct section, update target line.
-    0 != NF && (in_root == 1 && section == "ROOT" || in_section == 1) {
-      last_line = NR;
+    # If in root and setting root key which matches.
+    in_root == 1 && section == "ROOT" && $1 ~ re_key  {
+      print key "=" trim(value); key_found = 1; next;
     }
 
-    # Matching key in correct section, update target line and state.
-    $1 ~ re_key && (in_root == 1 && section == "ROOT" || in_section == 1)  {
-      last_line = NR; key_found = 1; in_root = 0; in_section = 0;
+    # If leaving root and setting root key which has not been found, add it.
+    $0 ~ "^\[" && in_root && section == "ROOT" && key_found == 0 {
+      print key "=" trim(value); print ""; print;
+      key_found = 1; in_root = 0; next;
     }
 
-    # Add the line to the list.
-    { lines[NR] = $0; }
+    # If in correct section and key which matches.
+    in_section == 1 && $1 ~ re_key  {
+      print key "=" trim(value); key_found = 1; next;
+    }
 
-    # Re-create the file adding our value at the target line.
+    # If leaving correct section and key which has not been found, add it.
+    $0 ~ "^\[" && in_section && key_found == 0 {
+      print key "=" trim(value); print ""; print;
+      key_found = 1; in_section = 0; next;
+    }
+
+    # If entering a section update the in_section flag as necessary.
+    $0 ~ "^\[" {
+      section_found = section_found || $0 ~ re_section;
+      in_section = $0 ~ re_section; print ""; print; next;
+    }
+
+    # Add the line if not blank.
+    0 != NF { print }
+
     END {
-      for (i = 1; i <= NR; i++) {
-
-        # If we found the key and we are on the target line update the line.
-        if (key_found && i == last_line) {
-          print key "=" trim(value); continue;
-        }
-
-        # If we are on the target line copy it and add the value line after.
-        # @note: If no section found then target_line is outside of this loop.
-        if (i == last_line) {
-          print lines[i]; print key "=" trim(value); continue;
-        }
-
-        # Otherwise just copy the line.
-        print lines[i];
+      # If root key not found add it at the end.
+      if (section == "ROOT" && key_found == 0) {
+        print key "=" trim(value)
       }
-
-      # If the section was not found, add it (if not root) and the value.
-      if (section_found == 0) {
-        if (NR > 0) { print "";}
-        if (section != "ROOT") { print "[" section "]"; }
+      # If section key not found add it at the end.
+      if (section != "ROOT" && key_found == 0) {
+        if (section_found == 0) { print ""; print "[" trim(section) "]" }
         print key "=" trim(value)
       }
     }
@@ -263,6 +291,8 @@ _ini_value() {
   # ${1} - the INI file path
   # ${2} - the section name or ROOT
   # ${3} - the key name
+
+  # @todo: Understand 2s around values.
 
   # Set = as the delimiter (-F) and set variables (-v).
   awk -F '=' -v section="${2}" -v key="${3}" '
@@ -310,6 +340,45 @@ ini_get_value() {
   echo "$(_ini_value "${1}" "${2}" "${3}")" || ""
 }
 
+ini_get_keys() {
+  # Gets the list of keys in an INF file section.
+  # ${1} - the INI file path
+  # ${2} - the section name or ROOT
+
+  # Set = as the delimiter (-F) and set variables (-v).
+  awk -F '=' -v section="${2}" '
+
+    # Init functions, variables and regular expressions.
+    function trim(s) { gsub(/^[ \t]+|[ \t]+$/, "", s); return s; }
+    BEGIN {
+      result = ""
+      in_root = 1; in_section = 0;
+      section_found = 0;
+      re_section = "\["section"\]";
+    }
+
+    # New section, update state variables.
+    # @note: Next 2 lines - ORDER IS IMPORTANT.
+    $0 ~ "^\[" { in_root = 0; in_section = 0; }
+    $0 ~ re_section { in_root = 0; in_section = 1; section_found = 1; }
+
+    # Move to next line if a section header.
+    $0 ~ "^\[" { next; }
+
+    # Non-blank line in correct section, add to the list.
+    0 != NF && (in_root == 1 && section == "ROOT" || in_section == 1) {
+      result = result trim($1) ",";
+    }
+
+    # Re-create the file adding our value at the target line.
+    END {
+      if (result != "") { result = substr(result, 1, length(result)-1); }
+      print result;
+    }
+
+  ' "${1}"
+}
+
 #-------------------------------------------------------------------------------
 # Log file functionality.
 
@@ -330,4 +399,13 @@ log() {
   # Log to stdout and log file (we don't assume that 'tee' is available).
   echo "===>>> ${1}: ${2}"
   echo "===>>> ${1}: ${2}" >> /var/log/jjs105/install-log
+}
+
+log_context() {
+  # Run the context function adding to the log file.
+  # ${1} - package identifier
+
+  echo "===>>> ${1}: context"; show_context
+  echo "===>>> ${1}: context" >> /var/log/jjs105/install-log
+  show_context >> /var/log/jjs105/install-log
 }

@@ -14,7 +14,7 @@
 # COMMAND FAILS. This means that, for correct operation, tests that may fail
 # as expected behaviour need to be part of a command that actually succeeds.
 # @note: -x can be used for debugging purposes.
-set -eux
+set -eu
 
 #-------------------------------------------------------------------------------
 # Feature options.
@@ -50,6 +50,7 @@ _log "creating download dir"
 DOWNLOAD_DIR="$(mktemp --directory || mktemp --directory -t 'tmp')"
 
 # If necessary install cURL and ensure we have a download directory.
+# @todo: Check whether we need a download directory
 if [ "true" != "${COMPILE}" ]; then
   _log "installing cURL"
   install_packages curl ca-certificates

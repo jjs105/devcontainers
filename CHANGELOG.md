@@ -1,5 +1,17 @@
 # Changelog (jjs105/devcontainers)
 
+_**2025-07-31:**_\
+jjs105-devcontainer Feature
+
+* Always install the install-lib.sh library
+* Added show/log context functions to install library
+* Added simple secrets function to container and install library - env/INI
+* Reimplemented ini_set_value function in install library
+* Added ini_get_keys function to install library
+* Added atuin shell history installation + post attach command to configure
+* Changed shell history logic to support bash/fzf/atuin
+* Updated test script
+
 _**2025-07-27:**_\
 jjs105-devcontainer Feature
 

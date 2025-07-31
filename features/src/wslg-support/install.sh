@@ -59,7 +59,7 @@ install_packages vainfo mesa-va-drivers
 # Copy and configure the check options script.
 
 _log "setting up check options script"
-install_script ./check-wslg-options.sh /opt/jjs105/bin
+install_script ./wslg-post-attach.sh /opt/jjs105/bin
 
 # Set the check options configuration in the jjs105 INI file.
 ini_set_value "${INI_FILE}" "wslg-support" \

@@ -11,7 +11,6 @@
   ],
   "dependsOn": {
     "ghcr.io/jjs105/features/jjs105-devcontainer:latest": {
-      "install-lib": true
     }
   },
   "options": {

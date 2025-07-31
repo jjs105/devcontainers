@@ -9,6 +9,13 @@
 # This script is executed when the development container is attached and is used
 # to check vGPU and accelerated video support as necessary.
 
+# Exit on any failure, use +e to revert if necessary.
+# WARNING: The use of set -e means that the script wil exit if ANY SINGLE
+# COMMAND FAILS. This means that, for correct operation, tests that may fail
+# as expected behaviour need to be part of a command that actually succeeds.
+# @note: -x can be used for debugging purposes.
+set -eu
+
 #-------------------------------------------------------------------------------
 # Library inclusion and copy + required script setup.
 
@@ -17,7 +24,7 @@
 
 # Check that the jjs105 INI file exists.
 [ ! -f "${INI_FILE=/opt/jjs105/etc/jjs105.ini}" ] \
-  && _log "INI file (${INI_FILE}) not found, exiting" \
+  && log "jjs105/wslg-support" "INI file (${INI_FILE}) not found, exiting" \
   && exit 1
 
 #-------------------------------------------------------------------------------
