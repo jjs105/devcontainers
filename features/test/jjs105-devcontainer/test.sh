@@ -26,14 +26,9 @@ set -eu
 # Feature options.
 # @note: := substitution to ensure var=null => true.
 
-TEST_LIB="${TEST_LIB:=false}"
-ENSURE_BASH="${ENSURE_BASH:=true}"
 EXPECTED_SECRETS="${EXPECTED_SECRETS:=}"
 SHELL_HISTORY_METHOD="${SHELL_HISTORY_METHOD:=atuin_fzf}"
 BASH_HISTORY_PATH="${BASH_HISTORY_PATH:=/command-history/.bash_history}"
-ATUIN_DISABLE_UP_ARROW="${ATUIN_DISABLE_UP_ARROW:=true}"
-ATUIN_ENTER_ACCEPT="${ATUIN_ENTER_ACCEPT:=false}"
-ATUIN_INLINE_HEIGHT="${ATUIN_INLINE_HEIGHT:=0}"
 GIT_PROMPT="${GIT_PROMPT:=true}"
 
 #-------------------------------------------------------------------------------
@@ -44,32 +39,32 @@ GIT_PROMPT="${GIT_PROMPT:=true}"
 # itself.
 
 # Check for our test library, exiting if not found.
-if [ ! -f "/opt/jjs105/lib/test-lib.sh" ]; then
+if [ ! -f "/opt/jjs105/lib/lib-test.sh" ]; then
   # @note: echo -e means interpret escaped chars, -n means no ending newline.
-  echo -e "\n\n!!! Test library not found (/opt/jjs105/lib/test-lib.sh)" 1>&2 
+  echo -e "\n\n!!! Test library not found (/opt/jjs105/lib/lib-test.sh)" 1>&2 
   exit 1
 fi
 
 # Include the test library.
-source /opt/jjs105/lib/test-lib.sh
+source /opt/jjs105/lib/lib-test.sh
 
 #-------------------------------------------------------------------------------
 # Install library function testing.
 # @note: We define these tests in a separate script to keep things tidy.
 
 # Check for our install library, exiting if not found.
-if [ ! -f "/opt/jjs105/lib/install-lib.sh" ]; then
+if [ ! -f "/opt/jjs105/lib/lib-install.sh" ]; then
   # @note: echo -e means interpret escaped chars, -n means no ending newline.
-  echo -e "\n\n!!! Install library not found (/opt/jjs105/lib/install-lib.sh)" 1>&2 
+  echo -e "\n\n!!! Install library not found (/opt/jjs105/lib/lib-install.sh)" 1>&2 
   exit 1
 fi
 
 # Header and superfluous file exists check for completeness.
 test_section "Install Library Testing"
-check_file_exists "/opt/jjs105/lib/install-lib.sh"
+check_file_exists "/opt/jjs105/lib/lib-install.sh"
 
 # CURRENTLY EMPTY!!!
-source install-lib-test.sh
+source test-lib-install.sh
 
 # Create mock environment variables and test retrieval.
 # Create mock secrets file variables and test retrieval.
@@ -80,7 +75,7 @@ source install-lib-test.sh
 
 # Header and superfluous file exists check for completeness.
 test_section "Test Library Testing"
-check_file_exists "/opt/jjs105/lib/test-lib.sh"
+check_file_exists "/opt/jjs105/lib/lib-test.sh"
 
 # CURRENTLY EMPTY!!!
 source test-lib-test.sh

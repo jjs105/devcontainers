@@ -83,7 +83,7 @@ scripts, as follows:
 
 * Very simple in nature
 * Test main install options
-* Utilise a simple test library `test-lib.sh`
+* Utilise a simple test library `lib-test.sh`
 
 The test library is part of the jjs105-devcontainer development container
 feature to allow its (re)use between development container templates and 

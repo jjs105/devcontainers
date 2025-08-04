@@ -30,7 +30,7 @@ log() {
 # in case the log command fails for any reason.
 
 if [ "bash" != "$(readlink /proc/$$/exe | sed "s/.*\///")" ]; then
-  log "test-lib" "test scripts must be run using the bash shell, exiting"
+  log "jjs105/test" "test scripts must be run using the bash shell, exiting"
   exit 1
 fi
 
@@ -45,16 +45,16 @@ check() {
   # ${1} - test label
   # ${2...} - test command to run
 
-  local _LABEL="${1}"; shift
+  local _label="${1}"; shift
 # @note: echo -e means interpret escaped chars, -n means no ending newline.
-  echo -e "🔄 Testing '${_LABEL}'\033[37m"
+  echo -e "🔄 Testing '${_label}'\033[37m"
 
   # Run the test reporting the result, adding to the failed list if it fails.
   if "${@}"; then
-    echo "✅ Passed '${_LABEL}'" && return 0
+    echo "✅ Passed '${_label}'" && return 0
   else
-    DC_CLI_FAILED+=("${_LABEL}")
-    echo "❌ Failed '${_LABEL}'" 1>&2 && return 1
+    DC_CLI_FAILED+=("${_label}")
+    echo "❌ Failed '${_label}'" 1>&2 && return 1
   fi
 }
 
@@ -64,25 +64,25 @@ checkMultiple() {
   # ${2} - minimum number of successful commands required to pass
   # ${3...} - test commands to run
 
-  local _LABEL="${1}"; shift;
-  local _MIN_TO_PASS="${1}"; shift
+  local _label="${1}"; shift;
+  local _min_to_pass="${1}"; shift
 # @note: echo -e means interpret escaped chars, -n means no ending newline.
-  echo -e "🔄 Testing '${_LABEL}'\033[37m"
+  echo -e "🔄 Testing '${_label}'\033[37m"
 
   # Loop through the multiple tests.
-  local _PASSED=0; local _EXPRESSION="${1}"
-  while [ "" != "${_EXPRESSION}" ]; do
-    if "${_EXPRESSION}"; then ((_PASSED++)); fi
-    shift; _EXPRESSION="${1}"
+  local _passed=0; local _expression="${1}"
+  while [ "" != "${_expression}" ]; do
+    if "${_expression}"; then ((_passed++)); fi
+    shift; _expression="${1}"
   done
 
   # Check the tests against minimum required reporting the result, adding to the
   # failed list if it fails.
-  if [ "${_PASSED}" -ge "${_MIN_TO_PASS}" ]; then
-    echo "✅ Passed '${_LABEL}'" && return 0
+  if [ "${_passed}" -ge "${_min_to_pass}" ]; then
+    echo "✅ Passed '${_label}'" && return 0
   else
-    DC_CLI_FAILED+=("${_LABEL}")
-    echo "❌ Failed '${_LABEL}'" 1>&2 && return 1
+    DC_CLI_FAILED+=("${_label}")
+    echo "❌ Failed '${_label}'" 1>&2 && return 1
   fi
 }
 
@@ -129,15 +129,15 @@ _test_result() {
   # ${1} - the test result 0|1
 
   local _result=""
-  local _LABEL="${CURRENT_TEST_LABEL:-unknown test, call _test_start!}"
+  local _label="${CURRENT_TEST_LABEL:-unknown test, call _test_start!}"
 
   # Display and log the test result.
   if [ 0 = "${1}" ]; then
     _result="\033[092mPASSED\033[0m"
-    PASSED_TESTS+=("${_LABEL}")
+    PASSED_TESTS+=("${_label}")
   else
     _result="\033[091mFAILED\033[0m"
-    FAILED_TESTS+=("${_LABEL}")
+    FAILED_TESTS+=("${_label}")
   fi
 
   # If there are sub-tests then display the overall result.
@@ -208,8 +208,8 @@ check_env_exists() {
   # ${1} - the environment variable to check
   
   _test_start "env variable exists: ${1}"
-  local _RESULT=1; [ -v "${1}" ] && _RESULT=0
-  _test_result "${_RESULT}"
+  local _result=1; [ -v "${1}" ] && _result=0
+  _test_result "${_result}"
 }
 
 check_env_function_exists() {
@@ -218,8 +218,8 @@ check_env_function_exists() {
 
   _test_start "env function exists: ${1}"
   # @note: bash -i means run in interactive mode, -c run the following command.
-  local _RESULT=0; $(bash -ic "${1}" > /dev/null 2>&1)  || _RESULT=1
-  _test_result "${_RESULT}"
+  local _result=0; $(bash -ic "${1}" > /dev/null 2>&1)  || _result=1
+  _test_result "${_result}"
 }
 
 check_env_not_blank() {
@@ -227,8 +227,8 @@ check_env_not_blank() {
   # ${1} - the environment variable to check
 
   _test_start "env variable not blank: ${1}"
-  local _RESULT=1; [ -n "${!1}" ] && _RESULT=0
-  _test_result "${_RESULT}"
+  local _result=1; [ -n "${!1}" ] && _result=0
+  _test_result "${_result}"
 }
 
 check_env_matches() {
@@ -237,8 +237,8 @@ check_env_matches() {
   # ${2} - the value to check against
   
   _test_start "env variable matches: ${1} = ${2}"
-  local _RESULT=1; [ "${!1}" = "${2}" ] && _RESULT=0
-  _test_result "${_RESULT}"
+  local _result=1; [ "${!1}" = "${2}" ] && _result=0
+  _test_result "${_result}"
 }
 
 #-------------------------------------------------------------------------------
@@ -249,8 +249,8 @@ check_file_exists() {
   # ${1} - the file path to check
 
   _test_start "file exists: ${1}"
-  local _RESULT=1; [ -f "${1}" ] && _RESULT=0
-  _test_result "${_RESULT}"
+  local _result=1; [ -f "${1}" ] && _result=0
+  _test_result "${_result}"
 }
 
 check_file_absent() {
@@ -258,8 +258,8 @@ check_file_absent() {
   # ${1} - the file path to check
 
   _test_start "file absent: ${1}"
-  local _RESULT=1; [ ! -f "${1}" ] && _RESULT=0
-  _test_result "${_RESULT}"
+  local _result=1; [ ! -f "${1}" ] && _result=0
+  _test_result "${_result}"
 }
 
 #-------------------------------------------------------------------------------
@@ -270,22 +270,22 @@ check_installed() {
   # ${1} - the command, or path to it, to check
   # ${2..} - any extra checks to carry out
 
-  local _PATH="${1}"; shift; local _RESULT=1
-  local _LABEL="installed: ${_PATH}"; _test_start "${_LABEL}" "true"
+  local _path="${1}"; shift; local _result=1
+  local _label="installed: ${_path}"; _test_start "${_label}" "true"
 
   # Main file path/command exists check.
-  [ -f "${_PATH}" ] || _PATH=$(which "${_PATH}")
-  [ 0 != "${?}" ] || _RESULT=0
-  _test_sub_result "${_RESULT}" "path exists ${_PATH}" \
+  [ -f "${_path}" ] || _path=$(which "${_path}")
+  [ 0 != "${?}" ] || _result=0
+  _test_sub_result "${_result}" "path exists ${_path}" \
 
   # Loop through all passed extra checks.
-  local _EXPRESSION="${1}"
-  while [ "" != "${_EXPRESSION}" ]; do
-    [ 0 = "${_RESULT}" ] && ${_EXPRESSION} > /dev/null 2>&1 || _RESULT=1
-    _test_sub_result "${_RESULT}" "${_EXPRESSION}"
-    shift; _EXPRESSION="${1:-}"
+  local _expression="${1}"
+  while [ "" != "${_expression}" ]; do
+    [ 0 = "${_result}" ] && ${_expression} > /dev/null 2>&1 || _result=1
+    _test_sub_result "${_result}" "${_expression}"
+    shift; _expression="${1:-}"
   done
 
   # And finish the test.
-  _test_result "${_RESULT}"
+  _test_result "${_result}"
 }

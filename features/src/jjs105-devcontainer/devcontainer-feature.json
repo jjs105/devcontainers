@@ -11,18 +11,7 @@
     "fzf", "fuzzy search", "search",
     "prompt", "git prompt"
   ],
-  "postAttachCommand": "/opt/jjs105/bin/jjs105-post-attach.sh",
   "options": {
-    "test-lib": {
-      "type": "boolean",
-      "description": "Copy test-lib.sh to the container for future use.",
-      "default": false
-    },
-    "ensure-bash": {
-      "type": "boolean",
-      "description": "Ensure the Bash shell is installed.",
-      "default": true
-    },
     "expected_secrets":{
       "type": "string",
       "description": "Secrets to expect either in ENV variables or /workspace/.jjs105-secrets file. Comma separated list.",
@@ -52,21 +41,6 @@
         "/root/.bash_history",
         "~/.bash_history"
       ]
-    },
-    "atuin_disable_up_arrow": {
-      "type": "boolean",
-      "description": "When installing atuin disable the up arrow functionality.",
-      "default": true
-    },
-    "atuin_enter_accept": {
-      "type": "boolean",
-      "description": "When installing atuin set the enter_accept config value.",
-      "default": false
-    },
-    "atuin_inline_height": {
-      "type": "string",
-      "description": "When installing atuin set the inline_height config value.",
-      "default": "0"
     },
     "git-prompt": {
       "type": "boolean",

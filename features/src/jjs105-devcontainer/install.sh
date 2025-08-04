@@ -20,194 +20,71 @@ set -eu
 # Feature options.
 # @note: := substitution to ensure var=null => true.
 
-TEST_LIB="${TEST_LIB:=false}"
-ENSURE_BASH="${ENSURE_BASH:=true}"
-EXPECTED_SECRETS="${EXPECTED_SECRETS:=}"
+EXPECTED_SECRETS="${EXPECTED_SECRETS:=ATUIN_USERNAME,ATUIN_PASSWORD,ATUIN_KEY}"
 SHELL_HISTORY_METHOD="${SHELL_HISTORY_METHOD:=atuin_fzf}"
 BASH_HISTORY_PATH="${BASH_HISTORY_PATH:=/command-history/.bash_history}"
-ATUIN_DISABLE_UP_ARROW="${ATUIN_DISABLE_UP_ARROW:=true}"
-ATUIN_ENTER_ACCEPT="${ATUIN_ENTER_ACCEPT:=false}"
-ATUIN_INLINE_HEIGHT="${ATUIN_INLINE_HEIGHT:=0}"
 GIT_PROMPT="${GIT_PROMPT:=true}"
 
 #-------------------------------------------------------------------------------
-# Library inclusion and copy + required script setup.
+# Library configuration and load.
 
-# Include the install-lib.sh library directly from the container.
-. ./lib/install-lib.sh
+# Set the library path during install to our relative location.
+_jjs105_lib_path="${PWD}/lib"
 
-# Ensure logs are configured and set up our simplified log function.
-_log() { log "jjs105/devcontainer" "${1}"; }
-log_setup
+# Configure logging.
+_lib_install_log="true"
+_lib_ini_log="true"
+_log() { [ "true" = "true" ] && log "jjs105/devcontainer" "${1}" || :; }
 
-# Copy/install the install-lib.sh library.
-# @note: This used to be based on an option but now we always copy.
-# @note: We check that the file does not already exist to avoid overwriting.
-[ ! -f "/opt/jjs105/lib/install-lib.sh" ] \
-  && _log "installing install-lib.sh" \
-  && install_library ./lib/install-lib.sh /opt/jjs105/lib
+# Include the lib-install.sh library directly from the container.
+# shellcheck source=lib/lib-install.sh
+. "${_jjs105_lib_path}/lib-install.sh"
 
-# Copy/install the test-lib.sh library if necessary.
-# @note: We check that the file does not already exist to avoid overwriting.
-[ "true" = "${TEST_LIB}" ] && [ -f "/opt/jjs105/lib/test-lib.sh" ] \
-  && _log "test-lib.sh already exists, skipping install" \
-  && TEST_LIB="false"
-[ "true" = "${TEST_LIB}" ] \
-  && _log "installing test-lib.sh" \
-  && install_library ./lib/test-lib.sh /opt/jjs105/lib
-
-# Install cURL and ensure we have a download directory.
-_log "installing cURL"
-install_packages curl ca-certificates
-_log "creating download dir"
-# @note: -t is used to specify a template for the temporary directory name.
-DOWNLOAD_DIR="$(mktemp --directory || mktemp --directory -t 'tmp')"
-
-# Ensure that we have a general jjs105 INI file.
-ensure_jjs105_ini
+# Include our install functions (keeps overall install logic readable).
+. "./install-functions.sh"
 
 #-------------------------------------------------------------------------------
-# Bash install and configuration.
+# Always required installations.
 
-# Check for bash and install if necessary.
-# @note: command -v is similar to using type but more portable.
-[ "true" = "${ENSURE_BASH}" ] && [ ! $(command -v bash) ] \
-  && _log "installing bash" \
-  && install_packages bash
+_install_library_files
+_ensure_bash
+setup_jjs105_ini
+setup_downloads
+
+#-------------------------------------------------------------------------------
+# Add any expected secrets to the ini file.
+
+if [ -n "${EXPECTED_SECRETS}" ]; then
+  # shellcheck source=lib/lib-secrets.sh
+  . "${_jjs105_lib_path}/lib-secrets.sh"
+  secrets_add_expected_to_ini "jjs105-devcontainer" "${EXPECTED_SECRETS}"
+fi
+
+#-------------------------------------------------------------------------------
+# Bash usage, history and prompt configuration.
 
 # If necessary change the bash history file location so that it can be shared
 # between users and persisted as a volume.
-# @note: We allow this code to run even if multiple installs of the development
-# container feature - just in case the user has set different paths.
-if [ -n "${BASH_HISTORY_PATH}" ]; then
-  if [ -n "${HISTORY_PATH:="${BASH_HISTORY_PATH%\.bash_history}"}" ]; then
+[ "shared_file" = "${SHELL_HISTORY_METHOD}" ] \
+  && [ -n "${BASH_HISTORY_PATH}" ] \
+    && _set_history_path "${BASH_HISTORY_PATH}" \
+      || :
 
-    # Need to double check the shared history method is set to shared_file.
-    if [ "shared_file" != "${SHELL_HISTORY_METHOD}" ]; then
-      _log "bash history location, method not set to shared_file, skipping"
-    else
-
-      _log "setting bash history location to ${HISTORY_PATH}"
-      mkdir --parents "${HISTORY_PATH}" && touch "${HISTORY_PATH}/.bash_history" 
-      chmod --recursive ugo+rw "${HISTORY_PATH}"
-
-      _log "setting user bash history location(s)"
-      SNIPPET="export HISTFILE=${HISTORY_PATH}.bash_history"
-      # @note: echo -e means interpret escaped chars, -n means no ending newline.
-      run_command_for_users "echo -e \"\n\n${SNIPPET}\" >> ~/.bashrc"
-    fi
-  fi
-fi
-
-#-------------------------------------------------------------------------------
-# Other tools installation and configuration.
-
-# Download, install and configure fzf.
+# Download an install the Git prompt script if necessary.
 # @note: We check if the script has already been downloaded - i.e. by a
 # previous install of this feature - to avoid re-installation.
-[ -f "/opt/jjs105/install-fzf" ] \
-  && _log "install-fzf already exists, skipping install" \
-  && FZF_INSTALLED="true" || FZF_INSTALLED="false"
-if [ "true" != "${FZF_INSTALLED}" ] \
-  && [ "fzf" = "${SHELL_HISTORY_METHOD##atuin_}" ]; then
-
-  URL="https://raw.githubusercontent.com/junegunn/fzf/refs/heads/master/install"
-  _log "downloading fzf from ${URL}"
-  curl --silent --fail --location --retry 3 "${URL}" \
-    --output "${DOWNLOAD_DIR}/install-fzf"
-  install_script "${DOWNLOAD_DIR}/install-fzf" /opt/jjs105
-
-  _log "installing fzf for users"
-  run_command_for_users "/opt/jjs105/install-fzf --all"
-fi
-
-# Download, install and configure atuin.
-# @note: We check if the script has already been downloaded - i.e. by a
-# previous install of this feature - to avoid re-installation.
-[ -f "/opt/jjs105/install-atuin" ] \
-  && _log "install-atuin already exists, skipping install" \
-  && ATUIN_INSTALLED="true" || ATUIN_INSTALLED="false"
-if [ "true" != "${ATUIN_INSTALLED}" ] \
-  && [ "atuin" = "${SHELL_HISTORY_METHOD%%_fzf}" ]; then
-
-  URL="https://setup.atuin.sh"
-  _log "downloading atuin from ${URL}"
-  curl --silent --fail --location --retry 3 "${URL}" \
-    --output "${DOWNLOAD_DIR}/install-atuin"
-  install_script "${DOWNLOAD_DIR}/install-atuin" /opt/jjs105
-
-  _log "installing atuin for users"
-  run_command_for_users "/opt/jjs105/install-atuin"
-
-  # For some reason atuin config file is root only.
-  [ "root" != "${_CONTAINER_USER}" ] \
-    && chmod ugo+rw "/home/${_CONTAINER_USER}/.config/atuin/config.toml"
-  [ "${_CONTAINER_USER}" = "${_REMOTE_USER}" ] \
-    && [ -f "/home/${_REMOTE_USER}/.config/atuin/config.toml" ] \
-    && chmod ugo+rw "/home/${_REMOTE_USER}/.config/atuin/config.toml"
-
-  # @note: sed -E is used to ensure POSIX compatibility.
-  PATTERN="atuin init bash"; FLAG="--disable-up-arrow"
-  PATTERN="s/${PATTERN}/${PATTERN} ${FLAG}/g"
-  [ "true" = "${ATUIN_DISABLE_UP_ARROW}" ] \
-    && _log "disabling atuin up arrow" \
-    && run_command_for_users "sed -E --in-place '${PATTERN}' ~/.bashrc"
-fi
-
-# Download, install and configure Git prompt script.
-# @note: We check if the script has already been downloaded - i.e. by a
-# previous install of this feature - to avoid re-installation.
-[ -f "/opt/jjs105/lib/git-prompt.sh" ] \
-  && _log "git-prompt.sh already exists, skipping install" \
-  && GIT_PROMPT="false"
-if [ "true" = "${GIT_PROMPT}" ]; then
-
-  URL="https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh"
-  _log "downloading git-prompt from ${URL}"
-  curl --silent --fail --location --retry 3 "${URL}" \
-    --output "${DOWNLOAD_DIR}/git-prompt.sh"
-  install_library "${DOWNLOAD_DIR}/git-prompt.sh" /opt/jjs105/lib
-
-  _log "configuring git prompt for users"
-  run_command_for_users "cat $(pwd)/lib/bash-prompt.sh >> ~/.bashrc"
-fi
+[ "true" = "${GIT_PROMPT}" ] && _install_git_prompt || :
 
 #-------------------------------------------------------------------------------
-# Copy and configure the post-attach script.
+# Install fzf and/or atuin bash history tools as necessary.
 
-_log "setting up jjs105-post-attach script"
-install_script ./jjs105-post-attach.sh /opt/jjs105/bin
-
-# Set the options we may need in the future.
-ini_set_value "${INI_FILE}" "shell" \
-  "shell_history_method" "${SHELL_HISTORY_METHOD}"
-ini_set_value "${INI_FILE}" "atuin" \
-  "atuin_enter_accept" "${ATUIN_ENTER_ACCEPT}"
-ini_set_value "${INI_FILE}" "atuin" \
-  "atuin_inline_height" "${ATUIN_INLINE_HEIGHT}"
+[ "fzf" = "${SHELL_HISTORY_METHOD##atuin_}" ] && _install_fzf || :
+[ "atuin" = "${SHELL_HISTORY_METHOD%%_fzf}" ] && _install_atuin || :
 
 #-------------------------------------------------------------------------------
-# Secrets.
+# Update the .bashrc file for all users.
 
-# In this install.sh context we have access to options but not the configured
-# workspace. For this reason we just add any list of secrets to our INI file.
-# @note: We do this last as we are messing with the IFS value.
-
-# Loop through the variable adding the blank values.
-if [ -n "${EXPECTED_SECRETS}" ]; then
-  IFS=,; for secret in ${EXPECTED_SECRETS}; do
-    _log "secret: ${secret}"
-    ini_set_value "${INI_FILE}" "expected-secrets" "${secret}" ""
-  done
-fi
-
-# Copy the example secrets file for later use.
-install_library ./lib/.jjs105-secrets.example /opt/jjs105/lib
-
-#-------------------------------------------------------------------------------
-# Script cleanup etc.
-
-# Remove the download directory if created.
-[ -n "${DOWNLOAD_DIR}" ] \
-  && _log "removing download dir" \
-  && rm --recursive "${DOWNLOAD_DIR}"
+# POSIX/Alpine, grep -q (--quiet), -s (--no-messages).
+_grep="grep -q -s \"jjs105-devcontainer\" ~/.bashrc"
+_cat="cat ${_jjs105_lib_path}/jjs105-bashrc.sh >> ~/.bashrc"
+run_command_for_users "${_grep} || ${_cat}"
