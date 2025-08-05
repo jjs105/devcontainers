@@ -27,10 +27,16 @@ _jjs105_lib_path="${_jjs105_lib_path:-/opt/jjs105/lib}"
 #-------------------------------------------------------------------------------
 secrets_add_expected_to_ini() {
   # Function to add expected secrets to the INI file.
-  # ${1} - the expected secrets identifier
-  # ${2} - the expected secrets
+  # ${1} - the expected secrets, commas separate list
 
-  ini_set_value "${INI_FILE}" "expected-secrets" "${1}" "${2}" || :
+  # Get all secrets from the passed value and loop through.
+  # @note: We add a trailing comma for the processing.
+  local _secrets="${1},"
+  while [ -n "${_secrets}" ]; do
+    local _secret="${_secrets%%,*}"; _secrets="${_secrets#*,}"
+    # Add the secret to the INI file.
+    ini_set_value "${INI_FILE}" "expected-secrets" "${_secret}" ""
+  done
 }
 
 #-------------------------------------------------------------------------------
@@ -38,20 +44,15 @@ secrets_create_example_file() {
   # Function to create an example secrets file.
 
   # Create the example file.
-  cp "/opt/jjs105/.jjs105-secrets.example" \
-    "${_example_file:=./.jjs105-secrets-example}"
+  cp "/opt/jjs105/lib/.jjs105-secrets.example" "./.jjs105-secrets.example"
 
-  # Get all identifier keys from the INI file and loop through.
-  local _keys=$(ini_get_keys "${INI_FILE}" "expected-secrets")
-  while [ -n "${_keys}" ]; do
-    local _key="${_keys%%,*}"; _keys="${_keys#*,}"
-    # Get all secrets from the current value and loop through.
-    local _secrets=$(ini_get_value "${INI_FILE}" "expected-secrets" "${_key}")
-    while [ -n "${_secrets}" ]; do
-      local _secret="${_secrets%%,*}"; _secrets="${_secrets#*,}"
-      # Set the secret to blank in the example file.
-      ini_set_value "${_example_file}" "ROOT" "${_secret}" ""
-    done
+  # Get all secrets from the current value and loop through.
+  # @note: We add a trailing comma for the processing.
+  local _secrets="$(ini_get_keys "${INI_FILE}" "expected-secrets"),"
+  while [ -n "${_secrets}" ]; do
+    local _secret="${_secrets%%,*}"; _secrets="${_secrets#*,}"
+    # Set the secret to blank in the example file.
+    ini_set_value "./.jjs105-secrets.example" "ROOT" "${_secret}" ""
   done
 }
 
@@ -62,7 +63,8 @@ secrets_add_to_environment() {
   local _secrets_file="./.jjs105-secrets"
 
   # Get all secrets from the secrets file and loop through.
-  local _secrets=$(ini_get_keys "${_secrets_file}" "ROOT")
+  # @note: We add a trailing comma for the processing.
+  local _secrets="$(ini_get_keys "${_secrets_file}" "ROOT"),"
   while [ -n "${_secrets}" ]; do
     local _secret="${_secrets%%,*}"; _secrets="${_secrets#*,}"
     # Get the secret value and export to the environment.

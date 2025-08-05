@@ -15,11 +15,10 @@ Adds the Odin language support and tools.
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| release | The Odin release version to install. 'latest' for latest official release, 'master' for GitHub master. | string | latest |
+| release | The Odin language release version to install. 'latest' for latest official release, 'master' for GitHub master. | string | latest |
 | os | The target operating system (when downloading, not compiling. | string | linux |
 | arch | The target architecture (when downloading, not compiling. | string | amd64 |
-| examples | Whether to install the Odin example projects. | boolean | true |
-| examples-path | The path where the Odin example projects will be installed. | string | /opt/jjs105/src |
+| examples | Whether to install the Odin language example projects. | boolean | true |
 | ols-create-config | Whether to create ant OLS configuration file. | boolean | true |
 | ols-create-format | Whether to create ant OLS format file. | boolean | true |
 
@@ -38,16 +37,17 @@ feature._
 This feature, especially when setting the `compile` option to true, can add a
 lot of time to any development container build.
 
-For this reason, when using Odin in ernest, the Odin development container
-template - which is yet to be implemented - should be used.
+For this reason, when using the Odin language in ernest, the Odin language
+development container template - which is yet to be implemented - should be
+used.
 
 ## Features
 
 This development container feature can be used to setup a working development
-environment for the Odin programming language as follows:
+environment for the Odin language as follows:
 
 * Linux or MacOS based using VSCode
-* Install the Odin toolset, core + vendor libraries (/opt/jjs105/lib)  
+* Install the Odin language toolset, core + vendor libraries (/opt/jjs105/lib)  
   \+ Optionally create/add VSCode tasks to the `tasks.json` file
 * Add the Odin Language Server (OLS) via VSCode extension  
   \+ Optionally create a set of OLS configuration files  

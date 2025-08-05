@@ -11,22 +11,11 @@
 # in OS compatibility etc.
 
 #-------------------------------------------------------------------------------
-_install_library_files() {
-  # Function to copy all of our library files.
-
-  local _path="/opt/jjs105/lib"
-  _log "installing library files to ${_path}"
-  _path_create "${_path}" && _path_writable "${_path}" || return 1
-  # cp -r for recursive, -f for overwrite
-  # POSIX/Alpine, cp -r (--recursive), -f (--force), chmod -R (--recursive).
-  cp -r -f "./lib/." "${_path}" && chmod -R u=rwx,go=rx "${_path}"
-}
-
-#-------------------------------------------------------------------------------
 _ensure_bash() {
   # Function to check for bash and install if necessary.
 
   # @note: command -v is similar to using type but more portable.
+  # @note: bash -v (--version), returns a string which evaluates to true.
   [ ! $(command -v bash) ] \
     && _log "installing bash" && install_packages bash \
       || :
@@ -40,7 +29,7 @@ _set_history_path() {
   # ${1} - the history path
 
   # Check for a non-blank path, striping the filename if necessary.
-  [ -z "${_path:="${1%\.bash_history}"}" ] && return 0
+  local _path="${1%\.bash_history}"; [ -z "${_path}" ] && return 0
 
   _log "ensuring bash history location of ${_path}"
   _path_create "${_path}" && _path_writable "${_path}" || return 1
@@ -49,18 +38,17 @@ _set_history_path() {
 
   _log "setting user bash history location(s)"
   local _snippet="export HISTFILE=${_path%/}/.bash_history"
-  # @note: echo -e means interpret escaped chars, -n means no ending newline.
-  run_command_for_users "echo -e \"\n\n${_snippet}\" >> ~/.bashrc"
+  run_command_for_users "echo \"${_snippet}\n\" >> ~/.bashrc"
 }
 
 #-------------------------------------------------------------------------------
 _install_git_prompt() {
   # Function to configure the Git prompt.
 
-  # Check whether already configured in the current user's .bashrc file.
-  # POSIX/Alpine, grep -q (--quiet), -s (--no-messages).
-  $(grep -q -s "/opt/jjs105/lib/git-prompt.sh" ~/.bashrc) \
-    && _log "git-prompt already configured, skipping" \
+  # Check if the script has already been downloaded - i.e. by a previous install
+  # of this feature - to avoid re-installation.
+  [ -f "/opt/jjs105/lib/git-prompt.sh" ] \
+    && _log "git-prompt already installed, skipping" \
       && return 0 || :
 
   download_and_install "library" "git-prompt.sh" \
@@ -78,7 +66,7 @@ _install_fzf() {
       && return 0 || :
 
   # @note: We download and move the file ourselves as the install script
-  # hardcodes adding /bin to the install path.
+  # hard-codes adding /bin to the install path.
   download_and_install "download-only" "fzf-install.sh" \
     "https://raw.githubusercontent.com/junegunn/fzf/refs/heads/master/install"
   install_script "${DOWNLOAD_DIR}/fzf-install.sh" "/opt/jjs105"
@@ -99,7 +87,7 @@ _install_atuin() {
       && return 0 || :
 
   # @note: We download and move the file ourselves as the install script
-  # hardcodes adding /bin to the install path.
+  # hard-codes adding /bin to the install path.
   download_and_install "script" "atuin-install.sh" "https://setup.atuin.sh"
 
   _log "installing atuin for users"
@@ -109,6 +97,9 @@ _install_atuin() {
   # Run a bash shell to ensure that the atuin config file is created.
   # POSIX/Alpine, bash -c (--command), -i (--interactive).
   run_command_for_users "bash -i -c :"
+
+  # Add the expected secrets to the INI file.
+  secrets_add_expected_to_ini "ATUIN_USERNAME,ATUIN_PASSWORD,ATUIN_KEY"
 
   # Opinionated atuin configuration.
   # POSIX/Alpine, sed -E (--extended-regexp), -i (--in-place).

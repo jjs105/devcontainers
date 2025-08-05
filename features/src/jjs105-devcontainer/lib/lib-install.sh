@@ -59,7 +59,7 @@ _path_create() {
   # ${1} - the path to create
 
   # POSIX/Alpine, mkdir -p (--parents).
-  mkdir -p "${1}" || { 
+  (mkdir -p "${1}") || {
     _error "could not create path (${1})" && return 1
   }
 }
@@ -83,17 +83,6 @@ _install_file() {
   # Copy the file, command options depend on whether a new name has been passed.
   # POSIX/Alpine, cp -T (--no-target-directory).
   [ -z "${4:-}" ] && cp "${2}" "${3}" || cp -T "${2}" "${3}/${4:-}"
-}
-
-#-------------------------------------------------------------------------------
-truthy() {
-  # Checks if a value is truthy - 1, y, yes, t, true
-  # ${1} - the value to check
-
-  case "${1}" in
-    1|[yY]|[yY][eE][sS]|[tT]|[tT][rR][uU][eE]) return 0;;
-    *) return 1;;
-  esac
 }
 
 #-------------------------------------------------------------------------------
@@ -164,16 +153,42 @@ install_script() {
 }
 
 #-------------------------------------------------------------------------------
-install_workspace_file() {
-  # Simple install workspace file function.
-  # ${1} - source file path
+install_file_set() {
+  # Internal function to install a set of files.
+  # @note: This is implemented as the 'install' utility is not in the POSIX
+  # shell specification and therefore may not be available.
+  # ${1} - source directory path
   # ${2} - target directory path
-  # ${3} - optional [new] file name
 
-  # Install the file and set its permissions.
-  _install_file "install_workspace_file" "${1}" "${2}" "${3-}" || return 1
-  [ -z "${3:-}" ] && chmod ugo=rw "${2}/${1##*/}" \
-    || chmod ugo=rw "${2}/${3}"
+  # Must be a directory source and target.
+  [ -d "${1}" ] || { \
+    _error "install_file_set() expects '${1}' to be a directory" \
+    && return 1
+  }
+  [ -f "${2}" ] && { \
+    _error "install_file_set() expects '${2}' to be a directory" \
+    && return 1
+  }
+
+  # Ensure the target path exists and is writable.
+  _lib_install_log "install_file_set() ${1} -> ${2}"
+  _path_create "${2}" && _path_writable "${2}" || return 1
+
+  # Copy the files.
+  # POSIX/Alpine, cp -r (--recursive), -f (--force), chmod -R (--recursive).
+  cp -r -f "${1}" "${2}" && chmod -R u=rwX,go=rX "${2}"
+}
+
+#-------------------------------------------------------------------------------
+install_sources() {
+  # Internal function to install a set of source files.
+  # @note: This is implemented as the 'install' utility is not in the POSIX
+  # shell specification and therefore may not be available.
+  # ${1} - source directory path
+  # ${2} - target directory path
+
+  # Install the file set and then override the permissions.
+  install_file_set "${1}" "${2}" && chmod -R u=rwX,go=rwX "${2}"
 }
 
 #-------------------------------------------------------------------------------
@@ -195,10 +210,12 @@ download_and_install() {
   # ${2} - the file name
   # ${3} - the URL to download from
 
-  _lib_install_log "downloading ${1} ${2} from ${2}"
+  _lib_install_log "downloading ${1} ${2} from ${3}"
   curl --silent --fail --location --retry 3 "${3}" \
     --output "${DOWNLOAD_DIR}/${2}"
 
+  # @note: We have to hard-code the paths here as the _jjs105_lib_path variable
+  # points to the development container files location during install.
   case "${1}" in
     script|SCRIPT) install_script "${DOWNLOAD_DIR}/${2}" /opt/jjs105/bin;;
     library|LIBRARY) install_library "${DOWNLOAD_DIR}/${2}" /opt/jjs105/lib;;
@@ -211,16 +228,16 @@ download_and_install() {
 setup_jjs105_ini() {
   # Function to ensure that the jjs105.ini file exists.
 
-  INI_PATH="/opt/jjs105/etc"
+  local _ini_path="/opt/jjs105/etc"
 
   # Ensure the target path exists and is writable, copy the file if it doesn't
   # already exist and ensure permissions.
-  _lib_install_log "ensuring ${INI_PATH}/jjs105.ini is available"
-  _path_create "${INI_PATH}" && _path_writable "${INI_PATH}" || return 1
-  [ ! -f "${INI_FILE:=${INI_PATH}/jjs105.ini}" ] && \
-    cp "${_jjs105_lib_path}/jjs105.ini" "${INI_PATH}"
+  _lib_install_log "ensuring ${_ini_path}/jjs105.ini is available"
+  _path_create "${_ini_path}" && _path_writable "${_ini_path}" || return 1
+  [ ! -f "${INI_FILE:=${_ini_path}/jjs105.ini}" ] && \
+    cp "${_jjs105_lib_path}/jjs105.ini" "${_ini_path}"
   # POSIX/Alpine, chmod -R (--recursive).
-  chmod -R ugo+rw "${INI_PATH}"
+  chmod -R ugo+rw "${_ini_path}"
 }
 
 #-------------------------------------------------------------------------------
@@ -229,11 +246,31 @@ latest_git_release() {
   # ${1} - the GitHub repository in the format 'owner/repo'
 
   # Get the release information from the GitHub API and extract the tag name.
-  _lib_install_log "getting latest git release for ${1}"
   # POSIX/Alpine, grep -q (--quiet), sed -E (--extended-regexp).
   curl --silent "https://api.github.com/repos/${1}/releases/latest" \
-    | grep -q'"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' \
+    | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' \
   || { _error "could not determine git release" && return 1; }
+}
+
+#-------------------------------------------------------------------------------
+append_script_to_bashrc() {
+  # Function to append a script to the .bashrc file.
+  # ${1} - the script to append
+
+  # @note: We have to hard-code the path here as the _jjs105_lib_path variable
+  # points to the development container files location during install.
+  local _path="/opt/jjs105/lib"
+
+  # If the script doesn't already exist in the jjs105/lib directory copy it.
+  [ ! -f "${_path}/${1}" ] && install_library "./${1}" "${_path}"
+
+  # @todo: Change echo to printf to avoid issues with escape sequences.
+
+  # POSIX/Alpine, grep -q (--quiet), -s (--no-messages).
+  local _grep="grep -q -s \"${1}\" ~/.bashrc"
+  local _echo1="echo \"\n# Load ${1} script.\" >> ~/.bashrc"
+  local _echo2="echo \". ${_path}/${1}\n\" >> ~/.bashrc"
+  run_command_for_users "${_grep} || { ${_echo1} && ${_echo2}; }"
 }
 
 #-------------------------------------------------------------------------------

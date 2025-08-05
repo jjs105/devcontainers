@@ -20,7 +20,8 @@ set -eu
 # Feature options.
 # @note: := substitution to ensure var=null => true.
 
-EXPECTED_SECRETS="${EXPECTED_SECRETS:=ATUIN_USERNAME,ATUIN_PASSWORD,ATUIN_KEY}"
+INSTALL_LIBRARIES_ONLY="${INSTALL_LIBRARIES_ONLY:=false}"
+EXPECTED_SECRETS="${EXPECTED_SECRETS:=}"
 SHELL_HISTORY_METHOD="${SHELL_HISTORY_METHOD:=atuin_fzf}"
 BASH_HISTORY_PATH="${BASH_HISTORY_PATH:=/command-history/.bash_history}"
 GIT_PROMPT="${GIT_PROMPT:=true}"
@@ -29,6 +30,8 @@ GIT_PROMPT="${GIT_PROMPT:=true}"
 # Library configuration and load.
 
 # Set the library path during install to our relative location.
+# @note: We need to do this as the POSIX shell doesn't have a way to get the
+# current script path and we haven't yet copied them to /opt/jjs105/lib.
 _jjs105_lib_path="${PWD}/lib"
 
 # Configure logging.
@@ -40,13 +43,26 @@ _log() { [ "true" = "true" ] && log "jjs105/devcontainer" "${1}" || :; }
 # shellcheck source=lib/lib-install.sh
 . "${_jjs105_lib_path}/lib-install.sh"
 
+# Include the lib-secrets.sh library directly from the container.
+# shellcheck source=lib/lib-secrets.sh
+. "${_jjs105_lib_path}/lib-secrets.sh"
+
 # Include our install functions (keeps overall install logic readable).
 . "./install-functions.sh"
 
 #-------------------------------------------------------------------------------
-# Always required installations.
+# Always required actions.
 
-_install_library_files
+# Install all our library files.
+# @note: We have to hard-code the path here as the _jjs105_lib_path variable
+# points to the development container files location during install.
+install_file_set "./lib/." "/opt/jjs105/lib"
+
+# If only installing library files then we are done.
+[ "true" = "${INSTALL_LIBRARIES_ONLY}" ] \
+  && _log "libraries only installed, exiting" \
+  && exit 0
+
 _ensure_bash
 setup_jjs105_ini
 setup_downloads
@@ -54,11 +70,8 @@ setup_downloads
 #-------------------------------------------------------------------------------
 # Add any expected secrets to the ini file.
 
-if [ -n "${EXPECTED_SECRETS}" ]; then
-  # shellcheck source=lib/lib-secrets.sh
-  . "${_jjs105_lib_path}/lib-secrets.sh"
-  secrets_add_expected_to_ini "jjs105-devcontainer" "${EXPECTED_SECRETS}"
-fi
+[ -n "${EXPECTED_SECRETS}" ] \
+  && secrets_add_expected_to_ini "${EXPECTED_SECRETS}"
 
 #-------------------------------------------------------------------------------
 # Bash usage, history and prompt configuration.
@@ -71,8 +84,6 @@ fi
       || :
 
 # Download an install the Git prompt script if necessary.
-# @note: We check if the script has already been downloaded - i.e. by a
-# previous install of this feature - to avoid re-installation.
 [ "true" = "${GIT_PROMPT}" ] && _install_git_prompt || :
 
 #-------------------------------------------------------------------------------
@@ -82,9 +93,7 @@ fi
 [ "atuin" = "${SHELL_HISTORY_METHOD%%_fzf}" ] && _install_atuin || :
 
 #-------------------------------------------------------------------------------
-# Update the .bashrc file for all users.
+# Append our bashrc script to the end of the user's bashrc file.
+# @note: We do this last so everything else is ready before it can ever be run.
 
-# POSIX/Alpine, grep -q (--quiet), -s (--no-messages).
-_grep="grep -q -s \"jjs105-devcontainer\" ~/.bashrc"
-_cat="cat ${_jjs105_lib_path}/jjs105-bashrc.sh >> ~/.bashrc"
-run_command_for_users "${_grep} || ${_cat}"
+append_script_to_bashrc "jjs105-bashrc.sh"

@@ -1,6 +1,6 @@
 {
   "id": "odin-lang",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "name": "Odin Language Support",
   "description": "Adds the Odin language support and tools.",
   "documentationURL": "https://github.com/jjs105/devcontainers/tree/main/features/src/odin-lang",
@@ -11,12 +11,13 @@
   ],
   "dependsOn": {
     "ghcr.io/jjs105/features/jjs105-devcontainer:latest": {
+      "install_libraries_only": true
     }
   },
   "options": {
     "release":{
       "type": "string",
-      "description": "The Odin release version to install. 'latest' for latest official release, 'master' for GitHub master.",
+      "description": "The Odin language release version to install. 'latest' for latest official release, 'master' for GitHub master.",
       "default": "latest",
       "proposals": [
         "master",
@@ -47,12 +48,7 @@
     "examples": {
       "type": "boolean",
       "default": true,
-      "description": "Whether to install the Odin example projects."
-    },
-    "examples-path": {
-      "type": "string",
-      "default": "/opt/jjs105/src",
-      "description": "The path where the Odin example projects will be installed."
+      "description": "Whether to install the Odin language example projects."
     },
     "ols-create-config": {
       "type": "boolean",
