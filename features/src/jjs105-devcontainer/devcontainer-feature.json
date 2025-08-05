@@ -1,6 +1,6 @@
 {
   "id": "jjs105-devcontainer",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "name": "jjs105 Development Container Base",
   "description": "Installs tools useful for development of development containers.",
   "documentationURL": "https://github.com/jjs105/devcontainers/tree/main/features/src/jjs105-devcontainer",
@@ -12,13 +12,15 @@
     "prompt", "git prompt"
   ],
   "options": {
+    "install_libraries_only": {
+      "type": "boolean",
+      "description": "Install the library files only, used by other features which depend on this feature.",
+      "default": false
+    },
     "expected_secrets":{
       "type": "string",
       "description": "Secrets to expect either in ENV variables or /workspace/.jjs105-secrets file. Comma separated list.",
-      "default": "ATUIN_USERNAME,ATUIN_PASSWORD,ATUIN_KEY",
-      "proposals": [
-        "ATUIN_USERNAME,ATUIN_PASSWORD,ATUIN_KEY"
-      ]
+      "default": ""
     },
     "shell_history_method": {
       "type": "string",

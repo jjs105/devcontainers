@@ -1,5 +1,29 @@
 # Changelog (jjs105/devcontainers)
 
+_**2025-08-05:**_\
+
+General
+
+- grep checks audit - i.e. no []
+- local variable audit for all
+- post-attach functionality of all features -> .bashrc.
+
+jjs105-devcontainer Feature
+
+- install-libraries-only option
+- lib-ini.sh - fix to ignore comment lines
+- lib-install.sh
+  - added file set and sources install functions
+  - added function to append script to .bashrc
+- lib-secrets - all working + always use ROOT of secrets file
+
+Odin Language Feature
+
+- Removed option to specify examples path
+- Re-write as install.sh + install-functions.ah
+- Re-write in new style
+- Hard-coded version until releases fixed
+
 _**2025-08-04:**_\
 New approach - jjs105-devcontainer working, others NOT
 
@@ -14,7 +38,7 @@ General
 - lib-install, check for and install sudo
 - lib-secrets, no use of IFS
 
-jjs105-devcontainer
+jjs105-devcontainer Feature
 
 - Always copy all libraries to container
 - Always ensure bash
@@ -78,6 +102,7 @@ _**2025-07-18:**_
 - jjs105-devcontainer versioned
 
 _**2025-07-16:**_\
+
 Minor updates
 
 - Move bash history mount to the feature

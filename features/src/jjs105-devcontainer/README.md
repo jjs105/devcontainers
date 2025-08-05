@@ -7,7 +7,7 @@ Installs tools useful for development of development containers.
 
 ```json
 "features": {
-    "ghcr.io/jjs105/devcontainers/jjs105-devcontainer:1": {}
+    "ghcr.io/jjs105/features/jjs105-devcontainer:1": {}
 }
 ```
 
@@ -15,7 +15,8 @@ Installs tools useful for development of development containers.
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| expected_secrets | Secrets to expect either in ENV variables or /workspace/.jjs105-secrets file. Comma separated list. | string | ATUIN_USERNAME,ATUIN_PASSWORD,ATUIN_KEY |
+| install_libraries_only | Install the library files only, used by other features which depend on this feature. | boolean | false |
+| expected_secrets | Secrets to expect either in ENV variables or /workspace/.jjs105-secrets file. Comma separated list. | string | - |
 | shell_history_method | The method used to control shell history. | string | atuin_fzf |
 | bash-history-path | The path to use shared shell history path (shared_file). | string | /command-history/.bash_history |
 | git-prompt | Install the Git prompt script. | boolean | true |

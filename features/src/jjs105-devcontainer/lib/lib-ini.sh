@@ -132,7 +132,7 @@ ini_set_value() {
   # ${3} - the key name
   # ${4} - the value to set
 
-  # @todo: Don't strip empty lines. Have to 
+  # @todo: Don't strip empty lines.
 
   _ini_writable "${1}" || return 1
   _lib_ini_log "setting INI value ${2}/${3} = ${4} (${1})"
@@ -246,7 +246,10 @@ ini_get_keys() {
     # Move to next line if a section header.
     $0 ~ "^\\[" { next; }
 
-    # Non-blank line in correct section, add to the list.
+    # Move to next line if a comment.
+    $0 ~ "^[ \t]*(#|;)" { next; }
+
+    # Non-blank, non-comment, line in correct section, add to the list.
     0 != NF && (in_root == 1 && section == "ROOT" || in_section == 1) {
       result = result trim($1) ",";
     }

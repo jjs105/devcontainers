@@ -55,7 +55,8 @@ source /opt/jjs105/lib/lib-test.sh
 # Check for our install library, exiting if not found.
 if [ ! -f "/opt/jjs105/lib/lib-install.sh" ]; then
   # @note: echo -e means interpret escaped chars, -n means no ending newline.
-  echo -e "\n\n!!! Install library not found (/opt/jjs105/lib/lib-install.sh)" 1>&2 
+  echo -e \
+    "\n\n!!! Install library not found (/opt/jjs105/lib/lib-install.sh)" 1>&2 
   exit 1
 fi
 

@@ -17,10 +17,6 @@
 [ "true" = "${_lib_log_loaded:-false}" ] && return 0 \
   || _lib_log_loaded="true"
 
-# POSIX shell doesn't have a way to get the current script path so we need to
-# have set it, defaulting to /opt/jjs105/lib.
-_jjs105_lib_path="${_jjs105_lib_path:-/opt/jjs105/lib}"
-
 _error() {
   # Simple internal error function.
   # @note: Centralised to a function in case we change approach.
@@ -60,7 +56,7 @@ show_context() {
   echo "environment: " && printenv
   echo -n "current dir: " && pwd && ls -l -a
   echo "root dir: " &&  ls -l -a /
-  [ -d /workspaces ] && echo "workspaces dir: " && ls -l -a /workspaces || :
+  [ -d "/workspaces" ] && echo "workspaces dir: " && ls -l -a /workspaces || :
 }
 
 #-------------------------------------------------------------------------------

@@ -8,7 +8,7 @@
 # file by the jjs105-devcontainer development container feature.
 
 # This file is not intended to be run as a script, although it is possible.
-# Rather it should be appended to a user's .bashrc file.
+# Rather it should be sourced by, or appended to, a user's .bashrc file.
 
 #-------------------------------------------------------------------------------
 # Update the prompt
@@ -21,6 +21,7 @@
 # POSIX/Alpine, cut -d (--delimiter), -f (--fields)
 [ -f "/etc/os-release" ] && \
   RELEASE=" $(cat /etc/os-release | grep ^ID= | cut -d = -f 2)"
+# @note: lsb_release, returns a string which evaluates to true.
 [ $(command -v lsb_release) ] && \
   RELEASE=" $(lsb_release --id --short | tr '[:upper:]' '[:lower:]')"
 RELEASE="${RELEASE:+\033[35m}${RELEASE-}${RELEASE:+\033[0m}"
@@ -36,8 +37,8 @@ fi
 
 # Set # or $ as prompt end.
 # POSIX/Alpine, id -u (--user).
-[ "\$(id -u)" = "0" ] && PS1="${PS1}\n# "
-[ "\$(id -u)" = "0" ] || PS1="${PS1}\n\$ "
+[ "$(id -u)" = "0" ] && PS1="${PS1}\n# "
+[ "$(id -u)" = "0" ] || PS1="${PS1}\n\$ "
 
 # Export the prompt.
 export PS1
@@ -49,13 +50,13 @@ export PS1
 . "/opt/jjs105/lib/lib-secrets.sh"
 
 # Only care if there is an INI file and there are expected secrets.
+# @note: grep check does not need [].
 # POSIX/Alpine, grep -q (--quiet).
-if [ -f "/opt/jjs105/etc/jjs105.ini" ] \
-&& [ $(grep -q "\[expected-secrets\]" "/opt/jjs105/etc/jjs105.ini") ]; then
+if [ -f "${INI_FILE:=/opt/jjs105/etc/jjs105.ini}" ] \
+&& { grep -q "\[expected-secrets\]" "${INI_FILE}"; }; then
 
-  # If there is no secrets or example files then create the example file.
-  [ ! -f "./.jjs105-secrets" ] && [ ! -f "./.jjs105-secrets-example" ] \
-    && secrets_create_example_file || :
+  # If there is no secrets example file then create the example file.
+  [ ! -f "./.jjs105-secrets.example" ] && secrets_create_example_file || :
 
   # If there is a secrets file then add the secrets to environment variables.
   [ -f "./.jjs105-secrets" ] && secrets_add_to_environment || :
@@ -66,7 +67,7 @@ fi
 
 # POSIX/Alpine, grep -q (--quiet), -v (--invert-match).
 if [ -x ~/.atuin/bin/atuin ] \
-&& $(~/.atuin/bin/atuin status | grep -q -v "Username"); then
+&& ! { ~/.atuin/bin/atuin status | grep -q "Username"; }; then
   USERNAME=$(secrets_get "ATUIN_USERNAME")
   PASSWORD=$(secrets_get "ATUIN_PASSWORD")
   KEY=$(secrets_get "ATUIN_KEY")

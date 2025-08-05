@@ -26,43 +26,60 @@ CHECK_DEVICE_DXG="${CHECK_DEVICE_DXG:=true}"
 CHECK_DEVICE_VIDEO="${CHECK_DEVICE_VIDEO:=true}"
 
 #-------------------------------------------------------------------------------
-# Library inclusion and copy + required script setup.
+# Library configuration and load.
+# @note: Simple install so no need for separate install-functions.sh.
 
-# Include the install-lib.sh library from its install location.
-. /opt/jjs105/lib/install-lib.sh
+# Set the library path to /opt/jjs105/lib.
+# @note: We know this path is available because this development container
+# feature depends on the jjs105-devcontainer development container feature.
+_jjs105_lib_path="/opt/jjs105/lib"
 
-# Ensure logs are configured and set up our simplified log function.
-_log() { log "jjs105/wslg-support" "${1}"; }
-log_setup
+# Configure logging.
+_lib_install_log="true"
+_lib_ini_log="true"
+_log() { [ "true" = "true" ] && log "jjs105/wslg-support" "${1}" || :; }
 
-# Ensure that we have a general jjs105 INI file.
-ensure_jjs105_ini
+# Include the lib-install.sh library from its install location.
+# shellcheck source=lib/lib-install.sh
+. "${_jjs105_lib_path}/lib-install.sh"
+
+# Include the lib-ini.sh library from its install location.
+# shellcheck source=lib/lib-ini.sh
+. "${_jjs105_lib_path}/lib-ini.sh"
+
+#-------------------------------------------------------------------------------
+# Always required installations.
+
+setup_jjs105_ini
+setup_downloads
 
 #-------------------------------------------------------------------------------
 # Install packages etc.
 
 # Required packages
 _log "installing required packages"
-install_packages vainfo mesa-va-drivers
+install_packages vainfo mesa-va-drivers || :
 
 # Install the X11 apps if requested.
-"true" = "${INSTALL_X11_APPS}" ] \
+[ "true" = "${INSTALL_X11_APPS}" ] \
   && _log "installing X11 apps" \
-  && install_packages x11-apps
+  && install_packages x11-apps || :
 
 # Install the Mesa utilities if requested.
 [ "true" = "${INSTALL_MESA_UTILS}" ] \
   && _log "installing Mesa utilities" \
-  && install_packages mesa-utils
+  && install_packages mesa-utils || :
 
 #-------------------------------------------------------------------------------
-# Copy and configure the check options script.
+# Configure the check options.
 
-_log "setting up check options script"
-install_script ./wslg-post-attach.sh /opt/jjs105/bin
-
-# Set the check options configuration in the jjs105 INI file.
 ini_set_value "${INI_FILE}" "wslg-support" \
   "check-device-dxg" "${CHECK_DEVICE_DXG}"
 ini_set_value "${INI_FILE}" "wslg-support" \
   "check-device-video" "${CHECK_DEVICE_VIDEO}"
+
+#-------------------------------------------------------------------------------
+# Append our bashrc script to the end of the user's bashrc file.
+# @note: We do this last so everything else is ready before it can ever be run.
+
+append_script_to_bashrc "wslg-support-bashrc.sh"
