@@ -6,6 +6,7 @@
 
 # Defines a set of functions to manager INI files
 
+# shellcheck shell=sh
 # @note: We assume that only the most basic POSIX shell (sh) is available to aid
 # in OS compatibility etc.
 
@@ -29,7 +30,7 @@ _lib_ini_log() {
 }
 
 # If on BusyBox ensure gawk is installed.
-$(awk 2>&1 | grep -q BusyBox) \
+awk 2>&1 | grep -q BusyBox \
   && _lib_ini_log "installing GAWK on BusyBox" \
   && apk add --no-cache gawk \
     || :
@@ -118,7 +119,7 @@ ini_ensure_section() {
   _ini_readable "${1}" || return 1
   _lib_ini_log "ensuring INI section ${2} (${1})"
   # POSIX/Alpine, grep -q (--quiet).
-  grep -q "\[${2}\]" "${1}" || echo "\n[${2}]" >> "${1}"
+  grep -q "\[${2}\]" "${1}" || printf '\n[%s]' "${2}" >> "${1}"
 }
 
 #-------------------------------------------------------------------------------
@@ -215,7 +216,7 @@ ini_get_value() {
 
   _ini_readable "${1}" || return 1
   _lib_ini_log "getting INI value ${2}/${3} (${1})"
-  echo "$(_ini_value "${1}" "${2}" "${3}")" || ""
+  echo "$(_ini_value "${1}" "${2}" "${3}")" || echo ""
 }
 
 #-------------------------------------------------------------------------------

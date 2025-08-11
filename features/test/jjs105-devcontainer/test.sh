@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #-------------------------------------------------------------------------------
 # Copyright (c) Jon Spain (https://github.com/jjs105).
 # Licensed under GNU GPL v3 or later

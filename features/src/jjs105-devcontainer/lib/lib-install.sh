@@ -7,6 +7,7 @@
 # Defines (helper) functions for the implementation of development container and
 # feature install scripts.
 
+# shellcheck shell=sh
 # @note: We assume that only the most basic POSIX shell (sh) is available to aid
 # in OS compatibility etc.
 
@@ -82,7 +83,7 @@ _install_file() {
 
   # Copy the file, command options depend on whether a new name has been passed.
   # POSIX/Alpine, cp -T (--no-target-directory).
-  [ -z "${4:-}" ] && cp "${2}" "${3}" || cp -T "${2}" "${3}/${4:-}"
+  { [ -z "${4:-}" ] && cp "${2}" "${3}"; } || cp -T "${2}" "${3}/${4:-}"
 }
 
 #-------------------------------------------------------------------------------
@@ -100,7 +101,7 @@ install_packages() {
   # POSIX/Alpine, rm -r (--recursive), -f (--force).
   if [ -x "/usr/bin/apt-get" ]; then
     [ ! -x "/usr/bin/sudo" ] && apt-get sudo --assume-yes
-    _lib_install_log "installing packages using apt-get: ${@}"
+    _lib_install_log "installing packages using apt-get: ${*}"
     sudo apt-get update --assume-yes \
     && sudo apt-get install --assume-yes --no-install-recommends "$@" \
     && sudo apt-get clean \
@@ -110,13 +111,13 @@ install_packages() {
   # APK? (i.e. on Alpine).
   elif [ -x "/sbin/apk" ]; then
     [ ! -x "/usr/bin/sudo" ] && apk add sudo
-    _lib_install_log "installing packages using apk: ${@}"
+    _lib_install_log "installing packages using apk: ${*}"
     sudo apk add --no-cache "$@"
 
   # Pacman? (i.e. on Arch).
   elif [ -x "/sbin/pacman" ]; then
     [ ! -x "/usr/bin/sudo" ] && pacman --noconfirm sudo
-    _lib_install_log "installing packages using pacman: ${@}"
+    _lib_install_log "installing packages using pacman: ${*}"
     sudo pacman --noconfirm --sync --refresh "$@"
 
   # Otherwise not supported.
@@ -135,7 +136,7 @@ install_library() {
 
   # Install the file and set its permissions.
   _install_file "install_library" "${1}" "${2}" "${3-}" || return 1
-  [ -z "${3:-}" ] && chmod u=rw,go=r "${2}/${1##*/}" \
+  { [ -z "${3:-}" ] && chmod u=rw,go=r "${2}/${1##*/}"; } \
     || chmod u=rw,go=r "${2}/${3}"
 }
 
@@ -148,7 +149,7 @@ install_script() {
 
   # Install the file and set its permissions.
   _install_file "install_script" "${1}" "${2}" "${3-}" || return 1
-  [ -z "${3:-}" ] && chmod u=rwx,go=rx "${2}/${1##*/}" \
+  { [ -z "${3:-}" ] && chmod u=rwx,go=rx "${2}/${1##*/}"; } \
     || chmod u=rwx,go=rx "${2}/${3}"
 }
 
@@ -220,15 +221,25 @@ download_and_install() {
     script|SCRIPT) install_script "${DOWNLOAD_DIR}/${2}" /opt/jjs105/bin;;
     library|LIBRARY) install_library "${DOWNLOAD_DIR}/${2}" /opt/jjs105/lib;;
     download-only|DOWNLOAD-ONLY) :;;
-    *) _error "invalid install type: ${1}" return 1;;
+    *) _error "invalid install type: ${1}"; return 1;;
   esac
+}
+
+#-------------------------------------------------------------------------------
+remove_downloads() {
+  # Function to deliberately remove all downloads data.
+
+  # POSIX/Alpine, rm -r (--recursive), -f (--force).
+  [ -n "${DOWNLOAD_DIR}" ] && [ -d "${DOWNLOAD_DIR}" ] \
+      && _lib_install_log "removing downloads ${DOWNLOAD_DIR}" \
+      && rm -r -f "${DOWNLOAD_DIR:?}/"
 }
 
 #-------------------------------------------------------------------------------
 setup_jjs105_ini() {
   # Function to ensure that the jjs105.ini file exists.
 
-  local _ini_path="/opt/jjs105/etc"
+  _ini_path="/opt/jjs105/etc"
 
   # Ensure the target path exists and is writable, copy the file if it doesn't
   # already exist and ensure permissions.
@@ -259,18 +270,16 @@ append_script_to_bashrc() {
 
   # @note: We have to hard-code the path here as the _jjs105_lib_path variable
   # points to the development container files location during install.
-  local _path="/opt/jjs105/lib"
+  _path="/opt/jjs105/lib"
 
   # If the script doesn't already exist in the jjs105/lib directory copy it.
   [ ! -f "${_path}/${1}" ] && install_library "./${1}" "${_path}"
 
-  # @todo: Change echo to printf to avoid issues with escape sequences.
-
   # POSIX/Alpine, grep -q (--quiet), -s (--no-messages).
-  local _grep="grep -q -s \"${1}\" ~/.bashrc"
-  local _echo1="echo \"\n# Load ${1} script.\" >> ~/.bashrc"
-  local _echo2="echo \". ${_path}/${1}\n\" >> ~/.bashrc"
-  run_command_for_users "${_grep} || { ${_echo1} && ${_echo2}; }"
+  _grep="grep -q -s \"${1}\" ~/.bashrc"
+  _line1="printf \"\n# Load ${1} script.\n\" >> ~/.bashrc"
+  _line2="printf \". ${_path}/${1}\n\" >> ~/.bashrc"
+  run_command_for_users "${_grep} || { ${_line1} && ${_line2}; }"
 }
 
 #-------------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #-------------------------------------------------------------------------------
 # Copyright (c) Jon Spain (https://github.com/jjs105).
 # Licensed under GNU GPL v3 or later
@@ -22,7 +23,7 @@
 [ -f "/etc/os-release" ] && \
   RELEASE=" $(cat /etc/os-release | grep ^ID= | cut -d = -f 2)"
 # @note: lsb_release, returns a string which evaluates to true.
-[ $(command -v lsb_release) ] && \
+[ "$(command -v lsb_release)" ] && \
   RELEASE=" $(lsb_release --id --short | tr '[:upper:]' '[:lower:]')"
 RELEASE="${RELEASE:+\033[35m}${RELEASE-}${RELEASE:+\033[0m}"
 
@@ -53,7 +54,10 @@ export PS1
 # @note: grep check does not need [].
 # POSIX/Alpine, grep -q (--quiet).
 if [ -f "${INI_FILE:=/opt/jjs105/etc/jjs105.ini}" ] \
-&& { grep -q "\[expected-secrets\]" "${INI_FILE}"; }; then
+&& grep -q "\[expected-secrets\]" "${INI_FILE}"; then
+
+  # Ensure .gitignore file is configured.
+  secrets_gitignore
 
   # If there is no secrets example file then create the example file.
   [ ! -f "./.jjs105-secrets.example" ] && secrets_create_example_file || :

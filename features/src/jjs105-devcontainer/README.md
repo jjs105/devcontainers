@@ -21,6 +21,14 @@ Installs tools useful for development of development containers.
 | bash-history-path | The path to use shared shell history path (shared_file). | string | /command-history/.bash_history |
 | git-prompt | Install the Git prompt script. | boolean | true |
 
+## Customizations
+
+### VS Code Extensions
+
+- `mads-hartmann.bash-ide-vscode`
+- `timonwong.shellcheck`
+- `dbaeumer.vscode-eslint`
+
 
 ## Install Library
 

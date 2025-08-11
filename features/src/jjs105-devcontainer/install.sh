@@ -6,6 +6,7 @@
 
 # Install script for the jjs105-devcontainer development container feature.
 
+# shellcheck shell=sh
 # @note: We assume that only the most basic POSIX shell (sh) is available to aid
 # in OS compatibility etc.
 
@@ -37,7 +38,7 @@ _jjs105_lib_path="${PWD}/lib"
 # Configure logging.
 _lib_install_log="true"
 _lib_ini_log="true"
-_log() { [ "true" = "true" ] && log "jjs105/devcontainer" "${1}" || :; }
+_log() { log "jjs105/devcontainer" "${1}" || :; }
 
 # Include the lib-install.sh library directly from the container.
 # shellcheck source=lib/lib-install.sh
@@ -97,3 +98,8 @@ setup_downloads
 # @note: We do this last so everything else is ready before it can ever be run.
 
 append_script_to_bashrc "jjs105-bashrc.sh"
+
+#-------------------------------------------------------------------------------
+# Finish up.
+
+remove_downloads

@@ -7,6 +7,7 @@
 # Defines a set of functions to support logging in the context of jjs105
 # development containers.
 
+# shellcheck shell=sh
 # @note: We assume that only the most basic POSIX shell (sh) is available to aid
 # in OS compatibility etc.
 
@@ -27,9 +28,9 @@ _error() {
 
 # Create the log file and set permissions (as root).
 # POSIX/Alpine, su -c for command, chmod -R (--recursive), mkdir -p (--parents).
-su -c "mkdir -p /var/log/jjs105" - "root" \
+{ su -c "mkdir -p /var/log/jjs105" - "root" \
   && su -c "touch /var/log/jjs105/install-log" - "root" \
-  && su -c "chmod -R ugo+rw /var/log/jjs105" - "root"  \
+  && su -c "chmod -R ugo+rw /var/log/jjs105" - "root"; }  \
   || { _error "could not create log dir" && return 1; }
 
 #-------------------------------------------------------------------------------
@@ -50,11 +51,10 @@ show_context() {
 
   [ -n "${1:-}" ] && echo "${1}" || :
 
-  # @note: echo -e means interpret escaped chars, -n means no ending newline.
   # @note: ls -l means long format, -a means show all files.
-  echo -n "user: " && whoami
+  printf "user: " && whoami
   echo "environment: " && printenv
-  echo -n "current dir: " && pwd && ls -l -a
+  printf "current dir: " && pwd && ls -l -a
   echo "root dir: " &&  ls -l -a /
   [ -d "/workspaces" ] && echo "workspaces dir: " && ls -l -a /workspaces || :
 }
@@ -64,7 +64,7 @@ log_context() {
   # Run the context function adding to the log file.
   # ${1} - the package identifier
 
-  echo "===>>> ${1}: context"; show_context
+  echo "===>>> ${1}: context"; show_context ""
   echo "===>>> ${1}: context" >> /var/log/jjs105/install-log
-  show_context >> /var/log/jjs105/install-log
+  show_context "" >> /var/log/jjs105/install-log
 }

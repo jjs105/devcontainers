@@ -7,6 +7,7 @@
 # Install script functions for the jjs105-devcontainer development container
 # feature.
 
+# shellcheck shell=sh
 # @note: We assume that only the most basic POSIX shell (sh) is available to aid
 # in OS compatibility etc.
 
@@ -16,7 +17,7 @@ _ensure_bash() {
 
   # @note: command -v is similar to using type but more portable.
   # @note: bash -v (--version), returns a string which evaluates to true.
-  [ ! $(command -v bash) ] \
+  [ ! "$(command -v bash)" ] \
     && _log "installing bash" && install_packages bash \
       || :
 }
@@ -29,15 +30,15 @@ _set_history_path() {
   # ${1} - the history path
 
   # Check for a non-blank path, striping the filename if necessary.
-  local _path="${1%\.bash_history}"; [ -z "${_path}" ] && return 0
+  _path="${1%\.bash_history}"; [ -z "${_path}" ] && return 0
 
   _log "ensuring bash history location of ${_path}"
   _path_create "${_path}" && _path_writable "${_path}" || return 1
-  # POSIX/Alpine, chomd -R (--recursive).
+  # POSIX/Alpine, chmod -R (--recursive).
   touch "${_path%/}/.bash_history" && chmod -R ugo+rw "${_path}"
 
   _log "setting user bash history location(s)"
-  local _snippet="export HISTFILE=${_path%/}/.bash_history"
+  _snippet="export HISTFILE=${_path%/}/.bash_history"
   run_command_for_users "echo \"${_snippet}\n\" >> ~/.bashrc"
 }
 
@@ -61,7 +62,7 @@ _install_fzf() {
 
   # Check whether already configured in the current user's .bashrc file.
   # POSIX/Alpine, grep -q (--quiet), -s (--no-messages).
-  $(grep -q -s "~/.fzf.bash" ~/.bashrc) \
+  grep -q -s "/.fzf.bash" ~/.bashrc \
     && _log "fzf already installed, skipping" \
       && return 0 || :
 
@@ -82,7 +83,7 @@ _install_atuin() {
 
   # Check whether already configured in the current user's .bashrc file.
   # POSIX/Alpine, grep -q (--quiet), -s (--no-messages).
-  $(grep -q -s "atuin init bash" ~/.bashrc) \
+  grep -q -s "atuin init bash" ~/.bashrc \
     && _log "atuin already installed, skipping" \
       && return 0 || :
 
@@ -103,7 +104,7 @@ _install_atuin() {
 
   # Opinionated atuin configuration.
   # POSIX/Alpine, sed -E (--extended-regexp), -i (--in-place).
-  local _pattern="atuin init bash"; _flag="--disable-up-arrow"
+  _pattern="atuin init bash"; _flag="--disable-up-arrow"
   _pattern="s/${_pattern}/${_pattern} ${_flag}/g"
   run_command_for_users "sed -E -i '${_pattern}' ~/.bashrc"
   _pattern="s/(# |)enter_accept = .*/enter_accept = false/g"

@@ -1,5 +1,25 @@
 # Changelog (jjs105/devcontainers)
 
+_**2025-08-11:**_\
+
+General
+
+- Workspace .vscode  spellings
+- ShellCheck working - audit of all errors and warnings
+  - Indicate shell either with !~ or directive
+  - Remove $() where appropriate, surrounding quotes otherwise
+  - printf instead of echo where appropriate
+  - Use {} to ensure A && B || C always functions as expected
+  - Use ${*} instead of ${@} in strings
+  - remove use of local _var (not POSIX)
+  - Use eval() instead of !indirection (POSIX)
+
+jjs105-devcontainer Feature
+
+- Added gitignore functionality to secrets library and called from .bashrc
+- Added remove_downloads function to install library and use in install scripts
+- Added shellcheck/eslint/bash-ide extensions to spec
+
 _**2025-08-05:**_\
 
 General

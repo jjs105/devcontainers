@@ -7,6 +7,7 @@
 # Defines a set of functions to support secrets in the context of jjs105
 # development containers.
 
+# shellcheck shell=sh
 # @note: We assume that only the most basic POSIX shell (sh) is available to aid
 # in OS compatibility etc.
 
@@ -31,9 +32,9 @@ secrets_add_expected_to_ini() {
 
   # Get all secrets from the passed value and loop through.
   # @note: We add a trailing comma for the processing.
-  local _secrets="${1},"
+  _secrets="${1},"
   while [ -n "${_secrets}" ]; do
-    local _secret="${_secrets%%,*}"; _secrets="${_secrets#*,}"
+    _secret="${_secrets%%,*}"; _secrets="${_secrets#*,}"
     # Add the secret to the INI file.
     ini_set_value "${INI_FILE}" "expected-secrets" "${_secret}" ""
   done
@@ -48,27 +49,41 @@ secrets_create_example_file() {
 
   # Get all secrets from the current value and loop through.
   # @note: We add a trailing comma for the processing.
-  local _secrets="$(ini_get_keys "${INI_FILE}" "expected-secrets"),"
+  _secrets="$(ini_get_keys "${INI_FILE}" "expected-secrets"),"
   while [ -n "${_secrets}" ]; do
-    local _secret="${_secrets%%,*}"; _secrets="${_secrets#*,}"
+    _secret="${_secrets%%,*}"; _secrets="${_secrets#*,}"
     # Set the secret to blank in the example file.
     ini_set_value "./.jjs105-secrets.example" "ROOT" "${_secret}" ""
   done
 }
 
 #-------------------------------------------------------------------------------
+secrets_gitignore() {
+  # Function to create and/or add to a .gitignore file so that our secrets
+  # files are not committed to a repository.
+
+  # Check if already done.
+  [ -f "./.gitignore" ] \
+    && grep -q "/.jjs105-secrets\*" "./.gitignore" \
+    && return 0;
+
+  # Add to the file.
+  printf "\n/.jjs105-secrets*\n" >> "./.gitignore"
+}
+
+#-------------------------------------------------------------------------------
 secrets_add_to_environment() {
   # Function to add secrets to the environment.
 
-  local _secrets_file="./.jjs105-secrets"
+  _secrets_file="./.jjs105-secrets"
 
   # Get all secrets from the secrets file and loop through.
   # @note: We add a trailing comma for the processing.
-  local _secrets="$(ini_get_keys "${_secrets_file}" "ROOT"),"
+  _secrets="$(ini_get_keys "${_secrets_file}" "ROOT"),"
   while [ -n "${_secrets}" ]; do
-    local _secret="${_secrets%%,*}"; _secrets="${_secrets#*,}"
+    _secret="${_secrets%%,*}"; _secrets="${_secrets#*,}"
     # Get the secret value and export to the environment.
-    local _value=$(ini_get_value "${_secrets_file}" "ROOT" "${_secret}")
+    _value=$(ini_get_value "${_secrets_file}" "ROOT" "${_secret}")
     export "${_secret}"="${_value}"
   done
 }
@@ -79,8 +94,10 @@ secrets_get() {
   # file called .jjs105.secrets in the current directory.
   # ${1} - the secret name
 
+  eval "_env=\"\$${1}\""
+
   # Value available in environment variable trumps all.
-  [ -n "${!1+1}" ] && echo "${!1}" && return 0
+  [ -n "${_env}" ] && echo "${_env}" && return 0
 
   # Otherwise check for a secrets file in the current directory.
   # @note: We do not need to check for a value first as ini_get_value() returns

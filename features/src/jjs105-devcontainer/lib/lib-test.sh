@@ -7,6 +7,9 @@
 # Defines a bespoke functionality allowing enhanced testing of development
 # container scripts and templates.
 
+# shellcheck shell=bash
+# @note: This library requires that it be used in a bash context.
+
 #-------------------------------------------------------------------------------
 log() {
   # Simple log function.
@@ -90,7 +93,7 @@ reportResults() {
   # Function to report test results of testing created with check* function(s).
 
   [ 0 = "${#DC_CLI_FAILED[@]}" ] && echo "✅✅✅ All Tests Passed" && return 0
-  echo "💥💥💥 Failed tests: ${DC_CLI_FAILED[@]}" 1>&2 && return 1
+  echo "💥💥💥 Failed tests: ${DC_CLI_FAILED[*]}" 1>&2 && return 1
 }
 
 #-------------------------------------------------------------------------------
@@ -218,7 +221,7 @@ check_env_function_exists() {
 
   _test_start "env function exists: ${1}"
   # @note: bash -i means run in interactive mode, -c run the following command.
-  local _result=0; $(bash -ic "${1}" > /dev/null 2>&1)  || _result=1
+  local _result=0; bash -ic "${1}" > /dev/null 2>&1 || _result=1
   _test_result "${_result}"
 }
 
@@ -274,8 +277,7 @@ check_installed() {
   local _label="installed: ${_path}"; _test_start "${_label}" "true"
 
   # Main file path/command exists check.
-  [ -f "${_path}" ] || _path=$(which "${_path}")
-  [ 0 != "${?}" ] || _result=0
+  { [ -f "${_path}" ] || _path=$(which "${_path}"); } || _result=0
   _test_sub_result "${_result}" "path exists ${_path}" \
 
   # Loop through all passed extra checks.

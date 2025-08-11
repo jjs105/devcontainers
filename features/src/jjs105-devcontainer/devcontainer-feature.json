@@ -56,5 +56,14 @@
         "target": "/command-history",
         "type": "volume"
       }
-  ]
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+				"mads-hartmann.bash-ide-vscode",
+        "timonwong.shellcheck",
+				"dbaeumer.vscode-eslint"
+      ]
+    }
+  }
 }
