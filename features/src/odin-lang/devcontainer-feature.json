@@ -1,6 +1,6 @@
 {
   "id": "odin-lang",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "name": "Odin Language Support",
   "description": "Adds the Odin language support and tools.",
   "documentationURL": "https://github.com/jjs105/devcontainers/tree/main/features/src/odin-lang",
@@ -50,14 +50,14 @@
       "default": true,
       "description": "Whether to install the Odin language example projects."
     },
-    "ols-create-config": {
+    "vscode-create-config": {
       "type": "boolean",
-      "description": "Whether to create ant OLS configuration file.",
+      "description": "Whether to create a set of VS Code files.",
       "default": true
     },
-    "ols-create-format": {
+    "ols-create-config": {
       "type": "boolean",
-      "description": "Whether to create ant OLS format file.",
+      "description": "Whether to create a set of OLS configuration files.",
       "default": true
     }
   },

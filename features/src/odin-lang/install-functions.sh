@@ -6,6 +6,7 @@
 
 # Install script functions for the odin-lang development container feature.
 
+# shellcheck shell=sh
 # @note: We assume that only the most basic POSIX shell (sh) is available to aid
 # in OS compatibility etc.
 
@@ -21,21 +22,43 @@ _check_not_windows() {
 #-------------------------------------------------------------------------------
 _compile_and_configure_odin() {
   # Function to compile and configure Odin.
-  # Not yest supported.
   
   # Check whether the Odin language is already installed.
   [ -f "/opt/jjs105/lib/odin-lang/odin" ] \
     && _log "odin language already installed, skipping compilation" \
       && return 0 || :
 
-  _log "compiling the Odin language is not yet supported, exiting" && exit 1
+  # Determine the release.
+  _release="${RELEASE}"; [ "latest" = "${_release}" ] \
+    || _release="$(latest_git_release odin-lang/Odin)"
 
   # Install the pre-requisites.
-  # Clone the Odin language repository.
-  # Check for and checkout a release branch if specified.
+  install_packages clang llvm
+
+  # Clone the Odin language repository and checkout the correct branch.
+  _log "cloning the Odin language git repository"
+  git clone "https://github.com/odin-lang/Odin" "${DOWNLOAD_DIR}/odin-lang"
+  cd "${DOWNLOAD_DIR}/odin-lang" || {
+    _log "failed to change directory to Odin language repository"
+    exit 1
+  }
+  { [ "latest" != "${_release}" ] \
+    && _log "checking out Odin language branch ${_release}" \
+    && git checkout "${_release}"; } \
+    || _log "using latest version of Odin language repository"
+
   # Compile the Odin language.
-  # Install the compiled Odin language files to the lib directory.
-  # Uninstall the pre-requisites.
+  make release-native
+
+  # Copy the necessary Odin language files ready to install.
+  # POSIX/Alpine, cp -r (--recursive).
+  mkdir "${DOWNLOAD_DIR}/odin-install" \
+    && cp -r ./base ./core/ ./shared ./vendor ./odin \
+      "${DOWNLOAD_DIR}/odin-install"
+
+  # Install the files in the final location.
+  install_file_set \
+    "${DOWNLOAD_DIR}/odin-install/." "/opt/jjs105/lib/odin-lang"
 }
 
 #-------------------------------------------------------------------------------
@@ -48,7 +71,7 @@ _install_odin_release() {
       && return 0 || :
 
   # Determine the release.
-  local _release="${RELEASE}"; [ "latest" != "${_release}" ] \
+  _release="${RELEASE}"; [ "latest" != "${_release}" ] \
     || _release="$(latest_git_release odin-lang/Odin)"
 
   # ARM64 only supported on MacOS.
@@ -58,7 +81,7 @@ _install_odin_release() {
 
   # Download and extract the file.
   # @note: Extension based on OS, however we don't support windows download.
-  local _filename="odin-${OS}-${ARCH}-${_release}.tar.gz"
+  _filename="odin-${OS}-${ARCH}-${_release}.tar.gz"
   download_and_install "download-only" "${_filename}" \
     "https://github.com/odin-lang/Odin/releases/download/${_release}/${_filename}"
   # POSIX/Alpine, tar -x(--extract), -z(--gzip), -f(--file), -C(--directory).
@@ -79,7 +102,7 @@ _install_odin_examples() {
       && return 0 || :
 
   # Download and extract the examples.
-  local _filename="odin-examples.tar.gz"
+  _filename="odin-examples.tar.gz"
   download_and_install "download-only" "${_filename}" \
     "https://api.github.com/repos/odin-lang/examples/tarball/master"
   # POSIX/Alpine, tar -x(--extract), -z(--gzip), -f(--file), -C(--directory).

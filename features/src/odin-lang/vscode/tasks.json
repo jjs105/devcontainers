@@ -1,0 +1,158 @@
+{
+  // Example VS Code tasks.json tasks for the Odin language. Tasks have been
+  // pulled from a number of sources.
+  // @note: The '.' path in task context is the same as ${workspaceFolder}.
+  "version": "2.0.0",
+  // When considering tasks for an Odin language only project the common task
+  // settings here can be used to make the individual tasks simpler.
+  "options": { "env": {} },
+  // If using the OLS extension then the $odin problem matcher is available.
+  "problemMatcher": ["$odin"],
+  "tasks": [
+
+    // Build and run the current file, the Odin tool will remove the output file
+    // after execution.
+    {
+      "label": "odin-run-file",
+      "group": { "kind": "build", "isDefault": "**.odin" },
+      "type": "shell",
+      "command": "odin",
+      "linux": {
+        "args": [
+          "run",
+          "${file}",
+          "-file",
+          "-out:${fileDirname}/${fileBasenameNoExtension}.out"
+        ]
+      },
+      "windows": {
+        "args": [
+          "run",
+          "${file}",
+          "-file",
+          "-out:${fileDirname}/${fileBasenameNoExtension}.exe"
+        ]
+      }
+    },
+
+    // Build the entire workspace, output to the workspace root.
+    {
+      "label": "odin-debug-workspace-in-workspace",
+      "group": "build",
+      "type": "shell",
+      "command": "odin",
+      "linux": {
+        "args": [
+          "build",
+          "${workspaceFolder}",
+          "-out:${workspaceFolder}/${workspaceFolderBasename}.out",
+          "-debug"
+        ]
+      },
+      "windows": {
+        "args": [
+          "build",
+          "${workspaceFolder}",
+          "-out:${workspaceFolder}/${workspaceFolderBasename}.exe",
+          "-debug"
+        ]
+      }
+    },
+    
+    // Create a /build directory in the workspace root.
+    {
+      "label": "odin-create-build-directory",
+      "group": "build",
+      "type": "shell",
+      "linux": {
+        "command": "mkdir ${workspaceFolder}/build"
+      },
+      "windows": {
+        "command": "cmd /C if not exist ${workspaceFolder}\\build mkdir ${workspaceFolder}\\build"
+      }
+    },
+
+    // Build the current file, output to the workspace /build directory.
+    {
+      "label": "odin-debug-file-in-build-directory",
+      "group": "build",
+      "type": "shell",
+      "dependsOn": [
+        "odin-create-build-directory"
+      ],
+      "command": "odin",
+      "linux": {
+        "args": [
+          "build",
+          "${file}",
+          "-file",
+          "-out:${fileDirname}/${fileBasenameNoExtension}.out",
+          "-debug"
+        ]
+      },
+      "windows": {
+        "args": [
+          "build",
+          "${file}",
+          "-file",
+          "-out:${fileDirname}/${fileBasenameNoExtension}.exe",
+          "-debug"
+        ]
+      }
+    },
+
+    // Build the current directory, output to the workspace /build directory.
+    {
+      "label": "odin-debug-dir-in-build-directory",
+      "group": "build",
+      "type": "shell",
+      "dependsOn": [
+        "odin-create-build-directory"
+      ],
+      "command": "odin",
+      "linux": {
+        "args": [
+          "build",
+          "${fileDirname}",
+          "-out:${workspaceFolder}/build/${fileDirnameBasename}.out",
+          "-debug"
+        ]
+      },
+      "windows": {
+        "args": [
+          "build",
+          "${fileDirname}",
+          "-out:${workspaceFolder}/build/${fileDirnameBasename}.exe",
+          "-debug"
+        ]
+      }
+    },
+
+    // Build the entire workspace, output to the workspace /build directory.
+    {
+      "label": "odin-debug-workspace-in-build-directory",
+      "group": "build",
+      "type": "shell",
+      "dependsOn": [
+        "odin-create-build-directory"
+      ],
+      "command": "odin",
+      "linux": {
+        "args": [
+          "build",
+          "${workspaceFolder}",
+          "-out:${workspaceFolder}/build/${workspaceFolderBasename}.out",
+          "-debug"
+        ]
+      },
+      "windows": {
+        "args": [
+          "build",
+          "${workspaceFolder}",
+          "-out:${workspaceFolder}/build/${workspaceFolderBasename}.exe",
+          "-debug"
+        ]
+      }
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #-------------------------------------------------------------------------------
 # Copyright (c) Jon Spain (https://github.com/jjs105).
 # Licensed under GNU GPL v3 or later
@@ -19,7 +20,7 @@
 
 # Tell the user where the Odin language examples are if they exist
 [ -d "/opt/jjs105/src/odin-lang-examples" ] \
-  && echo "The Odin language examples can be found in /op/jjs105/src."
+  && echo "The Odin language examples can be found in /opt/jjs105/src."
 
 #-------------------------------------------------------------------------------
 truthy() {
@@ -33,18 +34,38 @@ truthy() {
 }
 
 #-------------------------------------------------------------------------------
+# Create .vscode files as necessary.
+
+# Copy our VS Code files if configured and not already present.
+echo "Example VS Code configuration files can be found in /opt/jjs105/lib/vscode/".
+_create=$(ini_get_value "${INI_FILE}" "odin-lang" "create-vscode-config")
+if truthy "${_create}"; then
+  mkdir --parents ./.vscode && chmod ugo=rwX "./.vscode"
+  [ ! -f "./.vscode/launch.json" ] \
+    && echo "Creating VS Code launch configuration file (launch.json)" \
+    && cp /opt/jjs105/lib/vscode/launch.json ./.vscode \
+    && chmod ugo=rwX "./.vscode/launch.json" \
+      || :
+  [ ! -f "./.vscode/tasks.json" ] \
+    && echo "Creating VS Code tasks configuration file (tasks.json)" \
+    && cp /opt/jjs105/lib/vscode/tasks.json ./.vscode \
+    && chmod ugo=rwX "./.vscode/tasks.json" \
+      || :
+fi
+
+#-------------------------------------------------------------------------------
 # Create OLS files as necessary.
 
 # Copy our ols.json file if configured and not already present.
+echo "Example OLS configuration files can be found in /opt/jjs105/lib/ols/".
 _create=$(ini_get_value "${INI_FILE}" "odin-lang" "create-ols-config")
-if truthy "${_create}" && [ ! -f "./ols.json" ]; then
-  echo "creating OLS configuration file (ols.json)"
-  cp /opt/jjs105/lib/ols/ols.json ./ && chmod ugo=rwX "./ols.json"
-fi
-
-# Copy our odinfmt.json file if configured and not already present.
-_create=$(ini_get_value "${INI_FILE}" "odin-lang" "create-ols-format")
-if truthy "${_create}" && [ ! -f "./odinfmt.json" ]; then
-  echo "creating OLS format file (odinfmt.json)"
-  cp /opt/jjs105/lib/ols/odinfmt.json ./ && chmod ugo=rwX "./odinfmt.json"
+if truthy "${_create}"; then
+  [ ! -f "./ols.json" ] \
+    && echo "Creating OLS configuration file (ols.json)" \
+    && cp /opt/jjs105/lib/ols/ols.json ./ && chmod ugo=rwX "./ols.json" \
+      || :
+  [ ! -f "./odinfmt.json" ] \
+    && echo "Creating OLS format file (odinfmt.json)" \
+    && cp /opt/jjs105/lib/ols/odinfmt.json ./ && chmod ugo=rwX "./odinfmt.json" \
+      || :
 fi

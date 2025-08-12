@@ -1,5 +1,18 @@
 # Changelog (jjs105/devcontainers)
 
+_**2025-08-12:**_\
+
+General
+
+- Spelling ignored words in workspace
+- ShellCheck audit and fixes
+
+Odin Language Feature
+
+- Added VS Code configuration files and option to add them to project
+- OLS files now installed as set not individual files
+- Implemented Odin language compilation option
+
 _**2025-08-11:**_\
 
 General

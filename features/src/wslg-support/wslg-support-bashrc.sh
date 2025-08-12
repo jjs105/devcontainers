@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #-------------------------------------------------------------------------------
 # Copyright (c) Jon Spain (https://github.com/jjs105).
 # Licensed under GNU GPL v3 or later
@@ -40,7 +41,7 @@ fi
 
 _check=$(ini_get_value "${INI_FILE}" "wslg-support" "check-device-video")
 if truthy "${_check}"; then
-  ([ -e /dev/dri/card0 ] || [ -e /dev/dri/renderD128 ]) \
+  { [ -e /dev/dri/card0 ] || [ -e /dev/dri/renderD128 ]; } \
     && echo "Accelerated video support enabled" \
       || echo "Accelerated video support not enabled"
 fi

@@ -6,6 +6,7 @@
 
 # Install script for the odin-lang development container feature.
 
+# shellcheck shell=sh
 # @note: We assume that only the most basic POSIX shell (sh) is available to aid
 # in OS compatibility etc.
 
@@ -25,7 +26,7 @@ OS="${OS:=linux}"
 ARCH="${ARCH:=amd64}"
 COMPILE="${COMPILE:=false}"
 EXAMPLES="${EXAMPLES:=true}"
-OLS_CREATE_CONFIG="${OLS_CREATE_CONFIG:=true}"
+VSCODE_CREATE_CONFIG="${VSCODE_CREATE_CONFIG:=true}"
 OLS_CREATE_FORMAT="${OLS_CREATE_FORMAT:=true}"
 
 #-------------------------------------------------------------------------------
@@ -39,14 +40,14 @@ _jjs105_lib_path="/opt/jjs105/lib"
 # Configure logging.
 _lib_install_log="true"
 _lib_ini_log="true"
-_log() { [ "true" = "true" ] && log "jjs105/odin-lang" "${1}" || :; }
+_log() { log "jjs105/odin-lang" "${1}" || :; }
 
 # Include the lib-install.sh library from its install location.
-# shellcheck source=lib/lib-install.sh
+# shellcheck source=../jjs105-devcontainer/lib/lib-install.sh
 . "${_jjs105_lib_path}/lib-install.sh"
 
 # Include the lib-ini.sh library from its install location.
-# shellcheck source=lib/lib-ini.sh
+# shellcheck source=../jjs105-devcontainer/lib/lib-ini.sh
 . "${_jjs105_lib_path}/lib-ini.sh"
 
 # Include our install functions (keeps overall install logic readable).
@@ -67,8 +68,7 @@ install_packages clang
 #-------------------------------------------------------------------------------
 # Either compile and configure the Odin language or download a release version.
 
-[ "true" = "${COMPILE}" ] \
-  && _compile_and_configure_odin \
+{ [ "true" = "${COMPILE}" ] && _compile_and_configure_odin; } \
     || _install_odin_release
 
 #-------------------------------------------------------------------------------
@@ -85,17 +85,23 @@ install_packages clang
 [ "true" = "${EXAMPLES}" ] && _install_odin_examples || :
 
 #-------------------------------------------------------------------------------
-# Odin Language Server (OLS) copy files and configuration.
+# Odin Language Server (OLS) + VS Code - copy files and configuration.
 
+install_file_set "./vscode/." "/opt/jjs105/lib/vscode"
 install_file_set "./ols/." "/opt/jjs105/lib/ols"
 
 ini_set_value "${INI_FILE}" "odin-lang" \
-  "create-ols-config" "${OLS_CREATE_CONFIG}"
+  "create-vscode-config" "${VSCODE_CREATE_CONFIG}"
 ini_set_value "${INI_FILE}" "odin-lang" \
-  "create-ols-format" "${OLS_CREATE_FORMAT}"
+  "create-ols-config" "${OLS_CREATE_CONFIG}"
 
 #-------------------------------------------------------------------------------
 # Append our bashrc script to the end of the user's bashrc file.
 # @note: We do this last so everything else is ready before it can ever be run.
 
 append_script_to_bashrc "odin-lang-bashrc.sh"
+
+#-------------------------------------------------------------------------------
+# Finish up.
+
+remove_downloads

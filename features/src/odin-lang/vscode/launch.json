@@ -1,0 +1,49 @@
+{
+  // Example VS Code launch.json configurations for the Odin language.
+  // @note: The build task and target program can be changed so that any of the
+  // alternative build approach examples in the VS Code tasks.json file are
+  // used.
+  "version": "0.2.0",
+  "configurations": [
+
+    // Linux based configurations, Clang and GNU toolsets.
+    {
+      "name": "odin-clang",
+      "type": "lldb",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      // Build the entire workspace, output to the workspace root.
+      "preLaunchTask": "odin-debug-workspace-in-workspace",
+      "program": "${workspaceFolder}/${workspaceFolderBasename}.out"
+    },
+    {
+      "name": "odin-gnu",
+      "type": "gdb",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      // Build the entire workspace, output to the workspace root.
+      "preLaunchTask": "odin-debug-workspace-in-workspace",
+      "program": "${workspaceFolder}/${workspaceFolderBasename}.out"
+    },
+
+    // Windows based configurations, VS Studio and GNU toolsets.
+    {
+      "name": "odin-win-studio",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      // Build the entire workspace, output to the workspace root.
+      "preLaunchTask": "odin-debug-workspace-in-workspace",
+      "program": "${workspaceFolder}/${workspaceFolderBasename}.exe"
+    },
+    {
+      "name": "odin-win-gdb",
+      "type": "cppdbg",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      // Build the entire workspace, output to the workspace root.
+      "preLaunchTask": "odin-debug-workspace-in-workspace",
+      "program": "${workspaceFolder}/${workspaceFolderBasename}.exe"
+    }
+  ]
+}

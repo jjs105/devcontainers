@@ -1,0 +1,104 @@
+{
+  "version": "2.0.0",
+  "problemMatcher": "$odin",
+  "options": {
+    "env": {
+      "ENV_ODB_SOURCE": "${fileDirname}",
+      "ENV_ODB_TARGET": "./build/${fileDirnameBasename}.o"
+    }
+  },
+  "tasks": [
+    {
+      "label": "odin-run",
+      "group": "build",
+      "type": "shell",
+      "dependsOn": [ "create-build-directory" ],
+      "command": "./odin-build.sh",
+      "args": [ "-rST" ]
+    },
+    {
+      "label": "odin-debug",
+      "group": "build",
+      "type": "shell",
+      "dependsOn": [ "create-build-directory" ],
+      "command": "./odin-build.sh",
+      "args": [ "-dST" ]
+    },
+    {
+      "label": "odin-build",
+      "group": "build",
+      "type": "shell",
+      "dependsOn": [ "create-build-directory" ],
+      "command": "./odin-build.sh",
+      "args": [ "-ST" ]
+    },
+    {
+      "label": "odin-release",
+      "group": "build",
+      "type": "shell",
+      "dependsOn": [ "create-build-directory" ],
+      "command": "./odin-build.sh",
+      "args": [ "-RST" ]
+    },
+    
+    {
+      "label": "odin-run-file",
+      "group": "build",
+      "type": "shell",
+      "dependsOn": [ "create-build-directory" ],
+      "command": "./odin-build.sh",
+      "args": [
+        "-rf",
+        "-p", "./build",
+        "-n", "${fileBasenameNoExtension}.o",
+        "${file}"
+      ]
+    },
+    {
+      "label": "odin-debug-file",
+      "group": "build",
+      "type": "shell",
+      "dependsOn": [ "create-build-directory" ],
+      "command": "./odin-build.sh",
+      "args": [
+        "-df",
+        "-p", "./build",
+        "-n", "${fileBasenameNoExtension}.o",
+        "${file}"
+      ]
+    },
+    {
+      "label": "odin-build-file",
+      "group": "build",
+      "type": "shell",
+      "dependsOn": [ "create-build-directory" ],
+      "command": "./odin-build.sh",
+      "args": [
+        "-f",
+        "-p", "./build",
+        "-n", "${fileBasenameNoExtension}.o",
+        "${file}"
+      ]
+    },
+    {
+      "label": "odin-release-file",
+      "group": "build",
+      "type": "shell",
+      "dependsOn": [ "create-build-directory" ],
+      "command": "./odin-build.sh",
+      "args": [
+        "-Rf",
+        "-p", "./build",
+        "-n", "${fileBasenameNoExtension}.o",
+        "${file}"
+      ]
+    },
+
+    {
+      "label": "create-build-directory",
+      "group": "build",
+      "type": "shell",
+      "command": "mkdir --parents ./build"
+    }
+  ]
+}

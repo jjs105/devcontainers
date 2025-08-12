@@ -6,6 +6,7 @@
 
 # Install script for the wsl2-x11-gui development container feature.
 
+# shellcheck shell=sh
 # @note: We assume that only the most basic POSIX shell (sh) is available to aid
 # in OS compatibility etc.
 
@@ -37,14 +38,14 @@ _jjs105_lib_path="/opt/jjs105/lib"
 # Configure logging.
 _lib_install_log="true"
 _lib_ini_log="true"
-_log() { [ "true" = "true" ] && log "jjs105/wslg-support" "${1}" || :; }
+_log() { log "jjs105/wslg-support" "${1}" || :; }
 
 # Include the lib-install.sh library from its install location.
-# shellcheck source=lib/lib-install.sh
+# shellcheck source=../jjs105-devcontainer/lib/lib-install.sh
 . "${_jjs105_lib_path}/lib-install.sh"
 
 # Include the lib-ini.sh library from its install location.
-# shellcheck source=lib/lib-ini.sh
+# shellcheck source=../jjs105-devcontainer/lib/lib-ini.sh
 . "${_jjs105_lib_path}/lib-ini.sh"
 
 #-------------------------------------------------------------------------------

@@ -19,8 +19,8 @@ Adds the Odin language support and tools.
 | os | The target operating system (when downloading, not compiling. | string | linux |
 | arch | The target architecture (when downloading, not compiling. | string | amd64 |
 | examples | Whether to install the Odin language example projects. | boolean | true |
-| ols-create-config | Whether to create ant OLS configuration file. | boolean | true |
-| ols-create-format | Whether to create ant OLS format file. | boolean | true |
+| vscode-create-config | Whether to create a set of VS Code files. | boolean | true |
+| ols-create-config | Whether to create a set of OLS configuration files. | boolean | true |
 
 ## Customizations
 

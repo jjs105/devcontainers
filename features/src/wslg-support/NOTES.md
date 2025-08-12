@@ -29,13 +29,13 @@ by adding the following:
 
 The approach used by this development container feature to enable the use of the
 Windows WSL2 GUI is based on the sample containers documentation in the official
-[MicroSoft wslg repoistory](https://github.com/microsoft/wslg/).
+[MicroSoft wslg repository](https://github.com/microsoft/wslg/).
 
 - https://github.com/microsoft/wslg/blob/main/samples/container/Containers.md
 
 ## VSCode Automatic Configuration
 
-Although based on the documentation descibed above, when using this development
+Although based on the documentation described above, when using this development
 container feature with VSCode as a development environment a number of the
 required steps seem to be automagically configured out-of-the-box.
 
