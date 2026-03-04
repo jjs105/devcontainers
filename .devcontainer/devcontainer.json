@@ -42,7 +42,9 @@
 	"name": "Dev Container Dev!",
 	"image": "mcr.microsoft.com/devcontainers/javascript-node",
 	"features": {
-    "ghcr.io/devcontainers/features/docker-in-docker": {},
+    "ghcr.io/devcontainers/features/docker-in-docker": {
+      "moby": false
+    },
     "./features/jjs105-devcontainer": {}
 	},
 	"postCreateCommand": "npm install --global @devcontainers/cli",

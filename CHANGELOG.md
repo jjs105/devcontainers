@@ -1,6 +1,12 @@
 # Changelog (jjs105/devcontainers)
 
-_**2025-08-12:**_\
+_**2026-03-04:**_
+
+Configure Docker-in-Docker feature to disable use of Moby as opposed to
+Docker CE. This is required as latest versions of Debian (Trixie onwards) do not
+include the moby CLI tooling.
+
+_**2025-08-12:**_
 
 General
 
@@ -13,7 +19,7 @@ Odin Language Feature
 - OLS files now installed as set not individual files
 - Implemented Odin language compilation option
 
-_**2025-08-11:**_\
+_**2025-08-11:**_
 
 General
 
@@ -33,7 +39,7 @@ jjs105-devcontainer Feature
 - Added remove_downloads function to install library and use in install scripts
 - Added shellcheck/eslint/bash-ide extensions to spec
 
-_**2025-08-05:**_\
+_**2025-08-05:**_
 
 General
 
