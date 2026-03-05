@@ -95,6 +95,11 @@ ini_set_value "${INI_FILE}" "odin-lang" \
 ini_set_value "${INI_FILE}" "odin-lang" \
   "create-ols-config" "${OLS_CREATE_CONFIG}"
 
+#--------------------------------`-----------------------------------------------
+# Copy the odin-build.sh script.
+
+install_script "./odin-build.sh" "/opt/jjs105/bin"
+
 #-------------------------------------------------------------------------------
 # Append our bashrc script to the end of the user's bashrc file.
 # @note: We do this last so everything else is ready before it can ever be run.

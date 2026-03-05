@@ -1,0 +1,60 @@
+{
+  "id": "exercism-cli",
+  "version": "1.0.0",
+  "name": "Exercism CLI",
+  "description": "Installs the Exercism CLI application.",
+  "documentationURL": "http://github.com/jjs105/devcontainers/tree/main/features/src/exercism-cli",
+  "licenseURL": "http://github.com/jjs105/devcontainers/tree/main/LICENSE",
+  "keywords": [
+    "Exercism", "CLI"
+  ],
+  "dependsOn": {
+    "ghcr.io/jjs105/devcontainers/features/jjs-lib:latest": {}
+  },
+  "installsAfter": [],
+  "containerEnv": {
+    "WORKSPACE_PATH": "",
+    "EXERCISM_TOKEN": ""
+  },
+  "options": {
+    "workspace": {
+      "type": "string",
+      "description": "The workspace path to for the exercism CLI tool.",
+      "default": "/workspaces/exercism",
+      "proposals": [
+        "/workspaces/exercism"
+      ]
+    },
+    "token": {
+      "type": "string",
+      "description": "The authentication token for the exercism CLI tool.",
+      "default": ""
+    },
+    "version": {
+      "type": "string",
+      "description": "The version to install.",
+      "default": "latest"
+    },
+    "os": {
+      "type": "string",
+      "description": "The target operating system.",
+      "default": "linux",
+      "enum": [
+        "linux",
+        "freebsd",
+        "darwin"
+      ]
+    },
+    "arch": {
+      "type": "string",
+      "description": "The target CPU architecture.",
+      "default": "x86_64",
+      "enum": [
+        "i386",
+        "x86_64",
+        "arm64",
+        "ppc64"
+      ]
+    }
+  }
+}

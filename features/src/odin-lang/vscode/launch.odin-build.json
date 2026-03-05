@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "odin-clang",
+      "type": "lldb",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "odin-debug",
+      "program": "${workspaceFolder}/build/${fileDirnameBasename}.o"
+    }
+ ]
+}

@@ -17,6 +17,7 @@ Adds Windows WSL based GUI, GPU and accelerated video support to a development c
 |-----|-----|-----|-----|
 | install-x11-apps | Install the X11 app (e.g. xeyes, xclock, etc.). | boolean | true |
 | install-mesa-utils | Install the Mesa utilities (e.g. glxinfo, glxgears). | boolean | true |
+| install-pulse-audio | Install the Pulse Audio tools. | boolean | true |
 | check-device-dxg | On startup check the /dev/dxg device (vGPU support). | boolean | true |
 | check-device-video | On startup check the /dev/dri/card0+renderD128 devices (acc. video support). | boolean | true |
 

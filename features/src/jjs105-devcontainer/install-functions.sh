@@ -39,6 +39,7 @@ _set_history_path() {
 
   _log "setting user bash history location(s)"
   _snippet="export HISTFILE=${_path%/}/.bash_history"
+  # @todo: Check if this works with Alpine/doas command.
   run_command_for_users "echo \"${_snippet}\n\" >> ~/.bashrc"
 }
 
@@ -106,9 +107,12 @@ _install_atuin() {
   # POSIX/Alpine, sed -E (--extended-regexp), -i (--in-place).
   _pattern="atuin init bash"; _flag="--disable-up-arrow"
   _pattern="s/${_pattern}/${_pattern} ${_flag}/g"
+  # @todo: Check if this works with Alpine/doas command.
   run_command_for_users "sed -E -i '${_pattern}' ~/.bashrc"
   _pattern="s/(# |)enter_accept = .*/enter_accept = false/g"
+  # @todo: Check if this works with Alpine/doas command.
   run_command_for_users "sed -E -i '${_pattern}' ~/.config/atuin/config.toml"
   _pattern="s/(# |)inline_height = .*/inline_height = 0/g" 
+  # @todo: Check if this works with Alpine/doas command.
   run_command_for_users "sed -E -i '${_pattern}' ~/.config/atuin/config.toml"
 }

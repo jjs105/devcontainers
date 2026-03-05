@@ -16,7 +16,7 @@
 # @todo: Utilise 3rd party bash test library.
 
 # Exit on any failure, use +e to revert if necessary.
-# WARNING: The use of set -e means that the script wil exit if ANY SINGLE
+# WARNING: The use of set -e means that the script will exit if ANY SINGLE
 # COMMAND FAILS. This means that, for correct operation, tests that may fail
 # as expected behaviour need to be part of a command that actually succeeds.
 # @note: -x can be used for debugging purposes.
@@ -87,7 +87,7 @@ source test-lib-test.sh
 # @todo: Check cUrl is installed.
 # @todo: Check for the INI file.
 # @todo: Check for lifecycle scripts.
-# @todo:@ Configure the container user and check it exists.
+# @todo: Configure the container user and check it exists.
 
 #-------------------------------------------------------------------------------
 # Shell history configuration testing [TBC].
@@ -103,12 +103,12 @@ test_section "Check BASH History Path"
   && check_env_not_blank "HISTFILE" \
   && check_env_matches "HISTFILE" \
     "${BASH_HISTORY_PATH%\.bash_history}/.bash_history" \
-  && check_file_exists "${HISTFILE}" \
+  && check_file_exists "${HISTFILE:=/non-existent-file}" \
   || echo "History path not configured, skipping."
 
 # Check if fuzzy search tools(s) fzf ar installed and available if configured.
 test_section "Check Fuzzy Search Install"
-[ "fzf" = "${SHELL_HISTORY_METHOD##atuin_}" ] || \
+[ "fzf" = "${SHELL_HISTORY_METHOD##atuin_}" ] \
   && check_installed "/opt/jjs105/bin/fzf" "fzf --version" \
   && check_installed "fzf" "fzf --version" \
   || echo "Fuzzy search install not required, skipping."

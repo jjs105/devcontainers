@@ -1,0 +1,32 @@
+{
+  "id": "nektos-act",
+  "version": "1.0.0",
+  "name": "Nektos Act Tool",
+  "description": "Installs the Nektos Act tool (nektos/act).",
+  "documentationURL": "http://github.com/jjs105/devcontainers/tree/main/features/src/nektos-act",
+  "licenseURL": "http://github.com/jjs105/devcontainers/tree/main/LICENSE",
+  "keywords": [
+    "GitHub", "Actions"
+  ],
+  "dependsOn": {
+    "ghcr.io/jjs105/devcontainers/features/jjs-devcontainer:1.0.0": {
+    }
+  },
+  "options": {
+    "version": {
+      "type": "string",
+      "description": "The version/release to install.",
+      "default": "latest"
+    },
+    "install-dir": {
+      "type": "string",
+      "description": "The target install directory.",
+      "default": "/usr/local/bin"
+    },
+    "debugging": {
+      "type": "boolean",
+      "description": "Whether to enable debug logging.",
+      "default": false
+    }
+  }
+}

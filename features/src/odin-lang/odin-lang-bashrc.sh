@@ -20,7 +20,7 @@
 
 # Tell the user where the Odin language examples are if they exist
 [ -d "/opt/jjs105/src/odin-lang-examples" ] \
-  && echo "The Odin language examples can be found in /opt/jjs105/src."
+  && echo "The Odin language examples can be found in /opt/jjs105/src"
 
 #-------------------------------------------------------------------------------
 truthy() {
@@ -37,7 +37,7 @@ truthy() {
 # Create .vscode files as necessary.
 
 # Copy our VS Code files if configured and not already present.
-echo "Example VS Code configuration files can be found in /opt/jjs105/lib/vscode/".
+echo "Example VS Code configuration files can be found in /opt/jjs105/lib/vscode"
 _create=$(ini_get_value "${INI_FILE}" "odin-lang" "create-vscode-config")
 if truthy "${_create}"; then
   mkdir --parents ./.vscode && chmod ugo=rwX "./.vscode"
@@ -57,7 +57,7 @@ fi
 # Create OLS files as necessary.
 
 # Copy our ols.json file if configured and not already present.
-echo "Example OLS configuration files can be found in /opt/jjs105/lib/ols/".
+echo "Example OLS configuration files can be found in /opt/jjs105/lib/ols"
 _create=$(ini_get_value "${INI_FILE}" "odin-lang" "create-ols-config")
 if truthy "${_create}"; then
   [ ! -f "./ols.json" ] \
@@ -69,3 +69,11 @@ if truthy "${_create}"; then
     && cp /opt/jjs105/lib/ols/odinfmt.json ./ && chmod ugo=rwX "./odinfmt.json" \
       || :
 fi
+
+#-------------------------------------------------------------------------------
+# Copy the odin-build.sh script if it doesn't already exist.
+
+[ ! -f "./odin-build.sh" ] \
+  && echo "Copying odin-build.sh script" \
+  && cp /opt/jjs105/bin/odin-build.sh . \
+    || :

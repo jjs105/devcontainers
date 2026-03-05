@@ -230,7 +230,7 @@ check_env_not_blank() {
   # ${1} - the environment variable to check
 
   _test_start "env variable not blank: ${1}"
-  local _result=1; [ -n "${!1}" ] && _result=0
+  local _result=1; [ -v "${1}" ] && [ -n "${!1}" ] && _result=0
   _test_result "${_result}"
 }
 
@@ -240,7 +240,7 @@ check_env_matches() {
   # ${2} - the value to check against
   
   _test_start "env variable matches: ${1} = ${2}"
-  local _result=1; [ "${!1}" = "${2}" ] && _result=0
+  local _result=1; [ -v "${1}" ] && [ "${!1}" = "${2}" ] && _result=0
   _test_result "${_result}"
 }
 

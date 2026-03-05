@@ -8,5 +8,9 @@
 # Rather it should be sourced from the main development container feature test
 # script.
 
-# Test script for the development container install  library contained in the
+# Test script for the development container install library contained in the
 # jjs105-devcontainer development container feature.
+
+# shellcheck shell=sh
+# @note: We assume that only the most basic POSIX shell (sh) is available to aid
+# in OS compatibility etc.

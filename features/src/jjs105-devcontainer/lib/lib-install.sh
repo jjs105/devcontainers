@@ -30,6 +30,35 @@ _lib_install_log() {
     && log "lib-install" "${1}" || :
 }
 
+# More often than not we are likely to need to use an OS appropriate elevated
+# permissions command. So we check that the command is installed now to avoid
+# adding the logic in multiple places.
+
+# If apt is available we assume use of sudo.
+# POSIX/Alpine, rm -r (--recursive), -f (--force).
+if [ -x "/usr/bin/apt-get" ] && [ ! -x "/usr/bin/sudo" ]; then
+  _lib_install_log "installing sudo using apt-get"
+  apt-get update --assume-yes
+  apt-get install sudo --assume-yes
+  apt-get clean
+  apt-get autoclean && apt-get autoremove
+  rm -r -f /var/lib/apt/lists/*
+
+# APK? (i.e. on Alpine).
+elif [ -x "/sbin/apk" ] && [ ! -x "/usr/bin/doas" ]; then
+  _lib_install_log "installing doas using apk"
+  apk add doas
+
+# Pacman? (i.e. on Arch).
+elif [ -x "/sbin/pacman" ] && [ ! -x "/usr/bin/doas" ]; then
+  _lib_install_log "installing doas using pacman"
+  pacman --noconfirm doas
+
+# Otherwise cannot install which is an error.
+elif [ ! -x "/usr/bin/sudo" ] && [ ! -x "/usr/bin/doas" ]; then
+  _error "could not find or install sudo/doas." && return 1
+fi
+
 #-------------------------------------------------------------------------------
 # Internal functions.
 
@@ -94,31 +123,28 @@ install_packages() {
   # a different approach should be used.
   # ${@} - list of packages to install
 
-  # @note we use sudo for ease and compatibility. If not installed we assume
-  # root permissions and add first.
+  # @note: We use sudo (doas on Alpine) for ease and compatibility. If not
+  # installed we assume root permissions and add first.
 
   # Use apt if available.
   # POSIX/Alpine, rm -r (--recursive), -f (--force).
   if [ -x "/usr/bin/apt-get" ]; then
-    [ ! -x "/usr/bin/sudo" ] && apt-get sudo --assume-yes
     _lib_install_log "installing packages using apt-get: ${*}"
-    sudo apt-get update --assume-yes \
-    && sudo apt-get install --assume-yes --no-install-recommends "$@" \
-    && sudo apt-get clean \
-    && sudo apt-get autoclean && apt-get autoremove \
-    && sudo rm -r -f /var/lib/apt/lists/*
+    sudo apt-get update --assume-yes
+    sudo apt-get install --assume-yes --no-install-recommends "$@"
+    sudo apt-get clean
+    sudo apt-get autoclean && apt-get autoremove
+    sudo rm -r -f /var/lib/apt/lists/*
 
   # APK? (i.e. on Alpine).
   elif [ -x "/sbin/apk" ]; then
-    [ ! -x "/usr/bin/sudo" ] && apk add sudo
     _lib_install_log "installing packages using apk: ${*}"
-    sudo apk add --no-cache "$@"
+    doas apk add --no-cache "$@"
 
   # Pacman? (i.e. on Arch).
   elif [ -x "/sbin/pacman" ]; then
-    [ ! -x "/usr/bin/sudo" ] && pacman --noconfirm sudo
     _lib_install_log "installing packages using pacman: ${*}"
-    sudo pacman --noconfirm --sync --refresh "$@"
+    doas pacman --noconfirm --sync --refresh "$@"
 
   # Otherwise not supported.
   else
@@ -293,24 +319,34 @@ run_command_for_users() {
   # install script. When considering other lifecycle scripts an alternative
   # approach should be found.
 
-  # Ensure sudo is installed.
-  [ ! -x "/usr/bin/sudo" ] && install_packages sudo
+  # Check for sudo/doas.
+  [ ! -x "/usr/bin/sudo" ] && [ ! -x "/usr/bin/doas" ] \
+    && _error "could not find or install sudo/doas." && return 1
 
   # Always run the command as root.
   _lib_install_log "running command as root: ${1}"
-  sudo --set-home --login -- sh -c "${1}"
+  [ -x "/usr/bin/sudo" ] \
+    && sudo --set-home --login -- sh -c "${1}"
+  [ -x "/usr/bin/doas" ] \
+    && doas -- sh -c "${1}"
 
   # If the current user is not root then run the command for the current user.
-  [ "root" != "${USER:-root}" ] \
-    && _lib_install_log "command as current user: ${USER}: ${1}" \
-    && sudo --user="${USER}" --set-home --login -- sh -c "${1}"
+  if [ "root" != "${USER:-root}" ]; then
+    _lib_install_log "command as current user: ${USER}: ${1}"
+    [ -x "/usr/bin/sudo" ] \
+      && sudo --user="${USER}" --set-home --login -- sh -c "${1}"
+    [ -x "/usr/bin/doas" ] \
+      && doas -u "${USER}" -- sh -c "${1}"
+  fi
 
   # Run the command for the container user if not already done so.
   if [ "root" != "${_CONTAINER_USER:-root}" ] \
   && [ "${USER:-root}" != "${_CONTAINER_USER:-root}" ]; then
     _lib_install_log "command as _CONTAINER_USER: ${_CONTAINER_USER}: ${1}"
-
-    sudo --user="${_CONTAINER_USER}" --set-home --login -- sh -c "${1}"
+    [ -x "/usr/bin/sudo" ] \
+      && sudo --user="${_CONTAINER_USER}" --set-home --login -- sh -c "${1}"
+    [ -x "/usr/bin/doas" ] \
+      && doas -u "${_CONTAINER_USER}" -- sh -c "${1}"
   fi
 
   # Run the command for the remote user if not already done so.
@@ -318,6 +354,9 @@ run_command_for_users() {
   && [ "${_CONTAINER_USER:-root}" != "${_REMOTE_USER:-root}" ] \
   && [ "${USER:-root}" != "${_REMOTE_USER:-root}" ]; then \
     _lib_install_log "command as _REMOTE_USER: ${_REMOTE_USER}: ${1}"
-    sudo --user="${_REMOTE_USER}" --set-home --login -- sh -c "${1}"
+    [ -x "/usr/bin/sudo" ] \
+      && sudo --user="${_REMOTE_USER}" --set-home --login -- sh -c "${1}"
+    [ -x "/usr/bin/doas" ] \
+      && doas -u "${_REMOTE_USER}" -- sh -c "${1}"
   fi
 }

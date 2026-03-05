@@ -23,6 +23,7 @@ set -eu
 
 INSTALL_X11_APPS="${INSTALL_X11_APPS:=true}"
 INSTALL_MESA_UTILS="${INSTALL_MESA_UTILS:=true}"
+INSTALL_PULSE_AUDIO="${INSTALL_PULSE_AUDIO:=true}"
 CHECK_DEVICE_DXG="${CHECK_DEVICE_DXG:=true}"
 CHECK_DEVICE_VIDEO="${CHECK_DEVICE_VIDEO:=true}"
 
@@ -70,6 +71,11 @@ install_packages vainfo mesa-va-drivers || :
 [ "true" = "${INSTALL_MESA_UTILS}" ] \
   && _log "installing Mesa utilities" \
   && install_packages mesa-utils || :
+
+# Install the Pulse Audio tools if requested.
+[ "true" = "${INSTALL_PULSE_AUDIO}" ] \
+  && _log "installing Pulse Audio tools" \
+  && install_packages pulseaudio pulseaudio-utils || :
 
 #-------------------------------------------------------------------------------
 # Configure the check options.

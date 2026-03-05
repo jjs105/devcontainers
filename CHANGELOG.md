@@ -2,7 +2,13 @@
 
 _**2026-03-05:**_
 
-Multi line command audit - && or || being at start of additional lines
+Preparation for new approach:
+
+- Multi line command audit - && or || being at start of additional lines
+- Commit in-progress features as-is
+- Pulse audio support added to wlsg-support feature
+- Always install sudo/doas and use sudo/doas for package install
+- Fix minor issues and comments
 
 _**2026-03-04:**_
 
