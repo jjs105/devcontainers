@@ -1,5 +1,29 @@
 # Changelog (jjs105/devcontainers)
 
+_**2025-08-05:**_\
+
+General
+
+- grep checks audit - i.e. no []
+- local variable audit for all
+- post-attach functionality of all features -> .bashrc.
+
+jjs105-devcontainer Feature
+
+- install-libraries-only option
+- lib-ini.sh - fix to ignore comment lines
+- lib-install.sh
+  - added file set and sources install functions
+  - added function to append script to .bashrc
+- lib-secrets - all working + always use ROOT of secrets file
+
+Odin Language Feature
+
+- Removed option to specify examples path
+- Re-write as install.sh + install-functions.ah
+- Re-write in new style
+- Hard-coded version until releases fixed
+
 _**2026-03-05:**_
 
 Preparation for new approach:
