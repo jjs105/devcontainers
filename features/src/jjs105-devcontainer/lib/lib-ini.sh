@@ -25,8 +25,8 @@ _jjs105_lib_path="${_jjs105_lib_path:-/opt/jjs105/lib}"
 [ "true" = "${_lib_ini_log:=false}" ] \
   && . "${_jjs105_lib_path}/lib-log.sh" || :
 _lib_ini_log() {
-  [ "true" = "${_lib_ini_log}" ] && \
-    log "lib-ini" "${1}" || :
+  [ "true" = "${_lib_ini_log}" ] \
+    && log "lib-ini" "${1}" || :
 }
 
 # If on BusyBox ensure gawk is installed.

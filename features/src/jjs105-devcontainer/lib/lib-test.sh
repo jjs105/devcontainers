@@ -22,8 +22,8 @@ log() {
   echo "===>>> ${1}: ${2}"
   # Check for our log location and log to file if we can (we don't assume that
   # 'tee' is available).
-  [ -d "/var/log/jjs105/" ] && \
-    echo "===>>> ${1}: ${2}" >> /var/log/jjs105/test-log
+  [ -d "/var/log/jjs105/" ] \
+    && echo "===>>> ${1}: ${2}" >> /var/log/jjs105/test-log
 }
 
 #-------------------------------------------------------------------------------

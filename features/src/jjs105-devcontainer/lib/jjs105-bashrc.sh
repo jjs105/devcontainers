@@ -20,11 +20,11 @@
 # @note: :+ substitution to check for final RELEASE=null.
 # @note: command -v is similar to using type but more portable.
 # POSIX/Alpine, cut -d (--delimiter), -f (--fields)
-[ -f "/etc/os-release" ] && \
-  RELEASE=" $(cat /etc/os-release | grep ^ID= | cut -d = -f 2)"
+[ -f "/etc/os-release" ] \
+  && RELEASE=" $(cat /etc/os-release | grep ^ID= | cut -d = -f 2)"
 # @note: lsb_release, returns a string which evaluates to true.
-[ "$(command -v lsb_release)" ] && \
-  RELEASE=" $(lsb_release --id --short | tr '[:upper:]' '[:lower:]')"
+[ "$(command -v lsb_release)" ] \
+  && RELEASE=" $(lsb_release --id --short | tr '[:upper:]' '[:lower:]')"
 RELEASE="${RELEASE:+\033[35m}${RELEASE-}${RELEASE:+\033[0m}"
 
 # Build the base prompt string.

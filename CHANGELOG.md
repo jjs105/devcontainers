@@ -1,5 +1,9 @@
 # Changelog (jjs105/devcontainers)
 
+_**2026-03-05:**_
+
+Multi line command audit - && or || being at start of additional lines
+
 _**2026-03-04:**_
 
 Configure Docker-in-Docker feature to disable use of Moby as opposed to

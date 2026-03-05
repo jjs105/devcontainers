@@ -28,7 +28,7 @@ _jjs105_lib_path="${_jjs105_lib_path:-/opt/jjs105/lib}"
 #-------------------------------------------------------------------------------
 secrets_add_expected_to_ini() {
   # Function to add expected secrets to the INI file.
-  # ${1} - the expected secrets, commas separate list
+  # ${1} - the expected secrets, comma separate list
 
   # Get all secrets from the passed value and loop through.
   # @note: We add a trailing comma for the processing.
@@ -65,7 +65,7 @@ secrets_gitignore() {
   # Check if already done.
   [ -f "./.gitignore" ] \
     && grep -q "/.jjs105-secrets\*" "./.gitignore" \
-    && return 0;
+    && return 0
 
   # Add to the file.
   printf "\n/.jjs105-secrets*\n" >> "./.gitignore"
@@ -94,6 +94,7 @@ secrets_get() {
   # file called .jjs105.secrets in the current directory.
   # ${1} - the secret name
 
+  # Need to use eval here.
   eval "_env=\"\$${1}\""
 
   # Value available in environment variable trumps all.

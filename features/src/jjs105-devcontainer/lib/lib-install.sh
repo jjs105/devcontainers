@@ -26,8 +26,8 @@ _jjs105_lib_path="${_jjs105_lib_path:-/opt/jjs105/lib}"
 [ "true" = "${_lib_install_log:=false}" ] \
   && . "${_jjs105_lib_path}/lib-log.sh" || :
 _lib_install_log() {
-  [ "true" = "${_lib_install_log}" ] && \
-    log "lib-install" "${1}" || :
+  [ "true" = "${_lib_install_log}" ] \
+    && log "lib-install" "${1}" || :
 }
 
 #-------------------------------------------------------------------------------
@@ -245,8 +245,8 @@ setup_jjs105_ini() {
   # already exist and ensure permissions.
   _lib_install_log "ensuring ${_ini_path}/jjs105.ini is available"
   _path_create "${_ini_path}" && _path_writable "${_ini_path}" || return 1
-  [ ! -f "${INI_FILE:=${_ini_path}/jjs105.ini}" ] && \
-    cp "${_jjs105_lib_path}/jjs105.ini" "${_ini_path}"
+  [ ! -f "${INI_FILE:=${_ini_path}/jjs105.ini}" ] \
+    && cp "${_jjs105_lib_path}/jjs105.ini" "${_ini_path}"
   # POSIX/Alpine, chmod -R (--recursive).
   chmod -R ugo+rw "${_ini_path}"
 }
