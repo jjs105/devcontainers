@@ -1,0 +1,41 @@
+{
+  "id": "jjs105-shell-history",
+  "version": "3.0.0",
+  "name": "Shell History Tools",
+  "description": "Installs atuin shell history and fzf fuzzy search tools.",
+  "documentationURL": "http://github.com/jjs105/devcontainers/tree/main/features/src/shell-history",
+  "licenseURL": "http://github.com/jjs105/devcontainers/tree/main/LICENSE",
+  "keywords": [
+    "shell", "shell history", "atuin",
+    "fuzzy search", "search", "fzf"
+  ],
+  "dependsOn": {
+    "./features/dependencies": {}
+  },
+  "options": {
+    "method": {
+      "type": "string",
+      "description": "The method used to control shell history.",
+      "default": "shared_file",
+      "enum": [
+        "shared_file",
+        "fzf",
+        "atuin",
+        "atuin_fzf"
+      ]
+    },
+    "shared-path": {
+      "type": "string",
+      "description": "The path to use shared shell history path (shared_file).",
+      "default": "/command-history/.bash_history",
+      "proposals": [
+        "/command-history/.bash_history",
+        "/root/.bash_history",
+        "~/.bash_history"
+      ]
+    }
+  },
+  "mounts": [
+    { "source": "command-history", "target": "/command-history", "type": "volume" }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "jjs105-wslg-support",
+  "version": "3.0.0",
+  "name": "WSLg Support",
+  "description": "Configures WSLg and installs associated tools.",
+  "documentationURL": "http://github.com/jjs105/devcontainers/tree/main/features/src/wslg-support",
+  "licenseURL": "http://github.com/jjs105/devcontainers/tree/main/LICENSE",
+  "keywords": [
+    "WSL", "WSL2", "GUI", "WSLg",
+    "Linux GUI", "Windows GUI",
+    "X11", "Wayland", "PulseAudio",
+    "vGPU", "accelerated video", "video playback"
+  ],
+  "dependsOn": {
+    "./features/dependencies": {}
+  },
+  "mounts": [
+    { "source": "/tmp/.X11-unix", "target": "/tmp/.X11-unix", "type": "bind" },
+    { "source": "/mnt/wslg", "target": "/mnt/wslg", "type": "bind" },
+    { "source": "/usr/lib/wsl", "target": "/usr/lib/wsl", "type": "bind" }
+  ],
+  "containerEnv": {
+    "DISPLAY": ":0",
+    "LD_LIBRARY_PATH": "/usr/lib/wsl/lib",
+    "LIBVA_DRIVER_NAME": "d3d12",
+    "GALLIUM_DRIVER": "d3d12",
+    "PULSE_SERVER": "/mnt/wslg/PulseServer"
+  },
+  "options": {
+    "install-pulse-audio": {
+      "type": "boolean",
+      "default": true,
+      "description": "Install the Pulse Audio tools."
+    },
+    "install-mesa-utils": {
+      "type": "boolean",
+      "default": true,
+      "description": "Install the Mesa utilities (e.g. glxinfo, glxgears)."
+    },
+    "install-x11-apps": {
+      "type": "boolean",
+      "default": true,
+      "description": "Install the X11 app (e.g. xeyes, xclock, etc.)."
+    }
+  }
+}

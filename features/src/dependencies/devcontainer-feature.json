@@ -1,0 +1,22 @@
+{
+  "id": "jjs105-dependencies",
+  "version": "3.0.0",
+  "name": "Dev Container Dependencies",
+  "description": "Installs various tools and a minimal install library for use by other features.",
+  "documentationURL": "http://github.com/jjs105/devcontainers/tree/main/features/src/dependencies",
+  "licenseURL": "http://github.com/jjs105/devcontainers/tree/main/LICENSE",
+  "keywords": [
+    "dev", "development",
+    "devcontainer", "dev container", "development container",
+    "install", "library",
+    "shell", "bash",
+    "dependencies", "tools"
+  ],
+  "options": {
+    "skip_bash_check": {
+      "type": "boolean",
+      "description": "Whether to skip check and install of the bash shell.",
+      "default": false
+    }
+  }
+}

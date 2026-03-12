@@ -1,0 +1,40 @@
+{
+  "id": "jjs105-non-root-user",
+  "version": "3.0.0",
+  "name": "Dev Container Non-Root User",
+  "description": "Sets up a non-root user for the development container.",
+  "documentationURL": "http://github.com/jjs105/devcontainers/tree/main/features/src/non-root-user",
+  "licenseURL": "http://github.com/jjs105/devcontainers/tree/main/LICENSE",
+  "keywords": [
+    "devcontainer", "dev container", "development container"
+  ],
+  "dependsOn": {
+    "./features/dependencies": {}
+  },
+  "options": {
+    "username": {
+      "type": "string",
+      "description": "Non-root development container user name.",
+      "default": "auto",
+      "proposals": [
+        "devc", "vscode", "auto"
+      ]
+    },
+    "user_uid": {
+      "type": "string",
+      "description": "Non-root development container user UID.",
+      "default": "auto",
+      "proposals": [
+        "1001", "auto"
+      ]
+    },
+    "user_gid": {
+      "type": "string",
+      "description": "Non-root development container user GID.",
+      "default": "auto",
+      "proposals": [
+        "1001", "auto"
+      ]
+    }
+  }
+}

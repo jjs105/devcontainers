@@ -1,0 +1,40 @@
+/**
+* Very basic Debian based container for development.
+* @note: We have moved away from the original example in the template-starter
+* project as the MS containers tend to include unnecessary and/or undocumented
+* software - for example zsh and build-pack-deps.
+*
+* @note: We include the development container features from this repository by
+* referencing them via their filepaths.
+*/
+{
+	"name": "Dev Container Dev!",
+	"image": "debian:trixie",
+	"features": {
+    "./features/dependencies": {},
+    "./features/non-root-user": {},
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": { "moby": false },
+    "ghcr.io/devcontainers/features/node:1": {},
+    "./features/prompt": {},
+    "./features/shell-history": { "method": "atuin_fzf" },
+    "./features/wslg-support": {}
+	},
+	"postCreateCommand": "npm install --global @devcontainers/cli",
+  "remoteUser": "devc",
+  "runArgs": [
+    "--device=/dev/dxg",
+    "--device=/dev/dri/card0",
+    "--device=/dev/dri/renderD128",
+    "--gpus=all"
+  ],
+  "customizations": {
+		"vscode": {
+			"extensions": [
+				"mads-hartmann.bash-ide-vscode",
+        "timonwong.shellcheck",
+				"dbaeumer.vscode-eslint"
+			]
+		}
+	}
+}

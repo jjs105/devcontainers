@@ -1,0 +1,16 @@
+{
+  "id": "jjs105-prompt",
+  "version": "3.0.0",
+  "name": "Dev Container Prompt",
+  "description": "Sets the shell/bash prompt for all users including Git information.",
+  "documentationURL": "http://github.com/jjs105/devcontainers/tree/main/features/src/prompt",
+  "licenseURL": "http://github.com/jjs105/devcontainers/tree/main/LICENSE",
+  "keywords": [
+    "shell", "bash", "prompt", "git"
+  ],
+  "dependsOn": {
+    "./features/dependencies": {}
+  },
+  "options": {
+  }
+}
