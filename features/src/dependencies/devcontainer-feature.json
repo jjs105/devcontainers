@@ -1,5 +1,5 @@
 {
-  "id": "jjs105-dependencies",
+  "id": "dependencies",
   "version": "3.0.0",
   "name": "Dev Container Dependencies",
   "description": "Installs various tools and a minimal install library for use by other features.",

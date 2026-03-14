@@ -1,5 +1,5 @@
 {
-  "id": "jjs105-prompt",
+  "id": "prompt",
   "version": "3.0.0",
   "name": "Dev Container Prompt",
   "description": "Sets the shell/bash prompt for all users including Git information.",
@@ -9,6 +9,7 @@
     "shell", "bash", "prompt", "git"
   ],
   "dependsOn": {
+    //"ghcr.io/jjs105/features/dependencies": {}
     "./features/dependencies": {}
   },
   "options": {

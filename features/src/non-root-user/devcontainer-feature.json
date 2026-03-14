@@ -1,5 +1,5 @@
 {
-  "id": "jjs105-non-root-user",
+  "id": "non-root-user",
   "version": "3.0.0",
   "name": "Dev Container Non-Root User",
   "description": "Sets up a non-root user for the development container.",
@@ -9,6 +9,7 @@
     "devcontainer", "dev container", "development container"
   ],
   "dependsOn": {
+    //"ghcr.io/jjs105/features/dependencies": {}
     "./features/dependencies": {}
   },
   "options": {

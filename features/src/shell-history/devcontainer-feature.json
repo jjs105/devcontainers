@@ -1,5 +1,5 @@
 {
-  "id": "jjs105-shell-history",
+  "id": "shell-history",
   "version": "3.0.0",
   "name": "Shell History Tools",
   "description": "Installs atuin shell history and fzf fuzzy search tools.",
@@ -10,6 +10,7 @@
     "fuzzy search", "search", "fzf"
   ],
   "dependsOn": {
+    //"ghcr.io/jjs105/features/dependencies": {}
     "./features/dependencies": {}
   },
   "options": {

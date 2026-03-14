@@ -1,5 +1,5 @@
 {
-  "id": "jjs105-wslg-support",
+  "id": "wslg-support",
   "version": "3.0.0",
   "name": "WSLg Support",
   "description": "Configures WSLg and installs associated tools.",
@@ -12,6 +12,7 @@
     "vGPU", "accelerated video", "video playback"
   ],
   "dependsOn": {
+    //"ghcr.io/jjs105/features/dependencies": {}
     "./features/dependencies": {}
   },
   "mounts": [
