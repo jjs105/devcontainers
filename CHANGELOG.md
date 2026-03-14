@@ -1,5 +1,9 @@
 # Changelog
 
+_**2026-03-14**_
+
+Add documentation and implementation notes for development container features.
+
 _**2026-03-12**_
 
 Initial commit of new simplified implementation approach:

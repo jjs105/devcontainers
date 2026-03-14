@@ -15,15 +15,14 @@
     "./features/dependencies": {}
   },
   "mounts": [
-    { "source": "/tmp/.X11-unix", "target": "/tmp/.X11-unix", "type": "bind" },
     { "source": "/mnt/wslg", "target": "/mnt/wslg", "type": "bind" },
+    { "source": "/tmp/.X11-unix", "target": "/tmp/.X11-unix", "type": "bind" },
     { "source": "/usr/lib/wsl", "target": "/usr/lib/wsl", "type": "bind" }
   ],
   "containerEnv": {
     "DISPLAY": ":0",
-    "LD_LIBRARY_PATH": "/usr/lib/wsl/lib",
-    "LIBVA_DRIVER_NAME": "d3d12",
     "GALLIUM_DRIVER": "d3d12",
+    "LD_LIBRARY_PATH": "/usr/lib/wsl/lib",
     "PULSE_SERVER": "/mnt/wslg/PulseServer"
   },
   "options": {
