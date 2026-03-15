@@ -9,8 +9,7 @@
     "shell", "bash", "prompt", "git"
   ],
   "dependsOn": {
-    //"ghcr.io/jjs105/features/dependencies": {}
-    "./features/dependencies": {}
+    "ghcr.io/jjs105/features/dependencies": {}
   },
   "options": {
   }

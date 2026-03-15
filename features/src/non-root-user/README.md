@@ -1,5 +1,5 @@
 
-# Dev Container Non-Root User (jjs105-non-root-user)
+# Dev Container Non-Root User (non-root-user)
 
 Sets up a non-root user for the development container.
 
@@ -7,7 +7,7 @@ Sets up a non-root user for the development container.
 
 ```json
 "features": {
-    "ghcr.io/jjs105/features/jjs105-non-root-user:3": {}
+    "ghcr.io/jjs105/features/non-root-user:3": {}
 }
 ```
 

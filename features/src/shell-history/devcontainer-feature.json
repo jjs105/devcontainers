@@ -10,8 +10,7 @@
     "fuzzy search", "search", "fzf"
   ],
   "dependsOn": {
-    //"ghcr.io/jjs105/features/dependencies": {}
-    "./features/dependencies": {}
+    "ghcr.io/jjs105/features/dependencies": {}
   },
   "options": {
     "method": {

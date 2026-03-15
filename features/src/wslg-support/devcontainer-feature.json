@@ -12,8 +12,7 @@
     "vGPU", "accelerated video", "video playback"
   ],
   "dependsOn": {
-    //"ghcr.io/jjs105/features/dependencies": {}
-    "./features/dependencies": {}
+    "ghcr.io/jjs105/features/dependencies": {}
   },
   "mounts": [
     { "source": "/mnt/wslg", "target": "/mnt/wslg", "type": "bind" },

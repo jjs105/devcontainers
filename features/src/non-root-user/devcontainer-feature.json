@@ -9,8 +9,7 @@
     "devcontainer", "dev container", "development container"
   ],
   "dependsOn": {
-    //"ghcr.io/jjs105/features/dependencies": {}
-    "./features/dependencies": {}
+    "ghcr.io/jjs105/features/dependencies": {}
   },
   "options": {
     "username": {

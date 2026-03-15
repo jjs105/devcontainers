@@ -1,5 +1,5 @@
 
-# WSLg Support (jjs105-wslg-support)
+# WSLg Support (wslg-support)
 
 Configures WSLg and installs associated tools.
 
@@ -7,7 +7,7 @@ Configures WSLg and installs associated tools.
 
 ```json
 "features": {
-    "ghcr.io/jjs105/features/jjs105-wslg-support:3": {}
+    "ghcr.io/jjs105/features/wslg-support:3": {}
 }
 ```
 

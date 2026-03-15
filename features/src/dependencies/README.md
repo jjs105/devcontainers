@@ -1,5 +1,5 @@
 
-# Dev Container Dependencies (jjs105-dependencies)
+# Dev Container Dependencies (dependencies)
 
 Installs various tools and a minimal install library for use by other features.
 
@@ -7,7 +7,7 @@ Installs various tools and a minimal install library for use by other features.
 
 ```json
 "features": {
-    "ghcr.io/jjs105/features/jjs105-dependencies:3": {}
+    "ghcr.io/jjs105/features/dependencies:3": {}
 }
 ```
 

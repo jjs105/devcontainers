@@ -1,5 +1,5 @@
 
-# Dev Container Prompt (jjs105-prompt)
+# Dev Container Prompt (prompt)
 
 Sets the shell/bash prompt for all users including Git information.
 
@@ -7,7 +7,7 @@ Sets the shell/bash prompt for all users including Git information.
 
 ```json
 "features": {
-    "ghcr.io/jjs105/features/jjs105-prompt:3": {}
+    "ghcr.io/jjs105/features/prompt:3": {}
 }
 ```
 

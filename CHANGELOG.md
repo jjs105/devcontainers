@@ -1,5 +1,10 @@
 # Changelog
 
+_**2026-03-15**_
+
+- all development container .json files reference online features
+- README.files updated
+
 _**2026-03-14**_
 
 - Add documentation and implementation notes for development container features

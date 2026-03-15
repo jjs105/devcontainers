@@ -1,5 +1,5 @@
 
-# Shell History Tools (jjs105-shell-history)
+# Shell History Tools (shell-history)
 
 Installs atuin shell history and fzf fuzzy search tools.
 
@@ -7,7 +7,7 @@ Installs atuin shell history and fzf fuzzy search tools.
 
 ```json
 "features": {
-    "ghcr.io/jjs105/features/jjs105-shell-history:3": {}
+    "ghcr.io/jjs105/features/shell-history:3": {}
 }
 ```
 
